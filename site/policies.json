@@ -1,0 +1,154 @@
+[
+  {
+    "id": "horario-chegada",
+    "titulo": "Horário de chegada e pontualidade",
+    "perguntas": ["qual horario de chegada", "tolerancia atraso", "inicio do plantao"],
+    "categoria": "Recursos Humanos",
+    "perfil": ["Todos"],
+    "resposta": [
+      "Entrada oficial: 15 min antes do início do plantão para passagem e checagens.",
+      "Tolerância de atraso: até 10 min, com justificativa ao responsável imediato.",
+      "Atrasos recorrentes: comunicado à Coordenação e RH conforme regra vigente."
+    ],
+    "excecoes": ["Eventos de força maior devem ser comunicados imediatamente à Coordenação"],
+    "responsavel": "Coordenação Geral",
+    "vigencia_inicio": "2025-09-01",
+    "vigencia_fim": null,
+    "versao": "1.0",
+    "ultima_atualizacao": "2025-09-22",
+    "fonte_oficial": ""
+  },
+  {
+    "id": "revezamento-descansos",
+    "titulo": "Revezamento de descansos durante o plantão",
+    "perguntas": ["descanso", "intervalo", "pausa", "revezamento"],
+    "categoria": "Recursos Humanos",
+    "perfil": ["USB", "USA", "Rádio", "Condutor", "Enfermagem", "Médico"],
+    "resposta": [
+      "Intervalos planejados e alternados para manter cobertura contínua.",
+      "Descanso combinado deve ser registrado no livro/planilha de plantão.",
+      "Chamados urgentes interrompem descansos; retomar assim que possível."
+    ],
+    "excecoes": ["Heat alert, desastres e sobrecarga podem suspender descansos temporariamente"],
+    "responsavel": "Coordenação Operacional",
+    "vigencia_inicio": "2025-09-01",
+    "vigencia_fim": null,
+    "versao": "1.0",
+    "ultima_atualizacao": "2025-09-22",
+    "fonte_oficial": ""
+  },
+  {
+    "id": "passagem-plantao",
+    "titulo": "Passagem de plantão",
+    "perguntas": ["passagem de plantao", "entrega de plantao", "turno"],
+    "categoria": "Operacional",
+    "perfil": ["Todos"],
+    "resposta": [
+      "Checklist obrigatório: frota, equipamentos, suprimentos, pendências de regulação.",
+      "Registrar ocorrências relevantes e orientações em documento padrão.",
+      "Plantão só encerra após validação do responsável da entrada."
+    ],
+    "excecoes": [],
+    "responsavel": "Coordenação Operacional",
+    "vigencia_inicio": "2025-09-01",
+    "vigencia_fim": null,
+    "versao": "1.0",
+    "ultima_atualizacao": "2025-09-22",
+    "fonte_oficial": ""
+  },
+  {
+    "id": "apoio-policial",
+    "titulo": "Solicitação de apoio policial",
+    "perguntas": ["apoio policial", "policia", "guarnição", "segurança publica"],
+    "categoria": "Segurança",
+    "perfil": ["USB", "USA", "Rádio", "Coordenação"],
+    "resposta": [
+      "Indicado quando há risco à equipe/usuário (ameaça, arma, aglomeração hostil).",
+      "Acionamento via canal oficial definido (Rádio/COBOM/190) antes da aproximação.",
+      "Aguardar liberação de segurança para entrar na cena sempre que recomendado."
+    ],
+    "excecoes": ["Cenas com risco iminente à vida devem seguir protocolo específico da Coordenação"],
+    "responsavel": "Coordenação de Segurança",
+    "vigencia_inicio": "2025-09-01",
+    "vigencia_fim": null,
+    "versao": "1.0",
+    "ultima_atualizacao": "2025-09-22",
+    "fonte_oficial": ""
+  },
+  {
+    "id": "troca-de-plantoes",
+    "titulo": "Troca de plantões (permuta)",
+    "perguntas": ["troca de plantao", "permuta", "cobertura de plantao"],
+    "categoria": "Recursos Humanos",
+    "perfil": ["Todos"],
+    "resposta": [
+      "Solicitar com antecedência mínima definida (ex.: 48–72h).",
+      "Precisa de aceite formal da Coordenação e registro no sistema/planilha.",
+      "Responsabilidade do atendimento é do profissional escalado após a troca."
+    ],
+    "excecoes": ["Casos emergenciais analisados pela Coordenação"],
+    "responsavel": "Coordenação Geral",
+    "vigencia_inicio": "2025-09-01",
+    "vigencia_fim": null,
+    "versao": "1.0",
+    "ultima_atualizacao": "2025-09-22",
+    "fonte_oficial": ""
+  },
+  {
+    "id": "uso-do-radio",
+    "titulo": "Uso do rádio e etiqueta de comunicação",
+    "perguntas": ["radio", "comunicacao", "conduta no radio"],
+    "categoria": "Comunicação",
+    "perfil": ["USB", "USA", "Rádio", "Coordenação"],
+    "resposta": [
+      "Mensagens objetivas, identificação da unidade e status no início.",
+      "Evitar jargões internos que confundam outras equipes.",
+      "Registrar por escrito orientações críticas transmitidas por rádio."
+    ],
+    "excecoes": [],
+    "responsavel": "Coordenação de Comunicação",
+    "vigencia_inicio": "2025-09-01",
+    "vigencia_fim": null,
+    "versao": "1.0",
+    "ultima_atualizacao": "2025-09-22",
+    "fonte_oficial": ""
+  },
+  {
+    "id": "uniforme-identificacao",
+    "titulo": "Uniforme e identificação",
+    "perguntas": ["uniforme", "cracha", "epi"],
+    "categoria": "Operacional",
+    "perfil": ["Todos"],
+    "resposta": [
+      "Uso obrigatório de uniforme completo e crachá visível.",
+      "EPIs conforme atividade (luvas, óculos, colete refletivo etc.).",
+      "Desvios devem ser justificados e registrados."
+    ],
+    "excecoes": ["Reposição de EPI/peças deve ser solicitada à Logística"],
+    "responsavel": "Coordenação Operacional",
+    "vigencia_inicio": "2025-09-01",
+    "vigencia_fim": null,
+    "versao": "1.0",
+    "ultima_atualizacao": "2025-09-22",
+    "fonte_oficial": ""
+  },
+  {
+    "id": "registro-ocorrencias",
+    "titulo": "Registro de ocorrências e logs",
+    "perguntas": ["registro", "log", "documentacao"],
+    "categoria": "Logística",
+    "perfil": ["Rádio", "Coordenação", "USB", "USA"],
+    "resposta": [
+      "Toda orientação crítica deve ser registrada no sistema/log oficial.",
+      "Pendências de manutenção/estoque devem ser lançadas ao final do plantão.",
+      "Fatos relevantes para auditoria: descrever de forma objetiva e sem opinião."
+    ],
+    "excecoes": [],
+    "responsavel": "Coordenação Operacional",
+    "vigencia_inicio": "2025-09-01",
+    "vigencia_fim": null,
+    "versao": "1.0",
+    "ultima_atualizacao": "2025-09-22",
+    "fonte_oficial": ""
+  }
+]

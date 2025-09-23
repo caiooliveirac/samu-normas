@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Normas do Serviço – SAMU</title>
+  <link rel="stylesheet" href="./style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
+</head>
+<body>
+  <header>
+    <h1>Normas do Serviço – SAMU</h1>
+    <p class="subtitle">Regras oficiais de operação interna. Última atualização visível em cada item.</p>
+  </header>
+
+  <main>
+    <div class="search-box">
+      <input id="searchInput" type="text" placeholder="Ex.: 'horário de chegada', 'apoio policial', 'passagem de plantão'..." />
+    </div>
+
+    <div class="filters">
+      <select id="categoriaFilter">
+        <option value="">Todas as categorias</option>
+        <option value="Recursos Humanos">Recursos Humanos</option>
+        <option value="Operacional">Operacional</option>
+        <option value="Segurança">Segurança</option>
+        <option value="Logística">Logística</option>
+        <option value="Comunicação">Comunicação</option>
+      </select>
+      <select id="perfilFilter">
+        <option value="">Todos os perfis</option>
+        <option value="Todos">Todos</option>
+        <option value="Coordenação">Coordenação</option>
+        <option value="Rádio">Rádio</option>
+        <option value="USB">USB</option>
+        <option value="USA">USA</option>
+        <option value="Condutor">Condutor</option>
+        <option value="Enfermagem">Enfermagem</option>
+        <option value="Médico">Médico</option>
+      </select>
+    </div>
+
+    <section id="results" class="results"></section>
+  </main>
+
+  <footer>
+    <small>Se algo estiver desatualizado, informe a coordenação. © SAMU</small>
+  </footer>
+
+  <script src="./app.js"></script>
+</body>
+</html>
