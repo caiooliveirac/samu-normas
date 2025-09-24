@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+# editores
+.vscode/
+.idea/
+# python venvs (caso crie algo)
+.venv/
+__pycache__/
+# node (caso use depois)
+node_modules/
+.next/
+dist/
