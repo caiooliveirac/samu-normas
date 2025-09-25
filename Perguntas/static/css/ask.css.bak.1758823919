@@ -154,19 +154,3 @@ html, body {
   overflow-x: hidden;
   overflow-y: auto;
 }
-
-/* ==== Overrides de fundo para evitar "repetição" do gradiente ao rolar ==== */
-body,
-body.is-home {
-  /* camada 1: gradiente grande, fixo e sem repetição */
-  background-image:
-    radial-gradient(1600px 1000px at 10% -10%, rgba(62,123,255,.25), transparent 60%),
-    /* camada 2: cor base */
-    none;
-  background-color: var(--bg);
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  /* cobre a tela com folga para não "emendar" */
-  background-size: 1600px 1000px, auto;
-  background-position: 0 0, center;
-}

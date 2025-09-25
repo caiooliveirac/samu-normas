@@ -1,8 +1,13 @@
 from django.shortcuts import render, redirect
-from django.views.decorators.http import require_http_methods
 from django.contrib import messages
+from django.views.decorators.http import require_http_methods
+from django.contrib.admin.views.decorators import staff_member_required
+from django.core.paginator import Paginator
+from django.http import HttpResponse
 from django import forms
-from .models import Question
+import csv
+
+from .models import Question, Rule
 
 class AskForm(forms.ModelForm):
     class Meta:
@@ -25,8 +30,10 @@ def ask_view(request):
         form = AskForm(request.POST)
         if form.is_valid():
             q = form.save(commit=False)
-            # mantém hash de IP para moderação futura (opcional)
-            q.set_ip(get_client_ip(request))
+            try:
+                q.set_ip(get_client_ip(request))
+            except Exception:
+                pass
             q.save()
             messages.success(request, 'Pergunta enviada. Obrigado!')
             return redirect('questions:ask')
@@ -36,12 +43,6 @@ def ask_view(request):
         form = AskForm()
     return render(request, 'questions/ask.html', {'form': form})
 
-
-from django.contrib.admin.views.decorators import staff_member_required
-from django.core.paginator import Paginator
-from django.http import HttpResponse
-import csv
-
 @staff_member_required
 def inbox(request):
     q = request.GET.get('q', '').strip()
@@ -49,17 +50,10 @@ def inbox(request):
     qs = Question.objects.all().order_by('-id')
     if q:
         qs = qs.filter(text__icontains=q)
-    if status in ['new', 'reviewed']:
+    if status in ['new','reviewed']:
         qs = qs.filter(status=status)
-
-    paginator = Paginator(qs, 15)  # 15 por página
-    page_obj = paginator.get_page(request.GET.get('page'))
-
-    return render(request, 'questions/inbox.html', {
-        'page_obj': page_obj,
-        'q': q,
-        'status': status,
-    })
+    page_obj = Paginator(qs, 15).get_page(request.GET.get('page'))
+    return render(request, 'questions/inbox.html', {'page_obj': page_obj, 'q': q, 'status': status})
 
 @staff_member_required
 def inbox_detail(request, pk):
@@ -71,9 +65,7 @@ def mark_reviewed(request, pk):
     obj = Question.objects.get(pk=pk)
     obj.status = 'reviewed'
     obj.save()
-    from django.contrib import messages
     messages.success(request, f'Pergunta #{obj.pk} marcada como revisada.')
-    from django.shortcuts import redirect
     return redirect('questions:inbox_detail', pk=obj.pk)
 
 @staff_member_required
@@ -83,13 +75,16 @@ def export_csv(request):
     qs = Question.objects.all().order_by('-id')
     if q:
         qs = qs.filter(text__icontains=q)
-    if status in ['new', 'reviewed']:
+    if status in ['new','reviewed']:
         qs = qs.filter(status=status)
-
     resp = HttpResponse(content_type='text/csv; charset=utf-8')
     resp['Content-Disposition'] = 'attachment; filename="perguntas.csv"'
-    writer = csv.writer(resp)
-    writer.writerow(['id','created_at','status','category','text'])
+    w = csv.writer(resp); w.writerow(['id','created_at','status','category','text'])
     for row in qs.values_list('id','created_at','status','category','text'):
-        writer.writerow(row)
+        w.writerow(row)
     return resp
+
+# ----- NOVO: Página inicial (/) listando Rules publicadas -----
+def home(request):
+    rules = Rule.objects.filter(is_published=True).order_by('order','title')[:500]
+    return render(request, 'questions/home.html', {'rules': rules})

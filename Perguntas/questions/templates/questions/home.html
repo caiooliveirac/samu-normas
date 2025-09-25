@@ -1,0 +1,93 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Normas e Regras — SAMU</title>
+  <link rel="stylesheet" href="{% static 'css/ask.css' %}">
+  <style>
+    .rules{display:grid; gap:12px}
+    .rule{border:1px solid var(--card-border); border-radius:14px; padding:14px; background:var(--card)}
+    .rule h3{margin:0 0 6px 0; font-size:18px}
+    .toolbar{display:flex; gap:10px; align-items:center; margin-bottom:12px}
+    .toolbar input{background: transparent; color: var(--text); border:1px solid var(--card-border); border-radius:10px; padding:10px 12px;}
+  </style>
+
+  <style>
+    /* Overrides só desta página */
+    body.is-home{
+      display:block !important;         /* remove o flex-center global */
+      align-items:unset !important;
+      justify-content:unset !important;
+    }
+    body.is-home .container{
+      max-width: 980px;
+      margin: 24px auto;                /* centraliza horizontal e libera altura */
+    }
+    /* Grid responsivo para muitos cards */
+    .rules{
+      display:grid;
+      gap:12px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 720px){
+      .rules{
+        grid-template-columns: repeat(2, minmax(0,1fr));
+      }
+    }
+    @media (min-width: 1100px){
+      .rules{
+        grid-template-columns: repeat(3, minmax(0,1fr));
+      }
+    }
+  </style>
+
+</head>
+<body class="is-home">
+  <main class="container fade-in">
+    <header class="header">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <div class="title">Normas e Regras</div>
+        <div class="subtitle">Consulta rápida. Se não encontrar, pergunte.</div>
+      </div>
+      <div style="margin-left:auto"><a class="btn" href="/ask/">Perguntar</a></div>
+    </header>
+
+    <section class="card">
+      <form class="toolbar" onsubmit="return false">
+        <input id="q" type="text" placeholder="Buscar por título, texto ou categoria…">
+        <button class="btn" type="button" onclick="doFilter()">Buscar</button>
+      </form>
+
+      <div class="rules" id="rules">
+        {% for r in rules %}
+          <article class="rule" data-title="{{ r.title|lower }}" data-cat="{{ r.category|lower }}" data-body="{{ r.body|lower }}">
+            <h3>{{ r.title }}</h3>
+            {% if r.category %}<div class="helper" style="margin:6px 0"><span>Categoria: {{ r.category }}</span></div>{% endif %}
+            <p style="margin:0">{{ r.body }}</p>
+          </article>
+        {% empty %}
+          <p>Nenhuma regra publicada ainda.</p>
+        {% endfor %}
+      </div>
+    </section>
+
+    <p class="footer">Painel interno: <a href="/inbox/" style="color:inherit">/inbox</a></p>
+  </main>
+
+  <script>
+    function doFilter(){
+      const q = (document.getElementById('q').value || '').trim().toLowerCase();
+      const cards = document.querySelectorAll('#rules .rule');
+      cards.forEach(c=>{
+        const hay = (c.dataset.title + ' ' + c.dataset.cat + ' ' + c.dataset.body);
+        c.style.display = hay.includes(q) ? '' : 'none';
+      });
+    }
+    const input = document.getElementById('q');
+    if (input) input.addEventListener('input', doFilter);
+  </script>
+</body>
+</html>
