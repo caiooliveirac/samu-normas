@@ -16,4 +16,5 @@ urlpatterns = [
     # index -> inbox
     path('', RedirectView.as_view(pattern_name='questions:inbox', permanent=False)),
     path('', include('questions.urls')),
+    path('faq/', include('faq.urls')),
 ]
