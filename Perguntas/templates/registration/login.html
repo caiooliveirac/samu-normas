@@ -1,0 +1,44 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Login — Perguntas SAMU</title>
+  <link rel="stylesheet" href="{% static 'css/ask.css' %}">
+</head>
+<body>
+  <main class="container fade-in">
+    <header class="header">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <div class="title">Entrar no painel</div>
+        <div class="subtitle">Acesse para ver e revisar as perguntas enviadas.</div>
+      </div>
+    </header>
+
+    <section class="card">
+      <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+          <div class="msg error">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <div class="form-row">
+          <label for="id_username">Usuário</label>
+          {{ form.username }}
+        </div>
+
+        <div class="form-row">
+          <label for="id_password">Senha</label>
+          {{ form.password }}
+        </div>
+
+        <button class="btn" type="submit">Entrar</button>
+      </form>
+    </section>
+
+    <p class="footer">Dica: use um usuário com <strong>staff status</strong> (não precisa ser superuser).</p>
+  </main>
+</body>
+</html>

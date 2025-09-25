@@ -1,0 +1,88 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Inbox — Perguntas</title>
+  <link rel="stylesheet" href="{% static 'css/ask.css' %}">
+  <style>
+    table{width:100%; border-collapse: collapse;}
+    th, td{padding:10px 12px; border-bottom:1px solid var(--card-border); text-align:left; vertical-align:top}
+    th{color:var(--muted); font-weight:700; font-size:13px; letter-spacing:.3px; text-transform:uppercase}
+    tr:hover td{background: color-mix(in oklab, var(--card) 40%, transparent)}
+    .pill{border-radius:999px; padding:2px 8px; font-size:12px; display:inline-block}
+    .pill.new{background:color-mix(in oklab, #f7c948 35%, transparent); color:#3a2f0b}
+    .pill.reviewed{background:color-mix(in oklab, #2ecc71 30%, transparent); color:#0d3d22}
+    .toolbar{display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:14px}
+    .toolbar input, .toolbar select{
+      background: transparent; color: var(--text);
+      border:1px solid var(--card-border); border-radius:10px; padding:10px 12px;
+    }
+    .pager{display:flex; gap:10px; align-items:center; justify-content:flex-end; margin-top:12px; color:var(--muted)}
+    .pager a{color:var(--brand); text-decoration:none}
+  </style>
+</head>
+<body>
+  <main class="container fade-in">
+    <header class="header">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <div class="title">Inbox — Perguntas</div>
+        <div class="subtitle">Busque, filtre e abra as perguntas enviadas.</div>
+      </div>
+    </header>
+
+    <section class="card">
+      <form class="toolbar" method="get">
+        <input type="text" name="q" placeholder="Buscar texto..." value="{{ q|default:'' }}">
+        <select name="status">
+          <option value="">Todos os status</option>
+          <option value="new" {% if status == 'new' %}selected{% endif %}>Novos</option>
+          <option value="reviewed" {% if status == 'reviewed' %}selected{% endif %}>Revisados</option>
+        </select>
+        <button class="btn" type="submit">Filtrar</button>
+        <a class="btn" href="{% url 'questions:export_csv' %}?q={{ q }}&status={{ status }}">Exportar CSV</a>
+      </form>
+
+      <div class="helper" style="margin-bottom:8px">
+        <span>Mostrando {{ page_obj.object_list|length }} de {{ page_obj.paginator.count }} pergunta(s)</span>
+        <span></span>
+      </div>
+
+      <div style="overflow:auto">
+        <table>
+          <tr>
+            <th>ID</th>
+            <th>Data</th>
+            <th>Status</th>
+            <th>Categoria</th>
+            <th>Pergunta</th>
+            <th>Ações</th>
+          </tr>
+          {% for qobj in page_obj.object_list %}
+            <tr>
+              <td>{{ qobj.id }}</td>
+              <td class="muted">{{ qobj.created_at|date:"Y-m-d H:i" }}</td>
+              <td><span class="pill {{ qobj.status }}">{{ qobj.status }}</span></td>
+              <td>{{ qobj.category|default:"—" }}</td>
+              <td>{{ qobj.text|truncatechars:140 }}</td>
+              <td><a class="btn" href="{% url 'questions:inbox_detail' qobj.id %}">Abrir</a></td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="6">Nenhuma pergunta.</td></tr>
+          {% endfor %}
+        </table>
+      </div>
+
+      <div class="pager">
+        {% if page_obj.has_previous %}<a href="?q={{ q }}&status={{ status }}&page={{ page_obj.previous_page_number }}">« Anterior</a>{% endif %}
+        <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}<a href="?q={{ q }}&status={{ status }}&page={{ page_obj.next_page_number }}">Próxima »</a>{% endif %}
+      </div>
+    </section>
+
+    <p class="footer"><a href="/logout" style="color:inherit">Sair</a></p>
+  </main>
+</body>
+</html>

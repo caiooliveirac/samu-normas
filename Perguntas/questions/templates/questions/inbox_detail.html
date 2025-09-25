@@ -1,0 +1,49 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Pergunta #{{ q.id }}</title>
+  <link rel="stylesheet" href="{% static 'css/ask.css' %}">
+  <style>
+    .pill{border-radius:999px; padding:2px 8px; font-size:12px; display:inline-block}
+    .pill.new{background:color-mix(in oklab, #f7c948 35%, transparent); color:#3a2f0b}
+    .pill.reviewed{background:color-mix(in oklab, #2ecc71 30%, transparent); color:#0d3d22}
+    pre{white-space:pre-wrap; margin:0; font-family: ui-monospace, SFMono-Regular, Menlo, monospace}
+  </style>
+</head>
+<body>
+  <main class="container fade-in">
+    <header class="header">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <div class="title">Pergunta #{{ q.id }}</div>
+        <div class="subtitle">Criada em {{ q.created_at|date:"Y-m-d H:i" }} — Status: <span class="pill {{ q.status }}">{{ q.status }}</span></div>
+      </div>
+    </header>
+
+    <section class="card">
+      <div class="helper" style="margin-bottom:10px">
+        <span>Categoria: {{ q.category|default:"—" }}</span>
+        <span class="muted">Identificador técnico: {{ q.ip_hash|default:"—" }}</span>
+      </div>
+
+      <div class="card" style="padding:14px">
+        <pre>{{ q.text }}</pre>
+      </div>
+
+      {% if q.status != 'reviewed' %}
+        <p style="margin-top:14px">
+          <a class="btn" href="{% url 'questions:mark_reviewed' q.id %}">Marcar como revisada</a>
+          <a class="btn" href="{% url 'questions:inbox' %}" style="margin-left:8px">Voltar</a>
+        </p>
+      {% else %}
+        <p style="margin-top:14px">
+          <a class="btn" href="{% url 'questions:inbox' %}">Voltar</a>
+        </p>
+      {% endif %}
+    </section>
+  </main>
+</body>
+</html>

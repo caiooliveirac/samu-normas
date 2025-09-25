@@ -1,0 +1,73 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Pergunta anônima — SAMU</title>
+  <link rel="stylesheet" href="{% static 'css/ask.css' %}">
+</head>
+<body>
+  <main class="container fade-in">
+    <header class="header">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <div class="title">Pergunte ao SAMU <span style="opacity:.6">(anônimo)</span></div>
+        <div class="subtitle">Suas dúvidas internas em um só lugar — sem identificação.</div>
+      </div>
+    </header>
+
+    {% if messages %}
+      {% for m in messages %}
+        <div class="msg {% if m.tags %}{{ m.tags }}{% endif %}">{{ m }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <section class="card">
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <div class="form-row">
+          <label for="id_text">Sua pergunta</label>
+          {{ form.text }}
+          <div class="helper">
+            <span>Dê detalhes suficientes (sem dados sensíveis).</span>
+            <span id="charCounter" class="counter ok">0/1000</span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label for="id_category">Categoria (opcional)</label>
+          {{ form.category }}
+          <div class="helper"><span>Ex.: logística, protocolo, escala, segurança, RH…</span></div>
+        </div>
+
+        <button class="btn" type="submit">Enviar pergunta</button>
+      </form>
+    </section>
+
+    <p class="footer">Registramos apenas um identificador técnico irreversível (hash) do IP para moderação/anti-spam.</p>
+  </main>
+
+  <script>
+    // Contador de caracteres para o textarea
+    (function(){
+      const ta = document.getElementById('id_text');
+      if(!ta) return;
+      const lim = 1000;
+      ta.setAttribute('maxlength', lim);
+      const counter = document.getElementById('charCounter');
+      const update = () => {
+        const n = (ta.value || '').length;
+        counter.textContent = n + "/" + lim;
+        counter.classList.remove('ok','warn','bad');
+        if(n < 750) counter.classList.add('ok');
+        else if(n < lim) counter.classList.add('warn');
+        else counter.classList.add('bad');
+      };
+      ta.addEventListener('input', update);
+      update();
+    })();
+  </script>
+</body>
+</html>
