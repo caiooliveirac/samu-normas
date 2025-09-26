@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+  @apply bg-slate-950 text-slate-100 antialiased;
+}
+
+/* Scrollbar estilizado */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #0f172a; }
+::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+.focus-ring { @apply outline-none ring-2 ring-indigo-400/70 ring-offset-2 ring-offset-slate-900; }
+
+/* Util para animação suave de colapso quando combinar com transition-[max-height] */
+.collapsible { overflow: hidden; transition: max-height 150ms ease-out; }
+
+/* FAQ styles */
+.faq-item + .faq-item{ margin-top: 10px; }
+.faq-header{ outline: none; }
+.faq-header:hover{ background: rgba(255,255,255,0.03); }
+.faq-header:focus-visible{ box-shadow: 0 0 0 2px rgba(59,130,246,0.6) inset; border-radius: 8px; }
+.faq-title{ letter-spacing: -0.1px; }
+.faq-panel{ will-change: max-height; }
+
+/* Mobile touch targets */
+@media (max-width: 640px){
+  .faq-header{ padding: 16px 18px !important; }
+}
+
+@media (max-width: 900px){
+  .layout{grid-template-columns:1fr!important}
+}

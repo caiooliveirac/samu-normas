@@ -1,0 +1,154 @@
+[
+  {"model": "questions.category", "pk": 1, "fields": {"name": "Operação", "slug": "operacao"}},
+  {"model": "questions.category", "pk": 2, "fields": {"name": "Segurança", "slug": "seguranca"}},
+
+  {"model": "questions.tag", "pk": 1, "fields": {"name": "recusa", "slug": "recusa", "kind": "processo"}},
+  {"model": "questions.tag", "pk": 2, "fields": {"name": "registro", "slug": "registro", "kind": "operacional"}},
+  {"model": "questions.tag", "pk": 3, "fields": {"name": "cru", "slug": "cru", "kind": "comunicacao"}},
+  {"model": "questions.tag", "pk": 4, "fields": {"name": "seguranca-da-cena", "slug": "seguranca-da-cena", "kind": "seguranca"}},
+  {"model": "questions.tag", "pk": 5, "fields": {"name": "epi", "slug": "epi", "kind": "seguranca"}},
+  {"model": "questions.tag", "pk": 6, "fields": {"name": "pertences", "slug": "pertences", "kind": "processo"}},
+
+  {"model": "questions.rule", "pk": 101, "fields": {
+    "title": "Responsabilidade e Conduta",
+    "slug": "responsabilidade-conduta",
+    "category": 1,
+    "is_published": true,
+    "order": 10,
+    "body": "",
+    "created_at": "2025-09-26T21:00:00Z",
+    "updated_at": "2025-09-26T21:00:00Z"
+  }},
+  {"model": "questions.rulecard", "pk": 1011, "fields": {"rule": 101, "title": "Conduta individual", "order": 1, "is_published": true}},
+  {"model": "questions.rulebullet", "pk": 10111, "fields": {"card": 1011, "text": "Proibida divulgação de informações ou imagens de atendimentos.", "order": 1, "tags": [2]}},
+
+  {"model": "questions.rule", "pk": 102, "fields": {
+    "title": "Base Operacional",
+    "slug": "base-operacional",
+    "category": 1,
+    "is_published": true,
+    "order": 20,
+    "body": "",
+    "created_at": "2025-09-26T21:00:00Z",
+    "updated_at": "2025-09-26T21:00:00Z"
+  }},
+  {"model": "questions.rulecard", "pk": 1021, "fields": {"rule": 102, "title": "Checklist e Organização", "order": 1, "is_published": true}},
+  {"model": "questions.rulebullet", "pk": 10211, "fields": {"card": 1021, "text": "Realizar checklist completo da viatura, materiais e equipamentos no início e fim do plantão.", "order": 1, "tags": [2]}},
+
+  {"model": "questions.rule", "pk": 103, "fields": {
+    "title": "Recebimento de Chamados (CRU)",
+    "slug": "recebimento-chamados-cru",
+    "category": 1,
+    "is_published": true,
+    "order": 30,
+    "body": "",
+    "created_at": "2025-09-26T21:00:00Z",
+    "updated_at": "2025-09-26T21:00:00Z"
+  }},
+  {"model": "questions.rulecard", "pk": 1031, "fields": {"rule": 103, "title": "Fluxo de acionamento", "order": 1, "is_published": true}},
+  {"model": "questions.rulebullet", "pk": 10311, "fields": {"card": 1031, "text": "Atender de imediato pelo telefone ou aplicativo e sair em até 1 minuto.", "order": 1, "tags": [3]}},
+
+  {"model": "questions.rule", "pk": 104, "fields": {
+    "title": "Biossegurança",
+    "slug": "biosseguranca",
+    "category": 2,
+    "is_published": true,
+    "order": 40,
+    "body": "",
+    "created_at": "2025-09-26T21:00:00Z",
+    "updated_at": "2025-09-26T21:00:00Z"
+  }},
+  {"model": "questions.rulecard", "pk": 1041, "fields": {"rule": 104, "title": "EPI e descarte", "order": 1, "is_published": true}},
+  {"model": "questions.rulebullet", "pk": 10411, "fields": {"card": 1041, "text": "Utilizar sempre EPI completo; descartar perfurocortantes em coletor apropriado, sem reencapar.", "order": 1, "tags": [5]}},
+
+  {"model": "questions.rule", "pk": 105, "fields": {
+    "title": "Segurança da Cena",
+    "slug": "seguranca-da-cena",
+    "category": 2,
+    "is_published": true,
+    "order": 50,
+    "body": "",
+    "created_at": "2025-09-26T21:00:00Z",
+    "updated_at": "2025-09-26T21:00:00Z"
+  }},
+  {"model": "questions.rulecard", "pk": 1051, "fields": {"rule": 105, "title": "Avaliação e apoio", "order": 1, "is_published": true}},
+  {"model": "questions.rulebullet", "pk": 10511, "fields": {"card": 1051, "text": "Avaliar riscos antes de iniciar; acionar órgãos de apoio quando necessário; retirar-se se a cena ficar insegura.", "order": 1, "tags": [4]}},
+
+  {"model": "questions.rule", "pk": 106, "fields": {
+    "title": "Transporte da Vítima",
+    "slug": "transporte-da-vitima",
+    "category": 1,
+    "is_published": true,
+    "order": 60,
+    "body": "",
+    "created_at": "2025-09-26T21:00:00Z",
+    "updated_at": "2025-09-26T21:00:00Z"
+  }},
+  {"model": "questions.rulecard", "pk": 1061, "fields": {"rule": 106, "title": "Condução segura", "order": 1, "is_published": true}},
+  {"model": "questions.rulebullet", "pk": 10611, "fields": {"card": 1061, "text": "Uso de cinto para todos os ocupantes; procedimentos somente com ambulância parada.", "order": 1, "tags": []}},
+
+  {"model": "questions.rule", "pk": 107, "fields": {
+    "title": "Unidade de Referência",
+    "slug": "unidade-de-referencia",
+    "category": 1,
+    "is_published": true,
+    "order": 70,
+    "body": "",
+    "created_at": "2025-09-26T21:00:00Z",
+    "updated_at": "2025-09-26T21:00:00Z"
+  }},
+  {"model": "questions.rulecard", "pk": 1071, "fields": {"rule": 107, "title": "Passagem de caso", "order": 1, "is_published": true}},
+  {"model": "questions.rulebullet", "pk": 10711, "fields": {"card": 1071, "text": "Relatar quadro e procedimentos; colher assinatura do médico receptor.", "order": 1, "tags": [2]}},
+
+  {"model": "questions.rule", "pk": 108, "fields": {
+    "title": "Recusa de Atendimento",
+    "slug": "recusa-de-atendimento",
+    "category": 1,
+    "is_published": true,
+    "order": 80,
+    "body": "",
+    "created_at": "2025-09-26T21:00:00Z",
+    "updated_at": "2025-09-26T21:00:00Z"
+  }},
+  {"model": "questions.rulecard", "pk": 1081, "fields": {"rule": 108, "title": "Fluxo de recusa", "order": 1, "is_published": true}},
+  {"model": "questions.rulebullet", "pk": 10811, "fields": {"card": 1081, "text": "Explicar riscos; comunicar a Regulação; registrar e colher assinatura da vítima e testemunha.", "order": 1, "tags": [1,2,3]}},
+
+  {"model": "questions.rule", "pk": 109, "fields": {
+    "title": "Suspeita de Crime",
+    "slug": "suspeita-de-crime",
+    "category": 2,
+    "is_published": true,
+    "order": 90,
+    "body": "",
+    "created_at": "2025-09-26T21:00:00Z",
+    "updated_at": "2025-09-26T21:00:00Z"
+  }},
+  {"model": "questions.rulecard", "pk": 1091, "fields": {"rule": 109, "title": "Preservação de evidências", "order": 1, "is_published": true}},
+  {"model": "questions.rulebullet", "pk": 10911, "fields": {"card": 1091, "text": "Priorizar segurança; não alterar cena; registrar posição da vítima e entregar objetos à polícia.", "order": 1, "tags": [2]}},
+
+  {"model": "questions.rule", "pk": 110, "fields": {
+    "title": "Pertences da Vítima",
+    "slug": "pertences-da-vitima",
+    "category": 1,
+    "is_published": true,
+    "order": 100,
+    "body": "",
+    "created_at": "2025-09-26T21:00:00Z",
+    "updated_at": "2025-09-26T21:00:00Z"
+  }},
+  {"model": "questions.rulecard", "pk": 1101, "fields": {"rule": 110, "title": "Guarda e entrega", "order": 1, "is_published": true}},
+  {"model": "questions.rulebullet", "pk": 11011, "fields": {"card": 1101, "text": "Transportar com a vítima quando possível; listar itens de valor; entregar na UR com nome/assinatura.", "order": 1, "tags": [6]}},
+
+  {"model": "questions.rule", "pk": 111, "fields": {
+    "title": "Segurança do Paciente",
+    "slug": "seguranca-do-paciente",
+    "category": 2,
+    "is_published": true,
+    "order": 110,
+    "body": "",
+    "created_at": "2025-09-26T21:00:00Z",
+    "updated_at": "2025-09-26T21:00:00Z"
+  }},
+  {"model": "questions.rulecard", "pk": 1111, "fields": {"rule": 111, "title": "Identificação e quedas", "order": 1, "is_published": true}},
+  {"model": "questions.rulebullet", "pk": 11111, "fields": {"card": 1111, "text": "Identificar com ≥2 dados; higienizar mãos; fixação correta em maca/prancha; checar equipamentos.", "order": 1, "tags": [2]}}
+]

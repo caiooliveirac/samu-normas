@@ -1,0 +1,23 @@
+{% load static %}
+{% load vite %}
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <title>Normas e Regras</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  {% vite_css 'src/main.jsx' as css %}
+  {% if css %}
+    <link rel="stylesheet" href="{{ css }}" />
+  {% endif %}
+</head>
+<body>
+  <div id="root">
+    <!-- React monta aqui -->
+    <div class="container"><p class="muted">Carregando…</p></div>
+  </div>
+
+  {# carrega o bundle resolvido via manifest do Vite #}
+  <script src="{% vite_asset 'src/main.jsx' %}" type="module"></script>
+</body>
+</html>

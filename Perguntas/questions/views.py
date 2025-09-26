@@ -3,7 +3,9 @@ from django.contrib import messages
 from django.views.decorators.http import require_http_methods
 from django.contrib.admin.views.decorators import staff_member_required
 from django.core.paginator import Paginator
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.db.models import Prefetch
+from .models import Rule, RuleCard, RuleBullet, Category, Tag, Question
 from django import forms
 import csv
 
@@ -83,6 +85,55 @@ def export_csv(request):
     for row in qs.values_list('id','created_at','status','category','text'):
         w.writerow(row)
     return resp
+
+def rules_home(request):
+    # carrega só pra mostrar o shell do app; os dados vêm via fetch
+    return render(request, "questions/home_rules_react.html")
+
+def api_rules(request):
+    # carrega tudo já ordenado (Rule → Cards → Bullets → Tags)
+    rules = (
+        Rule.objects.filter(is_published=True)
+        .select_related("category")
+        .prefetch_related(
+            Prefetch(
+                "cards",
+                queryset=RuleCard.objects.filter(is_published=True).order_by("order", "id").prefetch_related(
+                    Prefetch(
+                        "bullets",
+                        queryset=RuleBullet.objects.all().order_by("order", "id").prefetch_related("tags")
+                    )
+                )
+            )
+        )
+        .order_by("order", "title")
+    )
+
+    data = []
+    for r in rules:
+        rule_obj = {
+            "id": r.id,
+            "title": r.title,
+            "slug": r.slug,
+            "category": r.category.name if r.category else "",
+            "cards": [],
+        }
+        for c in r.cards.all():
+            card_obj = {
+                "id": c.id,
+                "title": c.title or "",
+                "bullets": [],
+            }
+            for b in c.bullets.all():
+                card_obj["bullets"].append({
+                    "id": b.id,
+                    "text": b.text,
+                    "tags": [t.name for t in b.tags.all()],
+                })
+            rule_obj["cards"].append(card_obj)
+        data.append(rule_obj)
+
+    return JsonResponse({"results": data})
 
 # ----- NOVO: Página inicial (/) listando Rules publicadas -----
 def home(request):
