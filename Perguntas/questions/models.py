@@ -120,3 +120,50 @@ class RuleBullet(models.Model):
 
     def __str__(self):
         return (self.text[:80] + "…") if len(self.text) > 80 else self.text
+
+
+class SearchLog(models.Model):
+    """Registro de termos de busca que retornaram poucos ou nenhum resultado.
+    Foco: ajudar priorização editorial. Não armazenar IP puro (hash).
+    """
+    term = models.CharField(max_length=200, db_index=True)
+    results_count = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(default=timezone.now, db_index=True)
+    ip_hash = models.CharField(max_length=64, blank=True)
+    user_agent = models.CharField(max_length=300, blank=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["term", "created_at"]),
+        ]
+        verbose_name = "Busca sem resultado"
+        verbose_name_plural = "Buscas sem resultado"
+
+    def __str__(self):
+        return f"{self.term} ({self.results_count})"
+
+
+class AskedTerm(models.Model):
+    """Termos extraídos das perguntas submetidas em /ask.
+    Usado para identificar palavras que aparecem recorrentemente nas dúvidas enviadas.
+    Persistente (não há janela de tempo). Incrementa count a cada pergunta que contém a palavra.
+    Regras:
+      - Considera apenas palavras com >=4 caracteres alfanuméricos (unicode).
+      - Cada palavra é contada no máximo 1 vez por pergunta (se repetir na mesma frase não incrementa duas vezes).
+    """
+    term = models.CharField(max_length=200, unique=True, db_index=True)
+    count = models.PositiveIntegerField(default=0, db_index=True)
+    first_seen = models.DateTimeField(default=timezone.now)
+    last_seen = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        verbose_name = "Pergunta sem resultado"
+        verbose_name_plural = "Perguntas sem resultado"
+        ordering = ["-count", "term"]
+        indexes = [
+            models.Index(fields=["count"]),
+        ]
+
+    def __str__(self):
+        return f"{self.term} ×{self.count}"

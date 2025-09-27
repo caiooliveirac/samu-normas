@@ -1,8 +1,5 @@
 import { useCallback, useEffect, useRef, useState, useMemo } from 'react'
 
-// Implementação minimalista substituindo acordeão por lista plana com expansão
-// Requisitos: um item expandido por vez; desktop: hover; mobile: central viewport; acessível.
-
 function flattenRuleText(rule){
   const bulletTexts = rule.cards?.flatMap(c => c.bullets?.map(b => (b.text||'').trim()).filter(Boolean) || []) || []
   if (bulletTexts.length) return bulletTexts.join(' • ')
@@ -29,6 +26,7 @@ export default function App(){
   const [focusIndex, setFocusIndex] = useState(0)
   const [search, setSearch] = useState('')
   const searchRef = useRef(null)
+  const reportedTermsRef = useRef(new Set())
 
   // Fetch rules
   useEffect(()=>{
@@ -166,17 +164,41 @@ export default function App(){
   }, [filtered, focusIndex])
 
   const empty = filtered.length === 0
+  const few = !empty && filtered.length < 3 && search.trim()
+  const askHref = search.trim() ? `/ask/?q=${encodeURIComponent(search.trim())}` : '/ask/'
+
+  // Log automático de termos sem resultado (>=3 chars) evitando envio repetido
+  useEffect(()=>{
+    const term = search.trim()
+    if (!term || term.length < 3) return
+    if (!empty) return
+    if (reportedTermsRef.current.has(term.toLowerCase())) return
+    reportedTermsRef.current.add(term.toLowerCase())
+    const controller = new AbortController()
+    fetch('/api/search-log/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ term, results_count: 0 }),
+      signal: controller.signal
+    }).catch(()=>{})
+    return () => controller.abort()
+  }, [empty, search])
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-10 font-sans">
       <header className="mb-6 flex flex-col gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-100">Normas e Regras</h1>
-          <p className="text-sm text-slate-400 mt-1">Passe o mouse (desktop) ou role (mobile) para revelar. Busque por título, categoria ou conteúdo.</p>
-          <p className="text-[11px] text-slate-500 mt-2">Atalhos: / foco busca · Esc limpa · ↑ ↓ navegam · Home/End · Enter/Espaço expandem.</p>
+        <div className="flex items-start justify-between gap-4 flex-wrap">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-slate-100">Normas e Regras</h1>
+            <p className="text-sm text-slate-400 mt-1">Consulte e, se não achar, envie sua dúvida para ampliar a base.</p>
+            <p className="text-[11px] text-slate-500 mt-2">Atalhos: / busca · Esc limpa · ↑ ↓ navegam · Home/End · Enter/Espaço expandem.</p>
+          </div>
+          <a href={askHref} className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold px-4 py-2 shadow-sm shadow-indigo-900/40 transition-colors">
+            <span>+ Perguntar</span>
+          </a>
         </div>
-        <div className="flex gap-2 items-center">
-          <div className="relative flex-1">
+        <div className="flex flex-col gap-2">
+          <div className="relative">
             <input
               ref={searchRef}
               value={search}
@@ -194,14 +216,23 @@ export default function App(){
               >×</button>
             )}
           </div>
-          {search && (
-            <span className="text-[11px] text-slate-500 whitespace-nowrap">{filtered.length} resultado(s)</span>
+          {empty && search.trim() && (
+            <div role="status" className="rounded-lg border border-slate-700/70 bg-slate-800/60 px-3 py-3 text-[13px] text-slate-300">
+              Nenhuma regra encontrada para <strong className="text-slate-100">{search}</strong>.
+              <a href={askHref} className="ml-1 text-indigo-400 hover:text-indigo-300 underline decoration-dotted">Enviar essa dúvida?</a>
+            </div>
+          )}
+          {few && (
+            <div className="text-[11px] text-slate-500">
+              Poucos resultados. Se ainda está com dúvida,
+              <a href={askHref} className="ml-1 text-indigo-400 hover:text-indigo-300 underline">pergunte</a>.
+            </div>
           )}
         </div>
       </header>
 
       <ul className="flex flex-col gap-3" aria-label="Lista de regras" role="list">
-        {empty && (
+        {empty && search.trim() && (
           <li className="text-sm text-slate-500 px-2 py-10 text-center border border-slate-700/50 rounded-xl bg-slate-800/30">Nenhuma regra corresponde à busca.</li>
         )}
         {filtered.map((rule, idx) => {
@@ -276,6 +307,16 @@ export default function App(){
           )
         })}
       </ul>
+
+      {/* Botão flutuante permanente */}
+      <a
+        href={askHref}
+        aria-label="Enviar nova pergunta"
+        className="fixed bottom-5 right-5 inline-flex items-center gap-2 rounded-full bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold px-5 py-3 shadow-lg shadow-indigo-900/30 transition-colors group"
+      >
+        <span className="h-2 w-2 rounded-full bg-indigo-300 group-hover:bg-white transition-colors"></span>
+        <span>Perguntar</span>
+      </a>
     </div>
   )
 }

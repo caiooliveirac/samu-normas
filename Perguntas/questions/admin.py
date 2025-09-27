@@ -1,6 +1,24 @@
 from django.contrib import admin
 from django.utils.html import format_html, format_html_join
-from .models import Category, Tag, Rule, RuleCard, RuleBullet, Question
+from django.db import connection
+from .models import Category, Tag, Rule, RuleCard, RuleBullet, Question, SearchLog, AskedTerm
+
+# --- Utilitário: detectar se o banco tem tabelas de timezone populadas ---
+_HAS_TZ_SUPPORT = None
+
+def has_timezone_support():
+    global _HAS_TZ_SUPPORT
+    if _HAS_TZ_SUPPORT is not None:
+        return _HAS_TZ_SUPPORT
+    try:
+        with connection.cursor() as cur:
+            # Se as tabelas não estiverem carregadas, CONVERT_TZ geralmente retorna NULL
+            cur.execute("SELECT CONVERT_TZ('2000-01-01 00:00:00','UTC','UTC');")
+            row = cur.fetchone()
+            _HAS_TZ_SUPPORT = bool(row and row[0] is not None)
+    except Exception:
+        _HAS_TZ_SUPPORT = False
+    return _HAS_TZ_SUPPORT
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
@@ -91,3 +109,27 @@ class RuleBulletAdmin(admin.ModelAdmin):
 
     def short_text(self, obj):
         return (obj.text[:80] + "…") if len(obj.text) > 80 else obj.text
+
+
+@admin.register(SearchLog)
+class SearchLogAdmin(admin.ModelAdmin):
+    list_display = ("term", "results_count", "created_at")
+    search_fields = ("term", "user_agent")
+    list_filter = ("results_count", "created_at")
+    ordering = ("-created_at",)
+
+    # Só define date_hierarchy se o banco suportar conversão de timezone
+    if has_timezone_support():
+        date_hierarchy = "created_at"
+    else:
+        # Exibe aviso visual simples (opcional: poderia usar mensagens do admin)
+        pass
+
+
+@admin.register(AskedTerm)
+class AskedTermAdmin(admin.ModelAdmin):
+    list_display = ("term", "count", "last_seen", "first_seen")
+    search_fields = ("term",)
+    list_filter = ("count",)
+    ordering = ("-count", "term")
+    readonly_fields = ("first_seen", "last_seen", "count")

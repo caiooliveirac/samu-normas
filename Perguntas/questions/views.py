@@ -5,7 +5,9 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.core.paginator import Paginator
 from django.http import HttpResponse, JsonResponse
 from django.db.models import Prefetch
-from .models import Rule, RuleCard, RuleBullet, Category, Tag, Question
+from .models import Rule, RuleCard, RuleBullet, Category, Tag, Question, SearchLog, AskedTerm
+from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
 from django import forms
 import csv
 
@@ -37,6 +39,33 @@ def ask_view(request):
             except Exception:
                 pass
             q.save()
+            # --- Atualiza AskedTerm ---
+            try:
+                import re
+                text = (q.text or "").strip()
+                if text:
+                    tokens = re.findall(r"[\wÀ-ÖØ-öø-ÿ]{4,}", text, flags=re.UNICODE)
+                    seen = set()
+                    for raw in tokens:
+                        w = raw.strip()
+                        if not w or len(w) < 4:
+                            continue
+                        key = w.casefold()
+                        if key in seen:
+                            continue
+                        seen.add(key)
+                        obj, created = AskedTerm.objects.get_or_create(term=w[:200])
+                        if created:
+                            # first_seen e last_seen já setados por default
+                            obj.count = 1
+                            obj.save(update_fields=["count"])  # garante consistência
+                        else:
+                            from django.utils import timezone as _tz
+                            obj.count = obj.count + 1
+                            obj.last_seen = _tz.now()
+                            obj.save(update_fields=["count", "last_seen"])
+            except Exception:
+                pass
             messages.success(request, 'Pergunta enviada. Obrigado!')
             return redirect('questions:ask')
         else:
@@ -134,6 +163,89 @@ def api_rules(request):
         data.append(rule_obj)
 
     return JsonResponse({"results": data})
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def api_search_log(request):
+    """Recebe uma frase/pesquisa e registra cada palavra (>=4 letras) que
+    resultou em zero resultados na busca do front. Agora:
+    - Entrada JSON: {"term": "frase completa", "results_count": 0}
+      (results_count refere-se ao total de resultados gerais da busca.)
+    - Tokeniza a frase e salva cada palavra >=4 letras individualmente.
+    - Ignora palavras repetidas nas últimas 2h (case-insensitive).
+    Resposta: {"logged": [...], "ignored": {"short": [...], "recent": [...]}}
+    Status 201 se ao menos uma palavra foi gravada; caso contrário 200.
+    """
+    try:
+        import json, re
+        payload = json.loads(request.body.decode('utf-8'))
+    except Exception:
+        return JsonResponse({"error": "invalid json"}, status=400)
+
+    phrase = (payload.get("term") or "").strip()
+    results_count = int(payload.get("results_count") or 0)
+    if not phrase:
+        return JsonResponse({"error": "empty term"}, status=400)
+
+    # Só registramos se a busca geral retornou zero (ou poucos) resultados.
+    # Mantemos regra original de só registrar quando zero.
+    if results_count != 0:
+        return JsonResponse({"ignored": True, "reason": "non_zero_results"}, status=200)
+
+    # Tokenização: palavras com letras/números (unicode), tamanho >=4
+    tokens = re.findall(r"[\wÀ-ÖØ-öø-ÿ]{4,}", phrase, flags=re.UNICODE)
+    if not tokens:
+        return JsonResponse({"ignored": True, "reason": "no_tokens"}, status=200)
+
+    from datetime import timedelta
+    cutoff = timezone.now() - timedelta(hours=2)
+
+    ip = get_client_ip(request)
+    try:
+        ip_h = hash_ip(ip)
+    except Exception:
+        ip_h = ""
+    ua = (request.META.get('HTTP_USER_AGENT') or '')[:300]
+
+    logged = []
+    ignored_short = []  # (mantido para possível relatório futuro)
+    ignored_recent = []
+
+    # Normaliza (casefold para melhor comparação em pt-BR) e de-dup dentro da própria frase
+    seen_local = set()
+    for raw in tokens:
+        word = raw.strip()
+        if not word:
+            continue
+        lower = word.casefold()
+        if lower in seen_local:
+            continue
+        seen_local.add(lower)
+
+        if len(word) < 4:
+            ignored_short.append(word)
+            continue
+        # Checa se já existe esse termo nas últimas 2h
+        exists = SearchLog.objects.filter(term__iexact=word, created_at__gte=cutoff).exists()
+        if exists:
+            ignored_recent.append(word)
+            continue
+        # Cria registro
+        SearchLog.objects.create(
+            term=word[:200],
+            results_count=0,
+            ip_hash=ip_h,
+            user_agent=ua,
+        )
+        logged.append(word)
+
+    status_code = 201 if logged else 200
+    return JsonResponse({
+        "logged": logged,
+        "ignored": {"short": ignored_short, "recent": ignored_recent},
+        "total_phrase": phrase,
+    }, status=status_code)
 
 # ----- NOVO: Página inicial (/) listando Rules publicadas -----
 def home(request):
