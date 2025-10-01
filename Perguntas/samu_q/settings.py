@@ -63,7 +63,9 @@ WSGI_APPLICATION = 'samu_q.wsgi.application'
 # Database
 # Configurável por variáveis de ambiente, padrão MariaDB/MySQL
 # Para desenvolvimento local sem MariaDB, defina DB_ENGINE=sqlite
-DB_ENGINE = os.getenv('DB_ENGINE', 'mysql').lower()
+# Para testes locais/CI podemos definir DB_ENGINE=sqlite para evitar necessidade de MariaDB.
+# Default continua 'mysql' em produção. Em workflows configuraremos DB_ENGINE=sqlite.
+DB_ENGINE = os.getenv('DB_ENGINE', os.getenv('CI_DB_ENGINE', 'mysql')).lower()
 
 if DB_ENGINE == 'sqlite':
     DATABASES = {
@@ -85,6 +87,10 @@ else:
                 # Garante compatibilidade com MariaDB e suporte completo a emojis
                 'charset': 'utf8mb4',
                 'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            },
+            'TEST': {
+                # Permite usar um banco de teste dedicado, evitando tentar criar/dropar o principal.
+                'NAME': os.getenv('DB_TEST_NAME', os.getenv('DB_NAME', 'samu_q') + '_test')
             },
             # Mantém conexões reutilizáveis (ajuda em produção)
             'CONN_MAX_AGE': int(os.getenv('DB_CONN_MAX_AGE', '60')),
@@ -108,3 +114,19 @@ LOGIN_REDIRECT_URL = os.getenv('LOGIN_REDIRECT_URL', '/inbox/')
 LOGOUT_REDIRECT_URL = os.getenv('LOGOUT_REDIRECT_URL', '/')
 
 LOGIN_URL = os.getenv('LOGIN_URL', '/login/')
+
+# Segurança adicional quando HTTPS/produção
+if not DEBUG:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_REFERRER_POLICY = 'same-origin'
+    # HSTS (cuidado em ambiente de staging). Ajuste o tempo após validar HTTPS.
+    SECURE_HSTS_SECONDS = int(os.getenv('SECURE_HSTS_SECONDS', '63072000'))
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SESSION_COOKIE_HTTPONLY = True
+    CSRF_COOKIE_HTTPONLY = False  # Normalmente False; manter explícito
+    # Ajuste se for necessário trust adicional de proxy
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

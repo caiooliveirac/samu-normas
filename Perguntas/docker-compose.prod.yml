@@ -6,7 +6,8 @@ services:
       MARIADB_DATABASE: ${DB_NAME:-samu_q}
       MARIADB_USER: ${DB_USER:-samu_q}
       MARIADB_PASSWORD: ${DB_PASSWORD:-change-me}
-      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD:-change-me}
+      # Senha root separada da senha do usuário de aplicação
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root-change-me}
     volumes:
       - db_data:/var/lib/mysql
     healthcheck:
@@ -19,32 +20,21 @@ services:
       start_period: 25s
 
   web:
+    # Se APP_IMAGE estiver definido no ambiente, usamos a imagem já publicada (pull-based deploy)
+    # Caso contrário, docker compose fará build local usando Dockerfile.prod.
+    # Em produção (EC2) recomenda-se definir APP_IMAGE=ghcr.io/caiooliveirac/samu-normas:TAG_IMUTAVEL
+    # e opcionalmente remover/ignorar a seção 'build' abaixo para evitar builds acidentais.
+    image: ${APP_IMAGE:-}
     build:
       context: .
       dockerfile: Dockerfile.prod
-      # Para forçar arquitetura (se build em x86 para t4g):
-      # args: []
-    # Opcional: descomente para centralizar envs
-    # env_file:
-    #   - .env.prod
+    env_file:
+      - .env.prod
     environment:
       DJANGO_SETTINGS_MODULE: samu_q.settings
-      DJANGO_DEBUG: "False"
-      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-insecure-change-me}
-      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1}
-      # Origens confiáveis para CSRF (inclua esquema e porta quando não 80/443)
-      # Ajustar para IP/Domínio público. Exemplo: http://3.150.194.173:8000
-      CSRF_TRUSTED_ORIGINS: ${CSRF_TRUSTED_ORIGINS:-http://localhost:8000,http://127.0.0.1:8000}
-      DB_NAME: ${DB_NAME:-samu_q}
-      DB_USER: ${DB_USER:-samu_q}
-      DB_PASSWORD: ${DB_PASSWORD:-change-me}
+      # As demais variáveis vêm de .env.prod; aqui só forçamos defaults críticos se faltarem.
       DB_HOST: db
       DB_PORT: 3306
-      DB_CONN_MAX_AGE: 60
-      DB_ATOMIC_REQUESTS: "True"
-      GUNICORN_WORKERS: ${GUNICORN_WORKERS:-3}
-      GUNICORN_TIMEOUT: ${GUNICORN_TIMEOUT:-60}
-      COLLECT_STATIC: ${COLLECT_STATIC:-1}
     depends_on:
       db:
         condition: service_healthy
@@ -63,11 +53,14 @@ services:
     depends_on:
       - web
     ports:
-      - "8000:80"
+      - "8000:80"    # Porta HTTP (redirect)
+      - "8443:443"   # Expondo HTTPS (alterar para 443:443 em produção definitiva)
     volumes:
       - static_volume:/app/staticfiles:ro
       - media_volume:/app/media:ro
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      # Volume de certificados (estrutura padrão do certbot: /certs/live/DOMINIO/*.pem)
+      - certs_volume:/certs:ro
     healthcheck:
       test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1/nginx-health || exit 1"]
       interval: 20s
@@ -75,7 +68,19 @@ services:
       retries: 5
       start_period: 10s
 
+  # Serviço opcional para obtenção/renovação de certificados Let's Encrypt
+  # Uso típico (primeira emissão - staging):
+  # docker compose run --rm certbot certonly --webroot -w /var/www/certbot -d SEU_DOMINIO --email SEU_EMAIL --agree-tos --no-eff-email --staging
+  # Depois ajustar default.conf com o domínio real e reiniciar nginx.
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - certs_volume:/etc/letsencrypt
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    entrypoint: ["/bin/sh", "-c", "echo 'Use docker compose run --rm certbot ...' && sleep 5"]
+
 volumes:
   db_data:
   static_volume:
   media_volume:
+  certs_volume:

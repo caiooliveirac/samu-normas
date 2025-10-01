@@ -1,0 +1,42 @@
+# Ignora artefatos e arquivos não necessários no contexto de build
+.git
+.gitignore
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+*.log
+*.tmp
+*.swp
+*.cache
+
+# Ambientes / segredos locais
+.env
+.env.*
+!*.example
+
+# Node / frontend
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.vite
+
+# Arquivos estáticos gerados
+staticfiles/
+media/
+
+# Dumps / backups / fixtures volumosos
+dump*.sql
+rules_backup_*.sql
+
+# IDE / Editor
+.vscode/
+.idea/
+*.code-workspace
+
+# Outras
+dist/
+build/
+coverage/
+reports/

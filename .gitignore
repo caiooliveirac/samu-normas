@@ -1,13 +1,71 @@
-# macOS
+##### SISTEMA / EDITOR #####
 .DS_Store
-# editores
+Thumbs.db
 .vscode/
 .idea/
-# python venvs (caso crie algo)
+*.swp
+
+##### PYTHON / DJANGO #####
 .venv/
+env/
+venv/
 __pycache__/
-# node (caso use depois)
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+build/
+dist/
+.eggs/
+.mypy_cache/
+.pytest_cache/
+.cache/
+.tox/
+htmlcov/
+.coverage*
+
+##### FRONTEND / NODE #####
 node_modules/
 .next/
-dist/
+frontend/.vite/
+Perguntas/static/react/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+##### STATIC / MEDIA GERADOS #####
+staticfiles/
+media/
+
+##### AMBIENTE / SEGREDOS #####
+.env
+.env.*
+*/.env
 Perguntas/.env
+*.pem
+*.key
+*.crt
+*.pfx
+*.der
+
+##### LOGS / BACKUPS #####
+*.log
+logs/
+log/
+*.sql
+rules_backup_*.sql
+
+##### DOCKER (caso futuro) #####
+docker-data/
+*.tar
+
+##### CACHE / OUTROS #####
+.ropeproject/
+.spyproject/
+
+##### NEGAR IGNORE (manter no repo) #####
+!fixtures/
+!rules_seed.json
+
+# Fim
