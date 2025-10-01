@@ -1,0 +1,52 @@
+# Dockerfile.prod - imagem otimizada para produção
+# Multi-stage: compila dependências nativas e gera runtime enxuto
+
+FROM python:3.12-slim-bookworm AS build
+ENV PIP_NO_CACHE_DIR=1 \
+    PYTHONUNBUFFERED=1
+WORKDIR /build
+
+RUN apt-get update -o Acquire::ForceIPv4=true \
+ && apt-get install -y --no-install-recommends \
+    build-essential \
+    pkg-config \
+    default-libmysqlclient-dev \
+    libjpeg-dev zlib1g-dev \
+ && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+# Gera wheels (inclusive para mysqlclient e Pillow) para reutilizar na camada final
+RUN pip wheel --no-cache-dir --no-deps -r requirements.txt -w /wheels
+
+# Etapa final (runtime)
+FROM python:3.12-slim-bookworm
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PYTHONFAULTHANDLER=1
+WORKDIR /app
+
+# Somente bibliotecas runtime necessárias
+# Se Pillow exigir PNG ou Freetype depois, adicionar libpng16-16 libfreetype6
+RUN apt-get update -o Acquire::ForceIPv4=true \
+ && apt-get install -y --no-install-recommends \
+    libmariadb3 \
+    libjpeg62-turbo \
+    zlib1g \
+    netcat-openbsd \
+ && rm -rf /var/lib/apt/lists/*
+
+COPY --from=build /wheels /wheels
+RUN pip install --no-cache-dir /wheels/* && rm -rf /wheels
+
+# Copia aplicação
+COPY . /app
+
+# Cria usuário de aplicação; container iniciará como root para ajustar permissões de volumes
+RUN useradd -m appuser \
+ && chown -R appuser:appuser /app
+
+EXPOSE 8000
+
+# Comando default: gunicorn (workers simples para t4g.small - pode ajustar)
+CMD ["/bin/sh", "-c", "./scripts/entrypoint.prod.sh"]

@@ -1,0 +1,83 @@
+# --- Python / Django ---
+__pycache__/
+*.py[cod]
+*.so
+*.pyd
+*.pyo
+*.egg-info/
+.eggs/
+.build/
+
+# Virtual env
+.venv/
+venv/
+ENV/
+
+# Django stuff
+/media/
+/staticfiles/
+# Allow committed static source assets (raw) but ignore collected output
+# If you really want to version some built asset place an exception rule
+
+# SQLite local
+/db.sqlite3
+
+# Local settings/env files (keep templates/examples)
+.env
+.env.*
+!.env.example
+!.env.prod.example
+
+# Secrets / tokens / debug artifacts
+cookies*.txt
+hidden_token.txt
+login_headers.txt
+login_page*.html
+login_response_headers.txt
+logout_headers.txt
+post_logout.txt
+
+# Dumps / backups / fixtures derivadas
+*backup*.sql
+*.sql
+!rules_seed.json
+!rules_fixture.json
+!dump.json  # Se não quiser versionar remova este !
+
+# Node / frontend builds
+/frontend/node_modules/
+/frontend/dist/
+/frontend/dist-ssr/
+/frontend/*.local
+
+# Logs
+*.log
+logs/
+
+# OS / Editor
+.DS_Store
+.idea/
+.vscode/
+!.vscode/extensions.json
+*.swp
+*.swo
+
+# Docker artefatos locais
+**/.pytest_cache/
+.coverage
+htmlcov/
+
+# Bytecode caches
+__pycache__/
+
+# Build caches
+pip-wheel-metadata/
+
+# Pytest
+.pytest_cache/
+
+# Coverage
+.coverage.*
+
+# Misc
+scripts/debug_db.sh
