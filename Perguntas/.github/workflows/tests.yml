@@ -1,0 +1,39 @@
+name: Tests
+
+on:
+  pull_request:
+    branches: [ master ]
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    env:
+      DB_ENGINE: sqlite
+      SECRET_KEY: test-secret
+      DEBUG: "False"
+      ALLOWED_HOSTS: 127.0.0.1,localhost
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+            python-version: '3.12'
+
+      - name: Install deps
+        working-directory: Perguntas
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Run pytest
+        working-directory: Perguntas
+        run: pytest
+
+      - name: Store junit report (futuro) placeholder
+        if: always()
+        run: echo "(Adicionar junitxml futuramente se desejar)"

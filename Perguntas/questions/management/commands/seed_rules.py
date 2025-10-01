@@ -9,6 +9,7 @@ from django.db import connection, transaction
 from django.conf import settings
 
 from questions.models import Rule, RuleCard, RuleBullet, Category, Tag
+from django.db import models
 
 TABLE_ORDER = [  # dependentes primeiro para truncar com segurança depois
     'questions_rulebullet',
@@ -99,13 +100,42 @@ class Command(BaseCommand):
                     continue
                 count = 0
                 for raw in objects:
-                    fields = raw.get('fields', {})
+                    raw_fields = dict(raw.get('fields', {}))
                     pk = raw.get('pk')
-                    obj = model_cls(**fields)
-                    # Se o dump tiver PK explícita e quisermos preservar:
+
+                    # Tratar ManyToMany separadamente
+                    m2m_pending = {}
+                    for m2m in model_cls._meta.many_to_many:
+                        name = m2m.name
+                        if name in raw_fields:
+                            m2m_pending[name] = raw_fields.pop(name)
+
+                    # Converter ForeignKeys: se valor é int/str (pk) e não instância, usar <field>_id
+                    for f in model_cls._meta.fields:
+                        if isinstance(f, models.ForeignKey):
+                            fname = f.name
+                            if fname in raw_fields:
+                                val = raw_fields[fname]
+                                # Se já é None ou instância, mantém.
+                                if val is None or isinstance(val, f.related_model):
+                                    continue
+                                # Qualquer outro tipo (int/str pk) -> mover para field_id
+                                raw_fields[f"{fname}_id"] = raw_fields.pop(fname)
+
+                    # Construir objeto com campos ajustados
+                    try:
+                        obj = model_cls(**raw_fields)
+                    except Exception as e:
+                        raise CommandError(f"Falha instanciando {model_cls.__name__} pk={pk} raw={raw_fields}: {e}")
                     if pk is not None:
                         obj.pk = pk
                     obj.save(force_insert=True)
+
+                    # Aplicar M2M
+                    if m2m_pending:
+                        for rel_name, id_list in m2m_pending.items():
+                            getattr(obj, rel_name).set(id_list)
+
                     count += 1
                 created_counts[model_cls.__name__] = count
 

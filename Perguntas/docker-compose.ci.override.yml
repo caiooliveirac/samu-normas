@@ -1,0 +1,29 @@
+# Override para pipeline de smoke test CI
+# Mantém serviços próximos de produção, mas ajusta:
+# - Porta exposta diferente (8080) para evitar conflito
+# - Variáveis para reduzir warnings e uso de HSTS/redirect
+# - Usa DB volume efêmero (não persiste entre jobs)
+
+services:
+  web:
+    environment:
+      DEBUG: "False"
+      SECURE_SSL_REDIRECT: "False"
+      SECURE_HSTS_SECONDS: "0"
+    ports:
+      - "8080:8000"
+  nginx:
+    ports:
+      - "8081:80"
+    environment:
+      # Caso futuro: poderia injetar flag para config alternativa
+      NGINX_WORKERS: 1
+  db:
+    # Volume anônimo/efêmero no CI
+    volumes:
+      - type: volume
+        source: db_data_ci
+        target: /var/lib/mysql
+volumes:
+  db_data_ci:
+    driver: local

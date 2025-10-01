@@ -1,0 +1,85 @@
+name: Smoke Test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    services:
+      # Usa MariaDB real para aproximar produção
+      mariadb:
+        image: mariadb:11.4
+        env:
+          MYSQL_DATABASE: samu_q
+          MYSQL_USER: samu_q
+          MYSQL_PASSWORD: test_password
+          MYSQL_ROOT_PASSWORD: test_root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -pset --silent" \
+          --health-interval=10s --health-timeout=5s --health-retries=5
+    env:
+      DB_NAME: samu_q
+      DB_USER: samu_q
+      DB_PASSWORD: test_password
+      DB_ROOT_PASSWORD: test_root
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      SECRET_KEY: ci-secret-key
+      DEBUG: "False"
+      ALLOWED_HOSTS: 127.0.0.1,localhost
+      CSRF_TRUSTED_ORIGINS: http://localhost,http://127.0.0.1
+      SECURE_SSL_REDIRECT: "False"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image (local only)
+        uses: docker/build-push-action@v6
+        with:
+          context: ./Perguntas
+          file: ./Perguntas/Dockerfile.prod
+          push: false
+          tags: local/samu-normas:test
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Start stack (web + nginx)
+        run: |
+          export APP_IMAGE=local/samu-normas:test
+          docker compose -f Perguntas/docker-compose.prod.yml -f Perguntas/docker-compose.ci.override.yml up -d --no-build web nginx
+
+      - name: Wait for web health
+        run: |
+          set -e
+          for i in $(seq 1 20); do
+            if curl -sf http://localhost:8081/healthz >/dev/null; then
+              echo "Health OK em $i tentativas"; exit 0
+            fi
+            sleep 2
+          done
+          echo "Health não respondeu a tempo" >&2
+          docker compose -f Perguntas/docker-compose.prod.yml logs web nginx || true
+          exit 1
+
+      - name: Run smoke script
+        run: |
+          chmod +x Perguntas/scripts/smoke.sh
+          export APP_IMAGE=local/samu-normas:test
+          ALLOW_SMOKE=1 COMPOSE_FILES="Perguntas/docker-compose.prod.yml,Perguntas/docker-compose.ci.override.yml" \
+            Perguntas/scripts/smoke.sh --host http://localhost:8081 --skip-restart
+
+      - name: Logs (on failure)
+        if: failure()
+        run: |
+          docker compose -f Perguntas/docker-compose.prod.yml -f Perguntas/docker-compose.ci.override.yml logs --tail=150 web nginx
