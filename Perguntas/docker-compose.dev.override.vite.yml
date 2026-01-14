@@ -1,11 +1,11 @@
 services:
-  web:
+  backend:
     environment:
       # HMR habilita automaticamente em DEBUG=1. Mantemos explícito para evitar dúvidas.
       - VITE_DEV=1
-      # Importante: essa URL é a que o NAVEGADOR usa (via SSH tunnel), não o container.
-      # Como o Vite está com base '/static/react/', o dev server serve em /static/react/.
-      - VITE_DEV_SERVER=http://localhost:5173/static/react
+      - DB_ENGINE=mysql
+      # Importante: essa URL é a que o NAVEGADOR usa (via VS Code Port Forward/SSH), não o container.
+      - VITE_DEV_SERVER=${VITE_DEV_SERVER:-http://localhost:${DEV_FRONTEND_PORT:-5173}}
 
   vite:
     image: node:24-alpine
@@ -13,18 +13,18 @@ services:
     command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 5173"
     environment:
       # Para o proxy /api funcionar quando o Vite roda em container
-      - VITE_PROXY_TARGET=http://web:8000
+      - VITE_PROXY_TARGET=http://backend:8000
       # Como você vai acessar via SSH tunnel, o cliente HMR deve apontar para localhost
       - VITE_HMR_HOST=localhost
-      - VITE_HMR_CLIENT_PORT=5173
+      - VITE_HMR_CLIENT_PORT=${DEV_FRONTEND_PORT:-5173}
     volumes:
       - ./frontend:/app/frontend
       - frontend_node_modules:/app/frontend/node_modules
     ports:
       # Só expõe localmente no servidor (mais seguro). Use SSH tunnel para acessar.
-      - "127.0.0.1:5173:5173"
+      - "127.0.0.1:${DEV_FRONTEND_PORT:-5173}:5173"
     depends_on:
-      - web
+      - backend
 
 volumes:
   frontend_node_modules:

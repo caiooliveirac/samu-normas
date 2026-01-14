@@ -1,0 +1,15 @@
+# Override para expor o Vite (5173) na rede local.
+# Uso (exemplo com stack app):
+#   docker compose -p perguntas-dev -f docker-compose.dev.app.yml -f docker-compose.dev.override.lan.yml up -d --force-recreate frontend
+#
+# IMPORTANTE:
+# - Isso remove o bind em 127.0.0.1 e passa a expor a porta no host.
+# - Não use em produção e evite em servidores públicos (ex.: EC2) sem firewall/SG adequado.
+
+services:
+  frontend:
+    ports: !override
+      - "${DEV_FRONTEND_PORT:-5173}:5173"
+    environment:
+      # Deixa o Vite escolher o host de HMR automaticamente (usa window.location.hostname).
+      - VITE_HMR_HOST=

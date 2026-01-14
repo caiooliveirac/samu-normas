@@ -9,6 +9,13 @@
   <title>Normas e Regras</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   {% if hmr %}
+    <script type="module">
+      import RefreshRuntime from "{{ vite_url }}/@react-refresh"
+      RefreshRuntime.injectIntoGlobalHook(window)
+      window.$RefreshReg$ = () => {}
+      window.$RefreshSig$ = () => (type) => type
+      window.__vite_plugin_react_preamble_installed__ = true
+    </script>
     <script type="module" src="{{ vite_url }}/@vite/client"></script>
   {% endif %}
   {% if not hmr %}

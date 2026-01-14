@@ -1,0 +1,18 @@
+services:
+  db:
+    image: mariadb:11.4
+    environment:
+      - MARIADB_DATABASE=samu_q
+      - MARIADB_USER=samu_q
+      - MARIADB_PASSWORD=samu192
+      - MARIADB_ROOT_PASSWORD=samu192
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-psamu192"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  db_data:

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Marca d'água SAMU">
+  <title>Marca d'água SAMU</title>
+  <!--
+    Observação:
+    Este SVG é um placeholder neutro para marca d’água.
+    Se você tiver o símbolo institucional oficial do SAMU, substitua este arquivo pelo SVG oficial
+    (mantendo o mesmo nome/caminho) para preservar o comportamento visual sem mexer no layout.
+  -->
+  <!-- Anel externo -->
+  <circle cx="256" cy="256" r="210" fill="none" stroke="currentColor" stroke-width="22" opacity="0.9" />
+  <circle cx="256" cy="256" r="174" fill="none" stroke="currentColor" stroke-width="8" opacity="0.55" />
+
+  <!-- Texto central -->
+  <g fill="currentColor" opacity="0.95" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial" font-weight="800" text-anchor="middle">
+    <text x="256" y="270" font-size="92" letter-spacing="6">SAMU</text>
+    <text x="256" y="330" font-size="44" letter-spacing="10" opacity="0.9">192</text>
+  </g>
+
+  <!-- Pequena cruz simples (genérica) -->
+  <g fill="currentColor" opacity="0.35" transform="translate(256 170)">
+    <rect x="-16" y="-48" width="32" height="96" rx="6" />
+    <rect x="-48" y="-16" width="96" height="32" rx="6" />
+  </g>
+</svg>
