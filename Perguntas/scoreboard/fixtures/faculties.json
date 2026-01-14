@@ -1,0 +1,21 @@
+[
+  {"model": "scoreboard.faculty", "pk": 1, "fields": {"name": "UNIFG GUANAMBI", "short_name": "UNIFG GUA"}},
+  {"model": "scoreboard.faculty", "pk": 2, "fields": {"name": "AFYA SSA", "short_name": "AFYA"}},
+  {"model": "scoreboard.faculty", "pk": 3, "fields": {"name": "INDOMED ALAGOINHAS", "short_name": "INDOMED"}},
+  {"model": "scoreboard.faculty", "pk": 4, "fields": {"name": "UNEX FSA", "short_name": "UNEX"}},
+  {"model": "scoreboard.faculty", "pk": 5, "fields": {"name": "ZARNS", "short_name": "ZARNS"}},
+  {"model": "scoreboard.faculty", "pk": 6, "fields": {"name": "UFRB", "short_name": "UFRB"}},
+  {"model": "scoreboard.faculty", "pk": 7, "fields": {"name": "ESTÁCIO JUAZEIRO", "short_name": "ESTACIO JUA"}},
+  {"model": "scoreboard.faculty", "pk": 8, "fields": {"name": "UESB JEQUIÉ", "short_name": "UESB"}},
+  {"model": "scoreboard.faculty", "pk": 9, "fields": {"name": "UNIFACS", "short_name": "UNIFACS"}},
+  {"model": "scoreboard.faculty", "pk": 10, "fields": {"name": "UNEB", "short_name": "UNEB"}},
+  {"model": "scoreboard.faculty", "pk": 11, "fields": {"name": "UFBA CAT", "short_name": "UFBA CAT"}},
+  {"model": "scoreboard.faculty", "pk": 12, "fields": {"name": "UNIME", "short_name": "UNIME"}},
+  {"model": "scoreboard.faculty", "pk": 13, "fields": {"name": "UEFS", "short_name": "UEFS"}},
+  {"model": "scoreboard.faculty", "pk": 14, "fields": {"name": "BAHIANA", "short_name": "BAHIANA"}},
+  {"model": "scoreboard.faculty", "pk": 15, "fields": {"name": "UFOB", "short_name": "UFOB"}},
+  {"model": "scoreboard.faculty", "pk": 16, "fields": {"name": "UFBA", "short_name": "UFBA"}},
+  {"model": "scoreboard.faculty", "pk": 17, "fields": {"name": "UESC", "short_name": "UESC"}},
+  {"model": "scoreboard.faculty", "pk": 18, "fields": {"name": "UNINASSAU BARREIRAS", "short_name": "UNINASSAU"}},
+  {"model": "scoreboard.faculty", "pk": 19, "fields": {"name": "UNIFG BRUMADO", "short_name": "UNIFG BRU"}}
+]

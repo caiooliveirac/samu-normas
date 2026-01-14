@@ -1,0 +1,281 @@
+{% load vite %}
+<!doctype html>
+<html lang="pt-br" class="h-full">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Quadro Geral - Intermed</title>
+    <link rel="icon" href="/static/react/vite.svg" type="image/svg+xml" />
+    {% vite_hmr as hmr %}
+    {% if hmr %}
+      {% vite_dev_url as vite_url %}
+      <script type="module">
+        // HMR client e CSS apenas (sem React SPA)
+        import "/@vite/client";
+        import "{{ vite_url }}/src/styles.css";
+      </script>
+    {% else %}
+      {% vite_css 'src/main.jsx' as css %}
+      {% if css %}<link rel="stylesheet" href="{{ css }}" />{% endif %}
+    {% endif %}
+    <style>
+      /* Cores suaves para pódio */
+      .bg-gold-50 { background-color: #FFFBEB; }   /* amarelo suave */
+      .bg-silver-50 { background-color: #F4F6F8; } /* prata suave */
+      .bg-bronze-50 { background-color: #FFF7ED; } /* bronze suave */
+      /* Navbar: esconde marcador padrão do summary */
+      summary { list-style: none; }
+      summary::-webkit-details-marker { display: none; }
+      /* Menus navbar: exibir painel quando details estiver aberto */
+      nav[data-sb-nav] details > .menu-panel { display: none; opacity: 0; transform: translateY(0.25rem); transition: opacity .15s ease, transform .15s ease; }
+      nav[data-sb-nav] details[open] > .menu-panel { display: block; opacity: 1; transform: translateY(0); }
+      /* Rotação da setinha ao abrir */
+      nav[data-sb-nav] details[open] summary .chev { transform: rotate(180deg); }
+    </style>
+  </head>
+  <body class="min-h-full bg-white text-slate-700 antialiased px-4 py-8">
+    <div class="mx-auto w-full max-w-5xl">
+      <header class="relative z-20 mb-6">
+        <div class="flex items-center justify-between gap-3">
+          <h1 class="text-3xl font-bold tracking-tight text-brand-600">Quadro Geral</h1>
+        </div>
+        <p class="mt-2 text-sm text-slate-500">Dica: toque no nome da faculdade para ver em quais modalidades ela pontuou.</p>
+      </header>
+  <div class="relative z-10 mb-6" style="height:4px;background:linear-gradient(90deg,#345271,#36A9E1,#345271);border-radius:4px"></div>
+
+      <!-- Navbar simples: Modalidades e Faculdades -->
+      <nav class="mb-6" data-sb-nav>
+        <ul class="flex flex-wrap items-center gap-2">
+          <li class="relative">
+            <details class="group">
+              <summary class="inline-flex items-center gap-2 rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 cursor-pointer select-none shadow-sm">
+                <span>Modalidades</span>
+                <span class="chev text-slate-400 transition-transform">▾</span>
+              </summary>
+              <div class="menu-panel absolute z-30 mt-2 w-[min(96vw,28rem)] sm:w-80 max-h-80 overflow-auto rounded-xl border border-slate-200 bg-white p-2 shadow-lg">
+                <ul id="menuModalidadesList" class="divide-y divide-slate-100">
+                </ul>
+              </div>
+            </details>
+          </li>
+          <li class="relative">
+            <details class="group">
+              <summary class="inline-flex items-center gap-2 rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 cursor-pointer select-none shadow-sm">
+                <span>Faculdades</span>
+                <span class="chev text-slate-400 transition-transform">▾</span>
+              </summary>
+              <div class="menu-panel absolute z-30 mt-2 w-[min(96vw,28rem)] sm:w-80 max-h-80 overflow-auto rounded-xl border border-slate-200 bg-white p-2 shadow-lg">
+                <ul id="menuFaculdadesList" class="divide-y divide-slate-100">
+                </ul>
+              </div>
+            </details>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="overflow-x-auto rounded-lg border border-slate-200 shadow-sm bg-white">
+        <table id="scoreboard" class="min-w-full text-sm">
+          <thead class="sticky top-0 bg-slate-100 text-slate-700 text-xs uppercase tracking-wide z-0 shadow-sm">
+            <tr>
+              <th class="py-2 px-3 text-right w-20">Pontos</th>
+              <th class="py-2 px-3 text-left">Faculdade</th>
+              <th class="py-2 px-3 text-center w-12">🥇</th>
+              <th class="py-2 px-3 text-center w-12">🥈</th>
+              <th class="py-2 px-3 text-center w-12">🥉</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100"></tbody>
+        </table>
+      </div>
+
+      
+
+      
+
+      <section class="mt-10">
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-3">
+          <h2 class="text-xl font-semibold text-brand-600 order-1">Resultados por Modalidade</h2>
+          <div class="relative order-2 sm:order-2 w-full sm:w-64">
+            <input id="modFilter" type="text" placeholder="Filtrar modalidade…" class="w-full rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 shadow-sm">
+            <button id="clearModFilter" class="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs" aria-label="Limpar">×</button>
+          </div>
+        </div>
+        <div id="modalities" class="space-y-6">
+          <!-- Tabelas de modalidades serão injetadas aqui -->
+        </div>
+      </section>
+    </div>
+
+    
+
+    <script>
+  const API_URL = '/scoreboard/data/';
+      const tbody = document.addEventListener ? document.querySelector('#scoreboard tbody') : null;
+      let loading = false;
+      function renderModalities(modalities){
+        const container = document.getElementById('modalities');
+        if (!container) return;
+        const frag = document.createDocumentFragment();
+        (modalities||[]).forEach(m => {
+          if (!m.results || !m.results.length) return;
+          const wrap = document.createElement('div');
+          const title = m.category ? `${m.name} — ${m.category}` : m.name;
+          wrap.setAttribute('data-title', title.toLowerCase());
+          wrap.innerHTML = `
+            <div class="rounded-lg border border-slate-200 overflow-hidden bg-white" data-mod-card>
+              <button type="button" class="w-full text-left px-3 py-2 bg-slate-100 text-slate-700 text-sm font-semibold flex items-center justify-between mod-header" style="cursor:pointer">
+                <span>${title}</span>
+                <span class="text-slate-500 text-xs" data-chevron>▸</span>
+              </button>
+              <div class="overflow-x-auto mod-body hidden">
+                <table class="min-w-full text-sm">
+                  <thead class="sticky top-0 bg-slate-50 text-slate-600 text-xs uppercase tracking-wide z-10">
+                    <tr>
+                      <th class="py-2 px-3 text-left w-16">Coloc.</th>
+                      <th class="py-2 px-3 text-left">Faculdade</th>
+                      <th class="py-2 px-3 text-left w-24">Pontos</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100"></tbody>
+                </table>
+              </div>
+            </div>`;
+          const tbody = wrap.querySelector('tbody');
+          tbody.innerHTML = m.results
+            .sort((a,b)=> (a.position||0) - (b.position||0))
+            .map(r => {
+              const medal = r.position === 1 ? '🥇' : r.position === 2 ? '🥈' : r.position === 3 ? '🥉' : '';
+              const rowCls = r.position === 1
+                ? 'bg-gold-50 border-l-4 border-amber-300'
+                : r.position === 2
+                ? 'bg-silver-50 border-l-4 border-slate-300'
+                : r.position === 3
+                ? 'bg-bronze-50 border-l-4 border-amber-400'
+                : 'hover:bg-brand-50';
+              const ptsCls = (r.position||0) <= 3 ? 'text-brand-700' : 'text-brand-600';
+              return `
+                <tr class="${rowCls} transition-colors">
+                  <td class="py-2 px-3 text-slate-500 font-medium">${r.position}º</td>
+                  <td class="py-2 px-3 text-slate-700 font-semibold flex items-center gap-2">${medal ? `<span class="text-base">${medal}</span>` : ''}<span>${r.faculty}</span></td>
+                  <td class="py-2 px-3 ${ptsCls} font-bold">${r.points}</td>
+                </tr>`;
+            })
+            .join('');
+          // Toggle por card
+          const header = wrap.querySelector('.mod-header');
+          const bodyDiv = wrap.querySelector('.mod-body');
+          const chev = wrap.querySelector('[data-chevron]');
+          header.addEventListener('click', () => {
+            const hidden = bodyDiv.classList.toggle('hidden');
+            chev.textContent = hidden ? '▸' : '▾';
+          });
+          frag.appendChild(wrap);
+        });
+        container.innerHTML = '';
+        container.appendChild(frag);
+      }
+
+      
+
+      async function loadData(force=false){
+    if(loading) return; loading = true;
+        try {
+          const r = await fetch(API_URL, { cache: 'no-store' });
+          if(!r.ok) throw new Error('Falha HTTP '+r.status);
+          const json = await r.json();
+          const rows = (json.faculties||[]).sort((a,b)=> (b.total||0) - (a.total||0));
+          const body = document.querySelector('#scoreboard tbody');
+          body.innerHTML = rows.map((row, idx)=>{
+            const rowCls = idx === 0
+              ? 'bg-gold-50 border-l-4 border-amber-300'
+              : idx === 1
+              ? 'bg-silver-50 border-l-4 border-slate-300'
+              : idx === 2
+              ? 'bg-bronze-50 border-l-4 border-amber-400'
+              : '';
+            return `
+            <tr class="${rowCls} hover:bg-brand-50 transition-colors" data-faculty-name="${(row.name||'').replace(/&/g,'&amp;').replace(/\"/g,'&quot;')}">
+              <td class="py-2 px-3 font-bold text-brand-700 text-right">${row.total || 0}</td>
+              <td class="py-2 px-3 font-semibold text-slate-700 truncate max-w-[10rem] sm:max-w-none"><a class="text-brand-600 hover:underline" href="/scoreboard/faculdade/${encodeURIComponent(row.short_name || row.name)}">${row.short_name || row.name}</a></td>
+              <td class="py-2 px-3 text-center"><span class="inline-block rounded-full bg-yellow-50 text-yellow-700 px-2 py-0.5 text-xs font-semibold">${row.gold || 0}</span></td>
+              <td class="py-2 px-3 text-center"><span class="inline-block rounded-full bg-slate-100 text-slate-700 px-2 py-0.5 text-xs font-semibold">${row.silver || 0}</span></td>
+              <td class="py-2 px-3 text-center"><span class="inline-block rounded-full bg-amber-50 text-amber-800 px-2 py-0.5 text-xs font-semibold">${row.bronze || 0}</span></td>
+            </tr>`;
+          }).join('');
+
+          // Render modalidades
+          renderModalities(json.modalities);
+
+          // Popular menus da navbar
+          populateMenus(rows, json.modalities||[]);
+
+          // status/lastUpdate removidos
+        } catch(e){
+          console.error(e);
+        } finally { loading = false; }
+      }
+      loadData();
+  setInterval(()=> loadData(false), 10000);
+
+      // Filtro por modalidade (client-side)
+  const modInput = document.getElementById('modFilter');
+  const modClear = document.getElementById('clearModFilter');
+      function applyFilter(){
+        const q = (modInput.value||'').trim().toLowerCase();
+        const items = document.querySelectorAll('#modalities > div[data-title]');
+        items.forEach(el => {
+          const title = el.getAttribute('data-title')||'';
+          el.style.display = (!q || title.includes(q)) ? '' : 'none';
+        });
+      }
+      modInput.addEventListener('input', applyFilter);
+      modClear.addEventListener('click', () => { modInput.value=''; applyFilter(); modInput.focus(); });
+      
+      // Menus simples (sem JS de eventos) — apenas preenche as listas
+      function populateMenus(faculties, modalities){
+        try {
+          const mMods = document.getElementById('menuModalidadesList');
+          if (mMods) {
+            mMods.innerHTML = (modalities||[]).map(m => {
+              const title = m.category ? `${m.name} — ${m.category}` : m.name;
+              return `<li><a class=\"block px-2 py-2 hover:bg-brand-50 rounded-md text-sm text-brand-700\" href=\"/scoreboard/modalidade/${m.id}\">${title}</a></li>`;
+            }).join('') || '<li class="px-2 py-2 text-sm text-slate-500">Nenhuma modalidade.</li>';
+          }
+          const mFacs = document.getElementById('menuFaculdadesList');
+          if (mFacs) {
+            mFacs.innerHTML = (faculties||[]).map(f => {
+              const name = f.short_name || f.name || '';
+              const key = encodeURIComponent(name);
+              return `<li><a class=\"block px-2 py-2 hover:bg-brand-50 rounded-md text-sm text-brand-700\" href=\"/scoreboard/faculdade/${key}\">${name}</a></li>`;
+            }).join('') || '<li class="px-2 py-2 text-sm text-slate-500">Nenhuma faculdade.</li>';
+          }
+        } catch (e) {
+          console.warn('populateMenus error', e);
+        }
+      }
+
+      // Comportamento: fechar ao clicar fora e manter apenas um menu aberto
+      (function setupMenus(){
+        const nav = document.querySelector('nav[data-sb-nav]');
+        if (!nav) return;
+        const menus = Array.from(nav.querySelectorAll('details'));
+        // Fecha ao clicar fora
+        document.addEventListener('click', (e) => {
+          if (!nav.contains(e.target)) {
+            menus.forEach(d => d.removeAttribute('open'));
+          }
+        });
+        // Garante apenas um aberto
+        menus.forEach(d => {
+          d.addEventListener('toggle', () => {
+            if (d.open) menus.forEach(o => { if (o !== d) o.removeAttribute('open'); });
+          });
+        });
+      })();
+    </script>
+    {% if not hmr %}
+      {# Não carregamos o JS da SPA React aqui para evitar montar sem #root #}
+      {# O CSS já foi injetado via vite_css no <head> #}
+    {% endif %}
+  </body>
+</html>
