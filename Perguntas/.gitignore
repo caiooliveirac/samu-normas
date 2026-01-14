@@ -50,6 +50,7 @@ post_logout.txt
 # Artefatos derivados do pipeline de seed (mantenha só o Markdown fonte e o rules_seed.json final)
 /docs/rules_seed_backup*.json
 /docs/rules_seed_preview_*
+/docs/rules_seed_demo_backup_*.json
 
 # Node / frontend builds
 /frontend/node_modules/
