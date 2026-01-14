@@ -74,10 +74,10 @@ jobs:
       - name: Build and push (multi-platform)
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: Dockerfile.prod
+          context: ./Perguntas
+          file: ./Perguntas/Dockerfile.prod
           push: true
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/arm64
           tags: |
             ${{ env.IMAGE_NAME }}:latest
             ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.sha_tag }}
@@ -91,6 +91,11 @@ jobs:
             org.opencontainers.image.version=${{ steps.meta.outputs.ref_tag || steps.meta.outputs.sha_tag }}
             org.opencontainers.image.title=samu-normas
             org.opencontainers.image.description=Aplicacao Django Samu Normas (build CI)
+            org.opencontainers.image.ref.name=${{ github.ref_name }}
+          build-args: |
+            BUILD_SHA=${{ github.sha }}
+            BUILD_DATE=${{ steps.meta.outputs.timestamp_tag }}
+            APP_VERSION=${{ steps.meta.outputs.ref_tag || steps.meta.outputs.sha_tag }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 

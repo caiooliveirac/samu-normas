@@ -27,7 +27,7 @@ MODEL_ORDER = [  # ordem de criação (menos dependentes primeiro)
     RuleBullet,
 ]
 
-DEFAULT_FIXTURE_NAME = 'rules_fixture.json'
+DEFAULT_FIXTURE_NAME = 'rules_seed.json'
 
 
 class Command(BaseCommand):
@@ -47,6 +47,11 @@ class Command(BaseCommand):
         parser.add_argument('--fixture', dest='fixture', default=DEFAULT_FIXTURE_NAME)
         parser.add_argument('--backup', action='store_true')
         parser.add_argument('--truncate', action='store_true')
+        parser.add_argument(
+            '--fresh',
+            action='store_true',
+            help='Atalho para repopular do zero (equivalente a --truncate).',
+        )
         parser.add_argument('--dry-run', action='store_true')
 
     def handle(self, *args, **options):
@@ -86,6 +91,9 @@ class Command(BaseCommand):
 
         if options['backup']:
             self._backup_tables()
+
+        if options.get('fresh'):
+            options['truncate'] = True
 
         if options['truncate']:
             self._truncate_tables()
@@ -187,9 +195,27 @@ class Command(BaseCommand):
 
     def _truncate_tables(self):
         self.stdout.write(self.style.NOTICE("Truncando tabelas de regras..."))
-        with connection.cursor() as cur:
-            cur.execute('SET FOREIGN_KEY_CHECKS=0;')
-            for table in TABLE_ORDER:  # primeiro dependentes
-                cur.execute(f'TRUNCATE `{table}`;')
-            cur.execute('SET FOREIGN_KEY_CHECKS=1;')
+        vendor = getattr(connection, 'vendor', '')
+
+        if vendor == 'mysql':
+            with connection.cursor() as cur:
+                cur.execute('SET FOREIGN_KEY_CHECKS=0;')
+                for table in TABLE_ORDER:  # primeiro dependentes
+                    cur.execute(f'TRUNCATE `{table}`;')
+                cur.execute('SET FOREIGN_KEY_CHECKS=1;')
+        elif vendor == 'sqlite':
+            # SQLite não tem TRUNCATE; usamos DELETE e reset de sequência quando aplicável.
+            with connection.cursor() as cur:
+                cur.execute('PRAGMA foreign_keys = OFF;')
+                for table in TABLE_ORDER:
+                    cur.execute(f'DELETE FROM "{table}";')
+                    # Reset autoincrement se existir
+                    cur.execute('DELETE FROM sqlite_sequence WHERE name = ?;', [table])
+                cur.execute('PRAGMA foreign_keys = ON;')
+        elif vendor == 'postgresql':
+            tables = ', '.join(f'"{t}"' for t in TABLE_ORDER)
+            with connection.cursor() as cur:
+                cur.execute(f'TRUNCATE {tables} RESTART IDENTITY CASCADE;')
+        else:
+            raise CommandError(f'Engine de banco não suportada para truncate automático: {vendor}')
         self.stdout.write(self.style.SUCCESS("Truncate concluído."))

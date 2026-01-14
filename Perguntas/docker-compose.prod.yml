@@ -2,6 +2,9 @@ services:
   db:
     image: mariadb:11.4
     restart: unless-stopped
+    # Usa as mesmas variáveis definidas em .env.prod (DB_NAME, DB_USER, DB_PASSWORD, DB_ROOT_PASSWORD)
+    env_file:
+      - .env.prod
     environment:
       MARIADB_DATABASE: ${DB_NAME:-samu_q}
       MARIADB_USER: ${DB_USER:-samu_q}
@@ -24,10 +27,17 @@ services:
     # Caso contrário, docker compose fará build local usando Dockerfile.prod.
     # Em produção (EC2) recomenda-se definir APP_IMAGE=ghcr.io/caiooliveirac/samu-normas:TAG_IMUTAVEL
     # e opcionalmente remover/ignorar a seção 'build' abaixo para evitar builds acidentais.
+    # Dica rápida:
+    #   APP_IMAGE=ghcr.io/caiooliveirac/samu-normas:<sha> docker compose -f docker-compose.prod.yml up -d --no-build web
+    # Se alterar variáveis de ambiente críticas (ex: SECRET_KEY, DB_*), use --force-recreate ou o script ./scripts/deploy.sh
     image: ${APP_IMAGE:-}
     build:
       context: .
       dockerfile: Dockerfile.prod
+      args:
+        BUILD_SHA: ${BUILD_SHA:-dev-local}
+        BUILD_DATE: ${BUILD_DATE:-unknown}
+        APP_VERSION: ${APP_VERSION:-dev}
     env_file:
       - .env.prod
     environment:
@@ -39,7 +49,7 @@ services:
       db:
         condition: service_healthy
     volumes:
-      - static_volume:/app/staticfiles
+      - static_volume:/app/staticfiles # Atenção: volume vazio na 1a subida sobrepõe assets empacotados; guard no entrypoint repopula
       - media_volume:/app/media
     healthcheck:
       test: ["CMD-SHELL", "python -c 'import socket; s=socket.socket(); s.connect((\"127.0.0.1\",8000)); s.close(); print(\"ok\")'"]
@@ -53,14 +63,17 @@ services:
     depends_on:
       - web
     ports:
-      - "8000:80"    # Porta HTTP (redirect)
-      - "8443:443"   # Expondo HTTPS (alterar para 443:443 em produção definitiva)
+      - "80:80"      # Porta HTTP
+      - "443:443"    # Porta HTTPS
     volumes:
       - static_volume:/app/staticfiles:ro
       - media_volume:/app/media:ro
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
       # Volume de certificados (estrutura padrão do certbot: /certs/live/DOMINIO/*.pem)
       - certs_volume:/certs:ro
+    networks:
+      - default
+      - scoreboard_net
     healthcheck:
       test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1/nginx-health || exit 1"]
       interval: 20s
@@ -84,3 +97,8 @@ volumes:
   static_volume:
   media_volume:
   certs_volume:
+
+networks:
+  scoreboard_net:
+    external: true
+    name: scoreboard-standalone_default

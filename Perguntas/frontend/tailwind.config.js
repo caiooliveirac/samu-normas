@@ -3,16 +3,27 @@ module.exports = {
   content: [
     './index.html',
     './src/**/*.{js,jsx,ts,tsx}',
-    '../templates/**/*.html',
-    '../../questions/templates/**/*.html'
+    // Templates Django globbed relativos ao diretório frontend
+    '../templates/**/*.html',                 // templates raiz
+    '../../questions/templates/**/*.html',    // app questions
+    '../../scoreboard/templates/**/*.html',   // app scoreboard (ranking, etc.)
+    '../../faq/templates/**/*.html'           // app faq
   ],
   theme: {
     extend: {
       colors: {
-        surface: {
-          base: '#0f172a',
-          hover: '#1e293b',
-          border: '#334155'
+        brand: {
+          DEFAULT: '#345271',
+          50: '#f2f6f9',
+          100: '#e4ecf3',
+          200: '#c3d4e3',
+          300: '#a2bcd3',
+          400: '#6f90b6',
+          500: '#345271', // principal
+          600: '#2f4a66',
+          700: '#273e55',
+          800: '#203244',
+          900: '#1a2938'
         }
       }
     }

@@ -1,4 +1,5 @@
 import json
+import os
 from pathlib import Path
 from django import template
 from django.conf import settings
@@ -18,6 +19,24 @@ def _load_manifest():
             with open(p, 'r', encoding='utf-8') as f:
                 return json.load(f)
     raise FileNotFoundError('Vite manifest.json não encontrado')
+
+def _dev_server_url():
+    # URL usada pelo navegador, não pelo container (por isso localhost é válido)
+    return os.environ.get('VITE_DEV_SERVER', 'http://localhost:5173').rstrip('/')
+
+def _hmr_enabled():
+    # HMR habilita se DEBUG e VITE_DEV != '0' (default ligado em dev)
+    return bool(getattr(settings, 'DEBUG', False)) and os.environ.get('VITE_DEV', '1') != '0'
+
+@register.simple_tag
+def vite_hmr():
+    """Retorna 'true' se HMR estiver habilitado (DEBUG e VITE_DEV != '0')."""
+    return _hmr_enabled()
+
+@register.simple_tag
+def vite_dev_url():
+    """URL do Vite dev server (ex.: http://localhost:5173)."""
+    return _dev_server_url()
 
 @register.simple_tag
 def vite_asset(entry: str):

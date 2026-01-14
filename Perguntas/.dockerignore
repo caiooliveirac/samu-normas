@@ -21,6 +21,18 @@ node_modules/
 frontend/node_modules/
 frontend/dist/
 frontend/.vite
+frontend/.vite/
+frontend/.cache/
+frontend/.eslintcache
+
+# Evitar enviar build de static do Vite (será copiado do estágio Node)
+static/react/
+
+# Fixtures e dumps grandes
+dump.json
+# As regras são pequenas e versionadas; entram na imagem para permitir seed em produção.
+!rules_seed.json
+!rules_fixture.json
 
 # Arquivos estáticos gerados
 staticfiles/

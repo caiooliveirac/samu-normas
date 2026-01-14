@@ -58,6 +58,23 @@ if [ "${COLLECT_STATIC:-1}" = "1" ]; then
   fi
   # Verificação simples
   ls -1 staticfiles/react/assets 2>/dev/null | head -n 5 || echo "[entrypoint] Aviso: assets Vite não encontrados em staticfiles/react/assets"
+
+  # Guard extra: se o volume estático (montado) estiver praticamente vazio, repopula.
+  STATIC_GUARD_MIN=${STATIC_GUARD_MIN:-10}
+  COUNT_ITEMS=$(find staticfiles -mindepth 1 -maxdepth 2 -type f 2>/dev/null | wc -l | tr -d ' ')
+  if [ "${COUNT_ITEMS:-0}" -lt "$STATIC_GUARD_MIN" ]; then
+    echo "[entrypoint] Guard: staticfiles parece vazio ($COUNT_ITEMS < $STATIC_GUARD_MIN). Reforçando cópia de static/."
+    if command -v rsync >/dev/null 2>&1; then
+      rsync -a static/ staticfiles/ 2>/dev/null || true
+    else
+      cp -a static/* staticfiles/ 2>/dev/null || true
+    fi
+    COUNT_ITEMS=$(find staticfiles -mindepth 1 -maxdepth 2 -type f 2>/dev/null | wc -l | tr -d ' ')
+    echo "[entrypoint] Guard: itens após repopular = $COUNT_ITEMS"
+    [ "$COUNT_ITEMS" -lt "$STATIC_GUARD_MIN" ] && echo "[entrypoint] Guard: ainda parece vazio; verifique permissões ou volume" || true
+  fi
+  # Marca de que rodamos processo de preparação
+  touch staticfiles/.static_ready 2>/dev/null || true
 fi
 
 echo "[entrypoint] Rodando checagem Django..."

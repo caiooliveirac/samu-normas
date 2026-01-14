@@ -6,3 +6,5 @@ mysqlclient>=2.2
 Pillow>=10.0
 # opcional: descomente se quiser usar rate limit depois
 # django-ratelimit>=4.1
+
+# Dependências de desenvolvimento (pytest, etc.) ficam em requirements-dev.txt

@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState, useMemo } from 'react'
 
-function flattenRuleText(rule){
-  const bulletTexts = rule.cards?.flatMap(c => c.bullets?.map(b => (b.text||'').trim()).filter(Boolean) || []) || []
-  if (bulletTexts.length) return bulletTexts.join(' • ')
-  return (rule.body || '').trim()
+function getRulePreview(rule){
+  const fromBody = (rule.body || '').trim()
+  if (fromBody) return fromBody
+  const firstBullet = rule.cards?.[0]?.bullets?.find(b => (b.text || '').trim())
+  return (firstBullet?.text || '').trim()
 }
 
 function highlight(text, term){
@@ -12,7 +13,7 @@ function highlight(text, term){
   const re = new RegExp(`(${safe})`,'ig')
   const parts = String(text).split(re)
   if (parts.length === 1) return text
-  return parts.map((p,i)=> re.test(p) ? <mark key={i} className="bg-indigo-600/40 text-indigo-100 rounded px-0.5">{p}</mark> : p )
+  return parts.map((p,i)=> re.test(p) ? <mark key={i} className="bg-brand-500/25 text-brand-800 font-medium rounded px-0.5">{p}</mark> : p )
 }
 
 export default function App(){
@@ -25,6 +26,7 @@ export default function App(){
   const [heights, setHeights] = useState({})
   const [focusIndex, setFocusIndex] = useState(0)
   const [search, setSearch] = useState('')
+  const [subtheme, setSubtheme] = useState('')
   const searchRef = useRef(null)
   const reportedTermsRef = useRef(new Set())
 
@@ -107,8 +109,9 @@ export default function App(){
   }, [isMobile, expandedId])
 
   const handleMouseEnter = (id) => {
-    if (isMobile) return
-    setExpandedId(id)
+    // Não expandir por hover no desktop: evita “paredão” ao passar o mouse.
+    // Mantemos expansão por clique/teclado e por foco.
+    void id
   }
   const handleFocus = (id, idx) => {
     setExpandedId(id)
@@ -148,15 +151,23 @@ export default function App(){
   // Filtragem
   const filtered = useMemo(()=>{
     const t = search.trim().toLowerCase()
-    if (!t) return rules
-    return rules.filter(r => {
+    const bySubtheme = subtheme ? rules.filter(r => String(r.id) === String(subtheme)) : rules
+    if (!t) return bySubtheme
+    return bySubtheme.filter(r => {
       if (r.title?.toLowerCase().includes(t)) return true
       if (r.category?.toLowerCase().includes(t)) return true
       if (r.cards?.some(c => c.bullets?.some(b => b.text?.toLowerCase().includes(t)))) return true
       if (r.body?.toLowerCase().includes(t)) return true
       return false
     })
-  }, [rules, search])
+  }, [rules, search, subtheme])
+
+  // Se o usuário escolher um subtema, abre ele automaticamente
+  useEffect(()=>{
+    if (!subtheme) return
+    const found = rules.find(r => String(r.id) === String(subtheme))
+    if (found) setExpandedId(found.id)
+  }, [subtheme, rules])
 
   useEffect(()=>{
     // Reset foco ao mudar filtro para manter dentro da lista
@@ -185,15 +196,15 @@ export default function App(){
   }, [empty, search])
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 py-10 font-sans">
+    <div className="mx-auto w-full max-w-4xl px-4 py-10 font-sans">
       <header className="mb-6 flex flex-col gap-4">
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-100">Normas e Regras</h1>
-            <p className="text-sm text-slate-400 mt-1">Consulte e, se não achar, envie sua dúvida para ampliar a base.</p>
+            <h1 className="text-3xl font-bold tracking-tight text-brand-600">Normas e Regras</h1>
+            <p className="text-sm text-slate-600 mt-2">Consulte e, se não achar, envie sua dúvida para ampliar a base.</p>
             <p className="text-[11px] text-slate-500 mt-2">Atalhos: / busca · Esc limpa · ↑ ↓ navegam · Home/End · Enter/Espaço expandem.</p>
           </div>
-          <a href={askHref} className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold px-4 py-2 shadow-sm shadow-indigo-900/40 transition-colors">
+          <a href={askHref} className="inline-flex items-center gap-2 rounded-lg bg-brand-500 hover:bg-brand-600 text-xs font-semibold px-4 py-2 shadow-sm shadow-brand-500/30 text-white transition-colors">
             <span>+ Perguntar</span>
           </a>
         </div>
@@ -205,54 +216,76 @@ export default function App(){
               onChange={e=>setSearch(e.target.value)}
               placeholder="Buscar… (/ atalho)"
               aria-label="Buscar regras"
-              className="w-full rounded-lg border border-slate-600/60 bg-slate-900/60 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+              className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 shadow-sm"
             />
             {search && (
               <button
                 type="button"
                 onClick={()=>setSearch('')}
                 aria-label="Limpar busca"
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-slate-200"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-slate-600"
               >×</button>
             )}
           </div>
           {empty && search.trim() && (
-            <div role="status" className="rounded-lg border border-slate-700/70 bg-slate-800/60 px-3 py-3 text-[13px] text-slate-300">
-              Nenhuma regra encontrada para <strong className="text-slate-100">{search}</strong>.
-              <a href={askHref} className="ml-1 text-indigo-400 hover:text-indigo-300 underline decoration-dotted">Enviar essa dúvida?</a>
+            <div role="status" className="rounded-lg border border-slate-300/80 bg-slate-50 px-3 py-3 text-[13px] text-slate-600">
+              Nenhuma regra encontrada para <strong className="text-brand-700">{search}</strong>.
+              <a href={askHref} className="ml-1 text-brand-600 hover:text-brand-700 underline decoration-dotted">Enviar essa dúvida?</a>
             </div>
           )}
           {few && (
             <div className="text-[11px] text-slate-500">
               Poucos resultados. Se ainda está com dúvida,
-              <a href={askHref} className="ml-1 text-indigo-400 hover:text-indigo-300 underline">pergunte</a>.
+              <a href={askHref} className="ml-1 text-brand-600 hover:text-brand-700 underline">pergunte</a>.
             </div>
+          )}
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <label className="text-[11px] uppercase tracking-wide text-slate-500" htmlFor="subtheme">Subtema</label>
+          <select
+            id="subtheme"
+            value={subtheme}
+            onChange={(e)=>setSubtheme(e.target.value)}
+            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 shadow-sm"
+          >
+            <option value="">Todos</option>
+            {rules.map(r => (
+              <option key={r.id} value={String(r.id)}>{r.title}</option>
+            ))}
+          </select>
+          {subtheme && (
+            <button
+              type="button"
+              onClick={()=>setSubtheme('')}
+              className="text-xs text-slate-500 hover:text-slate-700 underline decoration-dotted"
+            >Limpar</button>
           )}
         </div>
       </header>
 
       <ul className="flex flex-col gap-3" aria-label="Lista de regras" role="list">
         {empty && search.trim() && (
-          <li className="text-sm text-slate-500 px-2 py-10 text-center border border-slate-700/50 rounded-xl bg-slate-800/30">Nenhuma regra corresponde à busca.</li>
+          <li className="text-sm text-slate-500 px-2 py-10 text-center border border-slate-300/80 rounded-xl bg-slate-50">Nenhuma regra corresponde à busca.</li>
         )}
         {filtered.map((rule, idx) => {
           const expanded = expandedId === rule.id
-          const bodyRaw = flattenRuleText(rule) || '(Sem conteúdo)'
+          const preview = getRulePreview(rule) || '(Sem conteúdo)'
           const measured = heights[rule.id] || 0
           const focused = idx === focusIndex
           return (
             <li
               key={rule.id}
               ref={el => itemRefs.current.set(rule.id, el)}
-              className={`group relative rounded-xl border transition-colors duration-150 backdrop-blur focus-within:ring-1 focus-within:ring-indigo-400/40
-                ${expanded ? 'border-indigo-400/60 bg-slate-800/60 shadow-md shadow-indigo-500/5' : 'border-slate-700/60 bg-slate-800/30 hover:border-slate-500/70'}`}
+              className={`group relative rounded-xl border transition-colors duration-150 focus-within:ring-1 focus-within:ring-brand-400/50
+                ${expanded ? 'border-brand-400/70 bg-brand-50 shadow-sm' : 'border-slate-300 bg-white hover:border-brand-300'}`}
               role="listitem"
             >
               <button
                 ref={el => buttonRefs.current.set(rule.id, el)}
                 type="button"
                 className={`w-full text-left px-5 py-4 outline-none rounded-xl transition-colors duration-150
-                  ${focused ? 'ring-2 ring-indigo-400/70 ring-offset-2 ring-offset-slate-900' : ''}`}
+                  ${focused ? 'ring-2 ring-brand-400/70 ring-offset-2 ring-offset-white' : ''}`}
                 aria-expanded={expanded}
                 aria-controls={`rule-panel-${rule.id}`}
                 onMouseEnter={()=>handleMouseEnter(rule.id)}
@@ -261,20 +294,20 @@ export default function App(){
               >
                 <div className="flex items-start gap-3">
                   <div className={`mt-1 h-2 w-2 rounded-full flex-shrink-0 transition-colors duration-150
-                    ${expanded ? 'bg-indigo-400 animate-pulse' : 'bg-slate-500 group-hover:bg-indigo-300'}`}/>
+                    ${expanded ? 'bg-brand-500 animate-pulse' : 'bg-slate-300 group-hover:bg-brand-400'}`}/>
                   <div className="flex-1 min-w-0">
                     <h2 className={`text-sm font-semibold tracking-wide transition-colors duration-150 line-clamp-1
-                      ${expanded ? 'text-indigo-300' : 'text-slate-200 group-hover:text-slate-100'}`}>{highlight(rule.title, search)}</h2>
+                      ${expanded ? 'text-brand-600' : 'text-slate-700 group-hover:text-brand-600'}`}>{highlight(rule.title, search)}</h2>
                     <div className="flex flex-wrap gap-x-2 gap-y-1 mt-1 items-center text-[11px]">
                       {rule.category && (
                         <span className="uppercase tracking-wide text-slate-500">{highlight(rule.category, search)}</span>
                       )}
                       {search && !expanded && (
-                        <span className="text-slate-600">•</span>
+                        <span className="text-slate-400">•</span>
                       )}
                       {search && !expanded && (
-                        <span className="text-[11px] text-slate-500 truncate max-w-[220px]">
-                          {highlight(bodyRaw.slice(0, 120) + (bodyRaw.length>120?'…':''), search)}
+                        <span className="text-[11px] text-slate-500 truncate max-w-[240px]">
+                          {highlight(preview.slice(0, 120) + (preview.length>120?'…':''), search)}
                         </span>
                       )}
                     </div>
@@ -289,16 +322,38 @@ export default function App(){
                   className="overflow-hidden transition-[max-height] duration-150 ease-out"
                 >
                   <div className="pt-3 pl-[22px] pr-1">
-                    <p className={`text-[13px] leading-relaxed text-slate-300 transition-all duration-150
-                      ${expanded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-1'}`}>{highlight(bodyRaw, search)}</p>
+                    {rule.body?.trim() && (
+                      <div className={`text-[13px] leading-relaxed text-slate-600 transition-all duration-150
+                        ${expanded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-1'}`}
+                      >
+                        {String(rule.body).split(/\n{2,}/).map((p, i) => (
+                          <p key={i} className={i ? 'mt-2' : ''}>{highlight(p, search)}</p>
+                        ))}
+                      </div>
+                    )}
+
                     {rule.cards?.length > 0 && (
-                      <ul className="mt-3 flex flex-col gap-1">
-                        {rule.cards.map(c => c.bullets.map(b => (
-                          <li key={b.id} className="text-[12px] text-slate-400 pl-3 relative before:absolute before:left-0 before:top-2 before:h-1 before:w-1 before:rounded-full before:bg-slate-500">
-                            {highlight(b.text, search)}
-                          </li>
-                        )))}
-                      </ul>
+                      <div className="mt-3 grid grid-cols-1 gap-3">
+                        {rule.cards.map((c) => (
+                          <section
+                            key={c.id}
+                            className="rounded-lg border border-slate-200 bg-white/70 px-4 py-3"
+                            aria-label={`Card ${c.title}`}
+                          >
+                            <h3 className="text-[12px] font-semibold text-slate-700">{highlight(c.title, search)}</h3>
+                            <ul className="mt-2 flex flex-col gap-1">
+                              {(c.bullets || []).map((b) => (
+                                <li
+                                  key={b.id}
+                                  className="text-[12px] text-slate-600 pl-3 relative before:absolute before:left-0 before:top-2 before:h-1 before:w-1 before:rounded-full before:bg-brand-400/80"
+                                >
+                                  {highlight(b.text, search)}
+                                </li>
+                              ))}
+                            </ul>
+                          </section>
+                        ))}
+                      </div>
                     )}
                   </div>
                 </div>
@@ -312,9 +367,9 @@ export default function App(){
       <a
         href={askHref}
         aria-label="Enviar nova pergunta"
-        className="fixed bottom-5 right-5 inline-flex items-center gap-2 rounded-full bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold px-5 py-3 shadow-lg shadow-indigo-900/30 transition-colors group"
+        className="fixed bottom-5 right-5 inline-flex items-center gap-2 rounded-full bg-brand-500 hover:bg-brand-600 text-xs font-semibold px-5 py-3 shadow-lg shadow-brand-500/30 transition-colors group text-white"
       >
-        <span className="h-2 w-2 rounded-full bg-indigo-300 group-hover:bg-white transition-colors"></span>
+        <span className="h-2 w-2 rounded-full bg-white/70 group-hover:bg-white transition-colors"></span>
         <span>Perguntar</span>
       </a>
     </div>

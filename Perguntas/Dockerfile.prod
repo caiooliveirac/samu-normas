@@ -7,16 +7,29 @@ ENV PIP_NO_CACHE_DIR=1 \
 WORKDIR /build
 
 RUN apt-get update -o Acquire::ForceIPv4=true \
- && apt-get install -y --no-install-recommends \
-    build-essential \
-    pkg-config \
-    default-libmysqlclient-dev \
-    libjpeg-dev zlib1g-dev \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+     build-essential \
+     pkg-config \
+     default-libmysqlclient-dev \
+     libjpeg-dev zlib1g-dev \
  && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
 # Gera wheels (inclusive para mysqlclient e Pillow) para reutilizar na camada final
 RUN pip wheel --no-cache-dir --no-deps -r requirements.txt -w /wheels
+
+# Build frontend (Vite)
+FROM node:24-alpine AS frontend_build
+WORKDIR /app/frontend
+COPY frontend/package.json frontend/package-lock.json* .npmrc* ./
+RUN npm set fund false && npm set audit false || true
+# Instala todas as dependências incluindo dev (necessárias para build Vite)
+RUN (npm ci || npm install) \
+ && echo 'Dependências instaladas (incluindo dev)'
+COPY frontend/ .
+# O outDir no vite.config.js aponta para ../static/react relativo a /app/frontend
+RUN npm run build \
+ && ls -1 ../static/react | head -n 20
 
 # Etapa final (runtime)
 FROM python:3.12-slim-bookworm
@@ -24,12 +37,20 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
     PYTHONFAULTHANDLER=1
+    
+# Build metadata (injetado via build args no workflow CI ou build manual)
+ARG BUILD_SHA=dev-local
+ARG BUILD_DATE=unknown
+ARG APP_VERSION=dev
+ENV BUILD_SHA=$BUILD_SHA \
+    BUILD_DATE=$BUILD_DATE \
+    APP_VERSION=$APP_VERSION
 WORKDIR /app
 
 # Somente bibliotecas runtime necessárias
 # Se Pillow exigir PNG ou Freetype depois, adicionar libpng16-16 libfreetype6
 RUN apt-get update -o Acquire::ForceIPv4=true \
- && apt-get install -y --no-install-recommends \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     libmariadb3 \
     libjpeg62-turbo \
     zlib1g \
@@ -40,11 +61,16 @@ COPY --from=build /wheels /wheels
 RUN pip install --no-cache-dir /wheels/* && rm -rf /wheels
 
 # Copia aplicação
+# Copia aplicação (código Python + templates + static base)
 COPY . /app
+# Copia resultado build (gerado em /app/static/react no estágio de frontend) preservando timestamps
+COPY --from=frontend_build /app/static/react /app/static/react
+RUN ls -R /app/static/react/.vite 2>/dev/null | head -n 20 || true
 
 # Cria usuário de aplicação; container iniciará como root para ajustar permissões de volumes
-RUN useradd -m appuser \
- && chown -R appuser:appuser /app
+# Evita custo de useradd em cada rebuild; se necessário, mantenha no entrypoint
+RUN getent passwd appuser >/dev/null || useradd -m appuser \
+ && chown -R appuser:appuser /app || true
 
 EXPOSE 8000
 
