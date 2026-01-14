@@ -1,0 +1,6 @@
+services:
+  web:
+    # Fluxo rápido de DEV/TESTE: monta o seed como bind-mount.
+    # Assim você pode regenerar rules_seed.json no host e aplicar no banco sem rebuild.
+    volumes:
+      - ./rules_seed.json:/app/rules_seed.json:ro

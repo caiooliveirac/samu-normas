@@ -73,6 +73,9 @@ logs/
 # Workspace files
 *.code-workspace
 
+# Projeto separado (não versionar dentro do app principal)
+/scoreboard-standalone/
+
 # Docker artefatos locais
 **/.pytest_cache/
 .coverage

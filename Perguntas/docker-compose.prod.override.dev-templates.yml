@@ -1,0 +1,9 @@
+services:
+  web:
+    # Monta apenas templates como volume para editar HTML sem rebuild de imagem
+    volumes:
+      - ./scoreboard/templates:/app/scoreboard/templates:ro
+      - ./templates:/app/templates:ro
+      - ./questions/templatetags:/app/questions/templatetags:ro
+    # Dica: após alterações, basta reiniciar o serviço para recarregar o cache de templates
+    # Ex.: docker compose -f docker-compose.prod.yml -f docker-compose.prod.override.dev-templates.yml restart web
