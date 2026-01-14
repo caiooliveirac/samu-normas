@@ -44,6 +44,13 @@ post_logout.txt
 !rules_fixture.json
 !dump.json  # Se não quiser versionar remova este !
 
+# Nunca versionar PDFs (fonte externa / pesado)
+*.pdf
+
+# Artefatos derivados do pipeline de seed (mantenha só o Markdown fonte e o rules_seed.json final)
+/docs/rules_seed_backup*.json
+/docs/rules_seed_preview_*
+
 # Node / frontend builds
 /frontend/node_modules/
 /frontend/dist/
@@ -61,6 +68,9 @@ logs/
 !.vscode/extensions.json
 *.swp
 *.swo
+
+# Workspace files
+*.code-workspace
 
 # Docker artefatos locais
 **/.pytest_cache/
