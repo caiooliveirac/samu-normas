@@ -1,0 +1,4 @@
+services:
+  web:
+    # Mantido por compatibilidade. A porta do web dev agora é controlada em
+    # docker-compose.dev.yml via DEV_WEB_PORT.

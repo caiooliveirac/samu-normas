@@ -8,7 +8,7 @@
     {% vite_hmr as hmr %}
     {% if hmr %}
       {% vite_dev_url as vite_url %}
-      <script type="module">import "/@vite/client";</script>
+      <script type="module">import "{{ vite_url }}/@vite/client";</script>
       <script type="module" src="{{ vite_url }}/src/main.jsx"></script>
     {% else %}
       {% vite_css 'src/main.jsx' as css %}

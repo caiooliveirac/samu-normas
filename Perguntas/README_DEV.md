@@ -11,7 +11,8 @@ Fluxo rápido sem rebuild de imagem a cada mudança de CSS/JS/HTML.
 
 1) Suba o backend com Compose de dev (monta volume e usa `DEBUG=1`):
 ```bash
-docker compose -f docker-compose.dev.yml up -d web
+# Se a porta 8000 estiver ocupada (ex.: scoreboard standalone), use DEV_WEB_PORT=8001
+DEV_WEB_PORT=8001 docker compose -p perguntas-dev -f docker-compose.dev.yml up -d web
 ```
 
 2) Rode o Vite dev server (HMR):
@@ -20,6 +21,24 @@ cd frontend
 npm install
 npm run dev
 ```
+
+#### Opção 1b — Vite dentro do Docker (útil em EC2/SSH)
+Se você está desenvolvendo num servidor remoto (ex.: EC2) e quer HMR sem rebuild, dá para subir o Vite como serviço no Compose.
+
+1) Suba `web` + `vite`:
+```bash
+DEV_WEB_PORT=8001 docker compose -p perguntas-dev -f docker-compose.dev.yml -f docker-compose.dev.override.vite.yml up -d
+```
+
+2) No seu computador local, abra um túnel SSH para as portas do Django e do Vite:
+```bash
+ssh -L 8001:localhost:8001 -L 5173:localhost:5173 ubuntu@SEU_HOST
+```
+
+3) Acesse no navegador:
+- App: `http://localhost:8000/`
+- App: `http://localhost:8001/`
+- Vite: `http://localhost:5173/` (apenas para debug; o app carrega assets de lá)
 
 3) Acesse o app (ex.: http://localhost:8000/scoreboard/). Os templates detectarão HMR e carregarão assets via `http://localhost:5173` automaticamente.
 

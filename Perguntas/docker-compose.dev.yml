@@ -26,7 +26,8 @@ services:
       - DB_HOST=db
       - DB_PORT=3306
       - DEBUG=1
-      - ALLOWED_HOSTS=3.150.194.173,localhost,127.0.0.1
+      # Inclui 'web' para permitir proxy interno do Vite (VITE_PROXY_TARGET=http://web:8000)
+      - ALLOWED_HOSTS=3.150.194.173,localhost,127.0.0.1,web
     depends_on:
       - db
     command: >
@@ -37,7 +38,8 @@ services:
       - static_volume:/app/staticfiles
       - media_volume:/app/media
     ports:
-      - "8000:8000"
+      # Dica: se a 8000 estiver ocupada (ex.: scoreboard standalone), use DEV_WEB_PORT=8001
+      - "127.0.0.1:${DEV_WEB_PORT:-8000}:8000"
 
 volumes:
   db_data:

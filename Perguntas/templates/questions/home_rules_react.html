@@ -1,14 +1,21 @@
 {% load static %}
 {% load vite %}
+{% vite_hmr as hmr %}
+{% vite_dev_url as vite_url %}
 <!doctype html>
 <html lang="pt-br">
 <head>
   <meta charset="utf-8">
   <title>Normas e Regras</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  {% vite_css 'src/main.jsx' as css %}
-  {% if css %}
-    <link rel="stylesheet" href="{{ css }}" />
+  {% if hmr %}
+    <script type="module" src="{{ vite_url }}/@vite/client"></script>
+  {% endif %}
+  {% if not hmr %}
+    {% vite_css 'src/main.jsx' as css %}
+    {% if css %}
+      <link rel="stylesheet" href="{{ css }}" />
+    {% endif %}
   {% endif %}
 </head>
 <body>
@@ -17,7 +24,11 @@
     <div class="container"><p class="muted">Carregando…</p></div>
   </div>
 
-  {# carrega o bundle resolvido via manifest do Vite #}
-  <script src="{% vite_asset 'src/main.jsx' %}" type="module"></script>
+  {% if hmr %}
+    <script type="module" src="{{ vite_url }}/src/main.jsx"></script>
+  {% else %}
+    {# carrega o bundle resolvido via manifest do Vite #}
+    <script src="{% vite_asset 'src/main.jsx' %}" type="module"></script>
+  {% endif %}
 </body>
 </html>

@@ -11,7 +11,7 @@
       {% vite_dev_url as vite_url %}
       <script type="module">
         // HMR client e CSS apenas (sem React SPA)
-        import "/@vite/client";
+        import "{{ vite_url }}/@vite/client";
         import "{{ vite_url }}/src/styles.css";
       </script>
     {% else %}
