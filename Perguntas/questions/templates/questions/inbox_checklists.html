@@ -1,0 +1,305 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Inbox — Checklists</title>
+  <link rel="stylesheet" href="{% static 'css/ask.css' %}">
+  <style>
+    table{width:100%; border-collapse: collapse;}
+    th, td{padding:10px 12px; border-bottom:1px solid var(--card-border); text-align:left; vertical-align:top}
+    th{color:var(--muted); font-weight:700; font-size:13px; letter-spacing:.3px; text-transform:uppercase}
+    tr:hover td{background: color-mix(in oklab, var(--card) 40%, transparent)}
+    .toolbar{display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:14px}
+    .toolbar input{
+      background: transparent; color: var(--text);
+      border:1px solid var(--card-border); border-radius:10px; padding:10px 12px;
+    }
+    .pager{display:flex; gap:10px; align-items:center; justify-content:flex-end; margin-top:12px; color:var(--muted)}
+    .pager a{color:var(--brand); text-decoration:none}
+    pre{white-space:pre-wrap; margin:0; font-family: ui-monospace, SFMono-Regular, Menlo, monospace}
+    .pill{border-radius:999px; padding:2px 8px; font-size:12px; display:inline-block; border:1px solid var(--card-border)}
+    .pill.ok{background:color-mix(in oklab, var(--ok) 16%, transparent); color:color-mix(in oklab, var(--ok) 80%, var(--text))}
+    .pill.bad{background:color-mix(in oklab, var(--err) 14%, transparent); color:color-mix(in oklab, var(--err) 78%, var(--text))}
+    .pill.muted{background:color-mix(in oklab, var(--card) 70%, transparent); color:var(--muted)}
+    .grid2{display:grid; grid-template-columns: 1fr; gap:12px}
+    @media (min-width: 920px){ .grid2{grid-template-columns: 1.2fr .8fr;} }
+  </style>
+</head>
+<body>
+  <main class="container fade-in">
+    <header class="header">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <div class="title">Inbox — Checklists</div>
+        <div class="subtitle">Visualize os envios por data (sem precisar do Admin).</div>
+      </div>
+      <div style="margin-left:auto; display:flex; gap:10px; align-items:center;">
+        <a class="btn" href="{% url 'questions:inbox' %}" style="text-decoration:none; padding:10px 14px; font-size: 13px;">Perguntas</a>
+      </div>
+    </header>
+
+    <section class="card">
+      <form class="toolbar" method="get">
+        <input type="date" name="date" value="{{ date|default:'' }}" aria-label="Data" />
+        <input type="text" name="q" placeholder="Buscar (médico, unidade, texto)..." value="{{ q|default:'' }}" style="min-width: 260px;" />
+        <button class="btn" type="submit">Filtrar</button>
+        <a class="btn" href="{% url 'questions:inbox_checklists' %}" style="text-decoration:none">Limpar</a>
+      </form>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin: 4px 0 12px;">
+        <button id="sendTelegramBtn" type="button" class="btn" style="padding:10px 12px; font-size: 13px;">Enviar aviso no Telegram</button>
+      </div>
+
+      <div id="toast" class="msg success" style="display:none; margin: 0 0 12px;">Enviado.</div>
+
+      <div class="grid2" style="margin-bottom: 14px;">
+        <div class="card" style="padding: 12px;">
+          <div style="display:flex; align-items:center; justify-content: space-between; gap: 12px;">
+            <div>
+              <div style="font-weight: 800; letter-spacing: .2px;">Resumo do dia ({{ date }})</div>
+              <div class="subtitle" style="margin-top: 4px;">Principal: quais ambulâncias ainda não têm checklist.</div>
+            </div>
+            <span class="pill muted">Esperadas: {{ expected_units|length }}</span>
+          </div>
+
+          <div style="margin-top:10px;">
+            <div class="muted" style="font-size: 12px; margin-bottom: 6px;">Faltando</div>
+            <div style="display:flex; flex-wrap:wrap; gap:8px;">
+              {% for u in missing_units %}
+                <span class="pill bad">{{ u }}</span>
+              {% empty %}
+                <span class="pill ok">Tudo lançado ✅</span>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div style="margin-top:10px;">
+            <div class="muted" style="font-size: 12px; margin-bottom: 6px;">Já lançado</div>
+            <div style="display:flex; flex-wrap:wrap; gap:8px;">
+              {% for u in present_units %}
+                <span class="pill ok">{{ u }}</span>
+              {% empty %}
+                <span class="pill muted">Nenhum ainda</span>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="padding: 12px;">
+          <div style="font-weight: 800; letter-spacing: .2px;">Resumo por dia</div>
+          <div class="subtitle" style="margin-top: 4px;">Últimos {{ daily_summary|length }} dias.</div>
+
+          <div style="margin-top: 10px; overflow:auto;">
+            <table>
+              <tr>
+                <th>Dia</th>
+                <th>Envios</th>
+                <th>Faltando</th>
+              </tr>
+              {% for d in daily_summary %}
+                <tr>
+                  <td>
+                    <a href="?date={{ d.date_iso }}" style="color: var(--brand); text-decoration:none; font-weight:700;">{{ d.date_iso }}</a>
+                  </td>
+                  <td>{{ d.count }}</td>
+                  <td>
+                    {% if d.missing_count == 0 %}
+                      <span class="pill ok">0</span>
+                    {% else %}
+                      <span class="pill bad">{{ d.missing_count }}</span>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="padding: 12px; margin-bottom: 14px;">
+        <div style="display:flex; align-items:center; justify-content: space-between; gap: 12px;">
+          <div>
+            <div style="font-weight: 800; letter-spacing: .2px;">Resumo do que falta / observações por unidade ({{ date }})</div>
+            <div class="subtitle" style="margin-top: 4px;">Usa o envio mais recente do dia por ambulância.</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 10px; overflow:auto;">
+          <table>
+            <tr>
+              <th>Unidade</th>
+              <th>Status</th>
+              <th>Faltando</th>
+              <th>Obs.</th>
+              <th>Ações</th>
+            </tr>
+            {% for u in unit_summaries %}
+              <tr>
+                <td style="font-weight:800; letter-spacing:.2px;">{{ u.unit }}</td>
+                <td>
+                  {% if not u.has_submission %}
+                    <span class="pill bad">Sem checklist</span>
+                  {% else %}
+                    <span class="pill ok">Enviado</span>
+                    <div class="muted" style="font-size:12px; margin-top:4px;">
+                      {{ u.created_at|date:"H:i" }} — {{ u.doctor_name }}
+                    </div>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if not u.has_submission %}
+                    <span class="pill bad">—</span>
+                  {% else %}
+                    {% if u.missing_count == 0 %}
+                      <span class="pill ok">0</span>
+                    {% else %}
+                      <span class="pill bad">{{ u.missing_count }}</span>
+                      <div class="muted" style="font-size:12px; margin-top:6px;">
+                        {% for line in u.missing_preview %}
+                          <div>• {{ line|truncatechars:90 }}</div>
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if not u.has_submission %}
+                    <span class="pill muted">—</span>
+                  {% else %}
+                    {% if u.obs_count == 0 %}
+                      <span class="pill muted">0</span>
+                    {% else %}
+                      <span class="pill bad">{{ u.obs_count }}</span>
+                      <div class="muted" style="font-size:12px; margin-top:6px;">
+                        {% for line in u.obs_preview %}
+                          <div>• {{ line|truncatechars:90 }}</div>
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if u.detail_url %}
+                    <a class="btn" href="{{ u.detail_url }}">Abrir</a>
+                  {% else %}
+                    <span class="muted">—</span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </table>
+        </div>
+      </div>
+
+      <div class="helper" style="margin-bottom:8px">
+        <span>Mostrando {{ page_obj.object_list|length }} de {{ page_obj.paginator.count }} envio(s)</span>
+        <span></span>
+      </div>
+
+      <div style="overflow:auto">
+        <table>
+          <tr>
+            <th>ID</th>
+            <th>Data</th>
+            <th>Médico</th>
+            <th>Unidade</th>
+            <th>Texto</th>
+            <th>Ações</th>
+          </tr>
+          {% for s in page_obj.object_list %}
+            <tr>
+              <td>{{ s.id }}</td>
+              <td class="muted">{{ s.created_at|date:"Y-m-d H:i" }}</td>
+              <td>{{ s.doctor_name }}</td>
+              <td>{{ s.unit }}</td>
+              <td>{{ s.text|truncatechars:140 }}</td>
+              <td><a class="btn" href="{% url 'questions:inbox_checklists_detail' s.id %}">Abrir</a></td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="6">Nenhum envio.</td></tr>
+          {% endfor %}
+        </table>
+      </div>
+
+      <div class="pager">
+        {% if page_obj.has_previous %}<a href="?q={{ q }}&date={{ date }}&page={{ page_obj.previous_page_number }}">« Anterior</a>{% endif %}
+        <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}<a href="?q={{ q }}&date={{ date }}&page={{ page_obj.next_page_number }}">Próxima »</a>{% endif %}
+      </div>
+    </section>
+
+    <form id="csrfForm" style="display:none;">{% csrf_token %}</form>
+
+    <p class="footer"><a href="/logout" style="color:inherit">Sair</a></p>
+  </main>
+
+  <script>
+    (function(){
+      const btn = document.getElementById('sendTelegramBtn');
+      const toast = document.getElementById('toast');
+      const csrfInput = document.querySelector('#csrfForm input[name=csrfmiddlewaretoken]');
+      const dateInput = document.querySelector('input[name=date]');
+
+      function showToast(message, kind){
+        toast.textContent = message || 'OK.';
+        toast.className = 'msg ' + (kind === 'error' ? 'error' : 'success');
+        toast.style.display = 'block';
+        clearTimeout(showToast._t);
+        showToast._t = setTimeout(() => { toast.style.display = 'none'; }, 2200);
+      }
+
+      async function send(){
+        const dateVal = (dateInput && dateInput.value) ? dateInput.value : '';
+        const csrf = csrfInput ? csrfInput.value : '';
+        if (!csrf) {
+          showToast('CSRF não encontrado. Recarregue a página.', 'error');
+          return;
+        }
+
+        const ok = window.confirm('Enviar aviso no Telegram (forçar reenvio) com o que está faltando/observações deste dia?');
+        if (!ok) return;
+
+        const prev = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Enviando...';
+        try {
+          const form = new URLSearchParams();
+          if (dateVal) form.set('date', dateVal);
+          form.set('slot', 'manual');
+          // Força reenvio mesmo se este slot já tiver sido enviado hoje.
+          form.set('force', '1');
+
+          const resp = await fetch('/api/checklists/digest/send/', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+              'X-CSRFToken': csrf,
+            },
+            body: form.toString(),
+          });
+          const data = await resp.json().catch(() => ({}));
+          if (!resp.ok || !data.ok) {
+            showToast((data && data.error) ? data.error : 'Falha ao enviar.', 'error');
+            return;
+          }
+          if (data.skipped) {
+            showToast('Servidor marcou como já enviado (skipped).', 'success');
+            return;
+          }
+          showToast('Enviado no Telegram.', 'success');
+        } catch (e) {
+          showToast('Erro de rede ao enviar.', 'error');
+        } finally {
+          btn.disabled = false;
+          btn.textContent = prev;
+        }
+      }
+
+      if (btn) btn.addEventListener('click', send);
+    })();
+  </script>
+</body>
+</html>

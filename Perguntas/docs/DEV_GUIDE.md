@@ -10,6 +10,7 @@ Este documento consolida o conhecimento necessário para voltar a trabalhar nest
 - Containerização: Docker multi-stage (`Dockerfile.prod`).
 - Registro de Imagens: GHCR (`ghcr.io/caiooliveirac/samu-normas`).
 - Seed inicial de dados: comando `seed_rules` lendo `rules_seed.json`.
+- Checklists USA + digest no Telegram: ver `docs/CHECKLISTS_TELEGRAM.md`.
 - Testes: pytest + pytest-django.
 
 ## 2. Estrutura Importante

@@ -12,8 +12,8 @@
     th{color:var(--muted); font-weight:700; font-size:13px; letter-spacing:.3px; text-transform:uppercase}
     tr:hover td{background: color-mix(in oklab, var(--card) 40%, transparent)}
     .pill{border-radius:999px; padding:2px 8px; font-size:12px; display:inline-block}
-    .pill.new{background:color-mix(in oklab, #f7c948 35%, transparent); color:#3a2f0b}
-    .pill.reviewed{background:color-mix(in oklab, #2ecc71 30%, transparent); color:#0d3d22}
+    .pill.new{background:color-mix(in oklab, var(--accent) 22%, transparent); color:color-mix(in oklab, var(--accent) 78%, var(--text))}
+    .pill.reviewed{background:color-mix(in oklab, var(--ok) 18%, transparent); color:color-mix(in oklab, var(--ok) 70%, var(--text))}
     .toolbar{display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:14px}
     .toolbar input, .toolbar select{
       background: transparent; color: var(--text);
@@ -30,6 +30,9 @@
       <div>
         <div class="title">Inbox — Perguntas</div>
         <div class="subtitle">Busque, filtre e abra as perguntas enviadas.</div>
+      </div>
+      <div style="margin-left:auto; display:flex; gap:10px; align-items:center;">
+        <a class="btn" href="{% url 'questions:inbox_checklists' %}" style="text-decoration:none; padding:10px 14px; font-size: 13px;">Checklists</a>
       </div>
     </header>
 

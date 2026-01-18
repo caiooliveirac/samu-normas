@@ -48,19 +48,36 @@ if [ "${COLLECT_STATIC:-1}" = "1" ]; then
     mkdir -p staticfiles media || true
     chown -R appuser:appuser staticfiles media || true
   fi
-  echo "[entrypoint] Coletando arquivos estáticos..."
-  python manage.py collectstatic --noinput || echo "[entrypoint] collectstatic falhou (ignorado)"
-  echo "[entrypoint] Sincronizando assets Vite (static/ -> staticfiles/)" 
-  if command -v rsync >/dev/null 2>&1; then
-    rsync -a --exclude '.*' static/ staticfiles/ 2>/dev/null || true
+  # Em produção, o volume staticfiles deve ser a fonte de verdade. Se já estiver pronto,
+  # evitamos sobrescrever com assets empacotados antigos em reinícios/recreates.
+  FORCE_COLLECT_STATIC=${FORCE_COLLECT_STATIC:-0}
+  STATIC_GUARD_MIN=${STATIC_GUARD_MIN:-10}
+  COUNT_ITEMS=$(find staticfiles -mindepth 1 -maxdepth 2 -type f 2>/dev/null | wc -l | tr -d ' ')
+  if [ "$FORCE_COLLECT_STATIC" != "1" ] && [ -f staticfiles/.static_ready ] && [ "${COUNT_ITEMS:-0}" -ge "$STATIC_GUARD_MIN" ]; then
+    echo "[entrypoint] Static já preparado (staticfiles/.static_ready + $COUNT_ITEMS itens). Pulando collectstatic/rsync."
   else
-    cp -a static/* staticfiles/ 2>/dev/null || true
+    echo "[entrypoint] Coletando arquivos estáticos..."
+    python manage.py collectstatic --noinput || echo "[entrypoint] collectstatic falhou (ignorado)"
+    echo "[entrypoint] Sincronizando static/ -> staticfiles/ (exceto react/)" 
+    if command -v rsync >/dev/null 2>&1; then
+      rsync -a --exclude 'react/' --exclude 'react/**' --exclude '.*' static/ staticfiles/ 2>/dev/null || true
+    else
+      # Fallback sem rsync (não copia react/ para evitar sobrescrever volume dedicado)
+      for p in static/*; do
+        [ "$(basename "$p")" = "react" ] && continue
+        cp -a "$p" staticfiles/ 2>/dev/null || true
+      done
+    fi
   fi
-  # Verificação simples
-  ls -1 staticfiles/react/assets 2>/dev/null | head -n 5 || echo "[entrypoint] Aviso: assets Vite não encontrados em staticfiles/react/assets"
+  # Verificação simples (manifest + assets)
+  if [ -f static/react/.vite/manifest.json ]; then
+    echo "[entrypoint] Manifest Vite OK: static/react/.vite/manifest.json"
+  else
+    echo "[entrypoint] Aviso: manifest Vite não encontrado em static/react/.vite/manifest.json"
+  fi
+  ls -1 static/react/assets 2>/dev/null | head -n 5 || true
 
   # Guard extra: se o volume estático (montado) estiver praticamente vazio, repopula.
-  STATIC_GUARD_MIN=${STATIC_GUARD_MIN:-10}
   COUNT_ITEMS=$(find staticfiles -mindepth 1 -maxdepth 2 -type f 2>/dev/null | wc -l | tr -d ' ')
   if [ "${COUNT_ITEMS:-0}" -lt "$STATIC_GUARD_MIN" ]; then
     echo "[entrypoint] Guard: staticfiles parece vazio ($COUNT_ITEMS < $STATIC_GUARD_MIN). Reforçando cópia de static/."

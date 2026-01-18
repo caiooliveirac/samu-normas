@@ -1,6 +1,14 @@
 import { useCallback, useEffect, useRef, useState, useMemo } from 'react'
 import { AnimatePresence, MotionConfig, motion } from 'framer-motion'
 
+const ATTACHMENTS = [
+  { id: 'anexo-01', title: 'Anexo 1', href: '/anexos/anexo-01.jpeg' },
+  { id: 'anexo-02', title: 'Anexo 2', href: '/anexos/anexo-02.jpeg' },
+  { id: 'anexo-03', title: 'Anexo 3', href: '/anexos/anexo-03.jpeg' },
+  { id: 'anexo-04', title: 'Anexo 4', href: '/anexos/anexo-04.jpeg' },
+  { id: 'anexo-05', title: 'Anexo 5', href: '/anexos/anexo-05.jpeg' },
+]
+
 function getRulePreview(rule){
   const fromBody = (rule.body || '').trim()
   if (fromBody) return fromBody
@@ -217,6 +225,7 @@ export default function App(){
   const [loading, setLoading] = useState(true)
   const [expandedId, setExpandedId] = useState(null)
   const [isMobile, setIsMobile] = useState(false)
+  const [openAttachmentId, setOpenAttachmentId] = useState(null)
   const itemRefs = useRef(new Map())
   const buttonRefs = useRef(new Map())
   const listScrollRef = useRef(null)
@@ -803,9 +812,14 @@ export default function App(){
             <p className="text-sm text-slate-800 mt-2">Consulte e, se não achar, envie sua dúvida para ampliar a base.</p>
             <p className="text-[11px] text-slate-600 mt-2">Atalhos: / busca · Esc limpa · ↑ ↓ navegam · Home/End · Enter/Espaço expandem.</p>
           </div>
-          <a href={askHref} className="inline-flex items-center gap-2 rounded-lg border border-brand-200 bg-white hover:bg-brand-50 text-sm sm:text-xs font-semibold px-4 py-2.5 sm:py-2 text-brand-800 transition-colors min-h-11">
-            <span>+ Perguntar</span>
-          </a>
+          <div className="flex items-center gap-2">
+            <a href="/checklists/" className="inline-flex items-center gap-2 rounded-lg border border-brand-200 bg-white/70 hover:bg-brand-50 text-sm sm:text-xs font-semibold px-4 py-2.5 sm:py-2 text-brand-800 transition-colors min-h-11">
+              <span>Checklists</span>
+            </a>
+            <a href={askHref} className="inline-flex items-center gap-2 rounded-lg border border-brand-200 bg-white hover:bg-brand-50 text-sm sm:text-xs font-semibold px-4 py-2.5 sm:py-2 text-brand-800 transition-colors min-h-11">
+              <span>+ Perguntar</span>
+            </a>
+          </div>
         </div>
         <div
           ref={controlsInFlowRef}
@@ -872,13 +886,6 @@ export default function App(){
           )}
         </div>
       </header>
-
-      <motion.div
-        aria-hidden="true"
-        initial={false}
-        animate={{ height: showFixedControls && fixedControlsHeight ? (fixedControlsHeight + 16) : 0 }}
-        transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.30, ease: [0.2, 0, 0, 1] }}
-      />
 
       <MotionUl
         layout
@@ -1032,7 +1039,7 @@ export default function App(){
                             {rule.body?.trim() && (
                               <div className="text-[14px] sm:text-[15px] leading-relaxed text-slate-700 text-justified">
                                 {String(rule.body).split(/\n{2,}/).map((p, i) => (
-                                  <MotionP key={i} variants={panelChildVariants} className={i ? 'mt-2' : ''}>{highlight(p, search)}</MotionP>
+                                  <MotionP key={i} variants={panelChildVariants} className={i ? 'mt-3' : ''}>{highlight(p, search)}</MotionP>
                                 ))}
                               </div>
                             )}
@@ -1072,6 +1079,56 @@ export default function App(){
           </AnimatePresence>
         )}
       </MotionUl>
+
+      {ATTACHMENTS.length > 0 && (
+        <section className="mt-4 mb-28 rounded-xl border border-brand-200/50 bg-white/70 shadow-sm shadow-slate-200/60 backdrop-blur-sm p-3">
+          <div className="flex items-center justify-between gap-3">
+            <div className="text-sm font-semibold text-brand-700">Anexos</div>
+            <div className="text-[11px] text-slate-600">{ATTACHMENTS.length} imagem(ns)</div>
+          </div>
+          <div className="mt-3 grid gap-2 sm:grid-cols-2">
+            {ATTACHMENTS.map((a) => {
+              const open = openAttachmentId === a.id
+              return (
+                <div key={a.id} className="rounded-lg border border-brand-200/50 bg-white/80 overflow-hidden">
+                  <button
+                    type="button"
+                    onClick={() => setOpenAttachmentId(open ? null : a.id)}
+                    className="w-full flex items-center justify-between gap-3 px-3 py-2 text-left hover:bg-brand-50/30 transition-colors"
+                    aria-expanded={open}
+                  >
+                    <span className="text-[13px] font-semibold text-slate-800">{a.title}</span>
+                    <span className="text-xs text-slate-500">{open ? 'Fechar' : 'Ver'}</span>
+                  </button>
+
+                  {open && (
+                    <div className="px-3 pb-3">
+                      <div className="mt-2 rounded-lg border border-brand-200/40 bg-white">
+                        <img
+                          src={a.href}
+                          alt={a.title}
+                          loading="lazy"
+                          className="w-full h-auto rounded-lg"
+                        />
+                      </div>
+                      <div className="mt-2 flex items-center justify-end">
+                        <a
+                          href={a.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-[12px] text-brand-700 hover:text-brand-800 underline decoration-dotted"
+                        >
+                          Abrir em nova aba
+                        </a>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </section>
+      )}
 
       {/* Botão flutuante permanente */}
       <a

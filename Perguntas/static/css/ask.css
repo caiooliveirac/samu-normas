@@ -1,33 +1,32 @@
 :root{
-  --bg: #0b1020;
-  --card: rgba(255,255,255,0.08);
-  --card-border: rgba(255,255,255,0.12);
-  --text: #e8ecf3;
-  --muted: #aab3c5;
-  --brand: #7aa2ff;
-  --brand-strong: #3e7bff;
+  /* Tema único (sempre claro): degradê vermelho -> branco */
+  --bg: #ffffff;
+  --card: #ffffff;
+  --card-border: #e5e9f2;
+  --text: #0f172a;
+  --muted: #44506b;
+  --brand: #C73227;
+  --accent: #DF4E24;
+  --brand-strong: var(--accent);
+  --brand-rgb: 199 50 39;
+  --accent-rgb: 223 78 36;
+  /* Gradiente de fundo: vermelho -> branco (sem ir para preto) */
+  --bg-gradient: linear-gradient(180deg, rgb(var(--brand-rgb) / 0.16), #ffffff 58%);
+  /* Versão maior/fixa (usada nas páginas com rolagem) */
+  --bg-gradient-fixed: linear-gradient(180deg, rgb(var(--brand-rgb) / 0.16), #ffffff 58%);
   --ok: #2ecc71;
   --err: #ff6b6b;
-  --shadow: 0 10px 30px rgba(0,0,0,.35);
-}
-
-@media (prefers-color-scheme: light){
-  :root{
-    --bg: #f6f8ff;
-    --card: #ffffff;
-    --card-border: #e5e9f2;
-    --text: #0f172a;
-    --muted: #44506b;
-    --brand: #3e7bff;
-    --brand-strong: #1f66ff;
-    --shadow: 0 8px 24px rgba(0,0,0,.08);
-  }
+  --shadow: 0 8px 24px rgba(0,0,0,.08);
 }
 
 *{box-sizing:border-box}
 body{
   margin:0; font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
-  color:var(--text); background: radial-gradient(1200px 600px at 10% -10%, rgba(62,123,255,.25), transparent 60%), var(--bg);
+  color:var(--text);
+  background-image: var(--bg-gradient);
+  background-color: var(--bg);
+  background-repeat: no-repeat;
+  background-size: cover;
   display:flex; align-items:center; justify-content:center; padding:24px;
 }
 
@@ -39,8 +38,9 @@ body{
   display:flex; align-items:center; gap:14px; margin-bottom:18px;
 }
 .logo{
+  background:
     radial-gradient(120% 120% at 20% 20%, rgba(255,255,255,.25), transparent 50%),
-    linear-gradient(135deg, var(--brand), #9b7aff);
+    linear-gradient(135deg, var(--brand), var(--accent));
   box-shadow: var(--shadow);
 }
 .title{font-weight:700; letter-spacing:.2px; font-size: clamp(20px, 3vw, 26px)}
@@ -160,13 +160,12 @@ body,
 body.is-home {
   /* camada 1: gradiente grande, fixo e sem repetição */
   background-image:
-    radial-gradient(1600px 1000px at 10% -10%, rgba(62,123,255,.25), transparent 60%),
+    var(--bg-gradient-fixed),
     /* camada 2: cor base */
     none;
   background-color: var(--bg);
   background-repeat: no-repeat;
   background-attachment: fixed;
-  /* cobre a tela com folga para não "emendar" */
-  background-size: 1600px 1000px, auto;
-  background-position: 0 0, center;
+  background-size: cover;
+  background-position: top left;
 }

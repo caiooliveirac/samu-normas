@@ -1,4 +1,32 @@
 services:
+  # Build rápido do frontend (sem rebuild da imagem web).
+  # Uso (manual):
+  #   docker compose -f docker-compose.prod.yml run --rm frontend
+  # Ele escreve os assets no volume react_volume, que é montado em web/nginx.
+  frontend:
+    image: node:24-alpine
+    working_dir: /frontend
+    environment:
+      # Garante base correta no build caso alguém mude o vite.config
+      VITE_BASE: /static/react/
+    volumes:
+      - ./frontend:/frontend
+      - frontend_node_modules:/frontend/node_modules
+      - frontend_npm_cache:/root/.npm
+      - react_volume:/out
+    command:
+      - /bin/sh
+      - -c
+      - |
+        set -e
+        echo "[frontend] Instalando deps (inclui devDependencies para o build)..."
+        cd /frontend
+        npm install
+        echo "[frontend] Limpando /out..."
+        find /out -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+        echo "[frontend] Build Vite -> /out"
+        npm run build -- --outDir /out
+
   db:
     image: mariadb:11.4
     restart: unless-stopped
@@ -50,6 +78,9 @@ services:
         condition: service_healthy
     volumes:
       - static_volume:/app/staticfiles # Atenção: volume vazio na 1a subida sobrepõe assets empacotados; guard no entrypoint repopula
+      # Assets do React (separado) — permite atualizar o front sem rebuild da imagem web.
+      - react_volume:/app/static/react:ro
+      - react_volume:/app/staticfiles/react:ro
       - media_volume:/app/media
     healthcheck:
       test: ["CMD-SHELL", "python -c 'import socket; s=socket.socket(); s.connect((\"127.0.0.1\",8000)); s.close(); print(\"ok\")'"]
@@ -67,6 +98,13 @@ services:
       - "443:443"    # Porta HTTPS
     volumes:
       - static_volume:/app/staticfiles:ro
+      # Fixa o tema das páginas Django (/ask,/login,/inbox): evita regressão para CSS antigo
+      # quando o container web é recriado sem rebuild e repopula o volume staticfiles.
+      - ./static/css/ask.css:/app/staticfiles/css/ask.css:ro
+      # React build (volume separado)
+      - react_volume:/app/staticfiles/react:ro
+      # Anexos (imagens) - publicados via /anexos/
+      - ./docs/anexos:/app/docs/anexos:ro
       - media_volume:/app/media:ro
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
       # Volume de certificados (estrutura padrão do certbot: /certs/live/DOMINIO/*.pem)
@@ -95,8 +133,11 @@ services:
 volumes:
   db_data:
   static_volume:
+  react_volume:
   media_volume:
   certs_volume:
+  frontend_node_modules:
+  frontend_npm_cache:
 
 networks:
   scoreboard_net:

@@ -1,0 +1,78 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Checklist #{{ s.id }}</title>
+  <link rel="stylesheet" href="{% static 'css/ask.css' %}">
+  <style>
+    pre{white-space:pre-wrap; margin:0; font-family: ui-monospace, SFMono-Regular, Menlo, monospace}
+  </style>
+</head>
+<body>
+  <main class="container fade-in">
+    <header class="header">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <div class="title">Checklist #{{ s.id }}</div>
+        <div class="subtitle">{{ s.created_at|date:"Y-m-d H:i" }} — {{ s.doctor_name }} — {{ s.unit }}</div>
+      </div>
+      <div style="margin-left:auto; display:flex; gap:10px; align-items:center;">
+        <a class="btn" href="{% url 'questions:inbox_checklists' %}" style="text-decoration:none; padding:10px 14px; font-size: 13px;">Voltar</a>
+      </div>
+    </header>
+
+    <section class="card">
+      <div class="helper" style="margin-bottom:10px">
+        <span class="muted">User-Agent: {{ s.user_agent|default:"—" }}</span>
+        <span class="muted">Identificador técnico: {{ s.ip_hash|default:"—" }}</span>
+      </div>
+
+      <div class="card" style="padding:14px">
+        <pre id="txt">{{ s.text }}</pre>
+      </div>
+
+      <p style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap">
+        <button class="btn" type="button" id="copyBtn">Copiar texto</button>
+        <a class="btn" href="{% url 'questions:inbox_checklists' %}" style="text-decoration:none">Voltar</a>
+      </p>
+
+      <div id="toast" class="msg success" style="display:none; margin-top: 10px;">Copiado.</div>
+    </section>
+  </main>
+
+  <script>
+    (function(){
+      const btn = document.getElementById('copyBtn');
+      const pre = document.getElementById('txt');
+      const toast = document.getElementById('toast');
+
+      function showToast(){
+        toast.style.display = 'block';
+        clearTimeout(showToast._t);
+        showToast._t = setTimeout(() => { toast.style.display = 'none'; }, 1400);
+      }
+
+      async function copy(){
+        const txt = (pre && pre.textContent) ? pre.textContent : '';
+        try {
+          await navigator.clipboard.writeText(txt);
+          showToast();
+        } catch (e) {
+          const r = document.createRange();
+          r.selectNodeContents(pre);
+          const sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(r);
+          try { document.execCommand('copy'); } catch (_) {}
+          sel.removeAllRanges();
+          showToast();
+        }
+      }
+
+      if (btn) btn.addEventListener('click', copy);
+    })();
+  </script>
+</body>
+</html>

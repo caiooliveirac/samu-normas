@@ -44,6 +44,10 @@ post_logout.txt
 !rules_fixture.json
 !dump.json  # Se não quiser versionar remova este !
 
+# Exports locais (não versionar)
+/backups/users_export*.json
+/backups/users_export*.csv
+
 # Nunca versionar PDFs (fonte externa / pesado)
 *.pdf
 

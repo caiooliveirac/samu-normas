@@ -167,3 +167,57 @@ class AskedTerm(models.Model):
 
     def __str__(self):
         return f"{self.term} ×{self.count}"
+
+
+class ChecklistSubmission(models.Model):
+    """Registro de checklist enviado a partir da view /checklists/.
+
+    Sem autenticação por enquanto: armazenamos nome/unidade informados e o texto final gerado.
+    O horário é sempre do servidor.
+    """
+
+    doctor_name = models.CharField(max_length=120)
+    unit = models.CharField(max_length=120)
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    ip_hash = models.CharField(max_length=64, blank=True)
+    user_agent = models.CharField(max_length=300, blank=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Envio de checklist"
+        verbose_name_plural = "Envios de checklist"
+
+    def set_ip(self, ip: str):
+        self.ip_hash = hash_ip(ip)
+
+    def __str__(self):
+        who = (self.doctor_name or "").strip() or "(sem nome)"
+        unit = (self.unit or "").strip() or "(sem unidade)"
+        return f"Checklist — {who} — {unit} — {self.created_at:%Y-%m-%d %H:%M}"
+
+
+class ChecklistDigestLog(models.Model):
+    """Log de envios de digest (Telegram).
+
+    Evita duplicidade por dia/slot e permite auditoria do que foi enviado.
+    """
+
+    date = models.DateField(db_index=True)
+    slot = models.CharField(max_length=32, db_index=True)  # ex: manual / morning / midday / evening
+    sent_at = models.DateTimeField(default=timezone.now, db_index=True)
+    status = models.CharField(max_length=16, default='success', db_index=True)  # success|skipped|error
+    recipient = models.CharField(max_length=120, blank=True)
+    message = models.TextField(blank=True)
+    error = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ["-sent_at"]
+        verbose_name = "Envio de digest (Telegram)"
+        verbose_name_plural = "Envios de digest (Telegram)"
+        constraints = [
+            models.UniqueConstraint(fields=["date", "slot"], name="uniq_digest_date_slot"),
+        ]
+
+    def __str__(self):
+        return f"Digest {self.date} ({self.slot}) — {self.status}"

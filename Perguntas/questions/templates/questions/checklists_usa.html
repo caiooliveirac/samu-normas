@@ -1,0 +1,357 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <title>Checklists - USA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="{% static 'css/ask.css' %}" />
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo" aria-hidden="true" style="width:44px;height:44px;border-radius:14px;"></div>
+      <div style="flex:1;min-width:0;">
+        <div class="title">Checklists de Ambulância (USA)</div>
+        <div class="subtitle">Marque os itens, gere o texto e (se quiser) envie para registro.</div>
+      </div>
+      <a href="/" class="btn" style="text-decoration:none; padding:10px 14px; font-size: 13px;">Voltar ao manual</a>
+    </div>
+
+    <div class="card">
+      {% if not groups %}
+        <p class="subtitle">Checklist não encontrado. Verifique <code>docs/checklist.md</code>.</p>
+      {% endif %}
+
+      {% for g in groups %}
+        <section class="js-group" data-group-title="{{ g.title }}" style="margin-bottom: 16px;">
+          <div style="font-weight: 800; letter-spacing: .3px; color: var(--brand); font-size: 14px; margin-bottom: 10px; text-transform: uppercase;">{{ g.title }}</div>
+
+          {% if g.items %}
+            <div style="display:flex; flex-direction: column; gap: 10px;">
+              {% for it in g.items %}
+                <div
+                  class="js-item"
+                  data-item-id="{{ it.id }}"
+                  data-kind="{{ it.kind }}"
+                  data-label="{{ it.label }}"
+                  style="padding:10px 12px; border:1px solid var(--card-border); border-radius: 12px; background: color-mix(in oklab, var(--card) 92%, transparent);"
+                >
+                  <div style="display:flex; align-items:flex-start; gap:10px;">
+                    {% if it.kind == 'field' %}
+                      <span aria-hidden="true" style="margin-top: 3px; font-size: 12px; color: var(--muted);">✎</span>
+                      <div style="flex:1; min-width: 0;">
+                        <div style="color: var(--text); font-weight: 750; letter-spacing: .2px;">{{ it.label }}</div>
+                        <input
+                          class="js-field"
+                          type="text"
+                          placeholder="Preencher"
+                          style="margin-top:8px; width:100%; background: transparent; color: var(--text); border:1px solid var(--card-border); outline:none; border-radius:12px; padding:10px 12px;"
+                        />
+                      </div>
+                    {% else %}
+                      <input class="js-check" type="checkbox" {% if it.checked %}checked{% endif %} style="margin-top: 3px;" />
+                      <div style="flex:1; min-width:0;">
+                        <div style="color: var(--text); font-weight: 650; letter-spacing: .2px;">{{ it.label }}</div>
+                        <input
+                          class="js-note"
+                          type="text"
+                          placeholder="Obs. (opcional) — ex: 'deveria ter 2, tem 1'"
+                          style="margin-top:8px; width:100%; background: transparent; color: var(--text); border:1px solid var(--card-border); outline:none; border-radius:12px; padding:10px 12px;"
+                        />
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          {% if g.subgroups %}
+            {% for sg in g.subgroups %}
+              <div class="js-subgroup" data-subgroup-title="{{ sg.title }}" style="margin-top: 14px;">
+                <div style="font-weight: 750; color: var(--text); font-size: 13px; margin-bottom: 10px;">{{ sg.title }}</div>
+                <div style="display:flex; flex-direction: column; gap: 10px;">
+                  {% for it in sg.items %}
+                    <div
+                      class="js-item"
+                      data-item-id="{{ it.id }}"
+                      data-kind="{{ it.kind }}"
+                      data-label="{{ it.label }}"
+                      style="padding:10px 12px; border:1px solid var(--card-border); border-radius: 12px; background: color-mix(in oklab, var(--card) 92%, transparent);"
+                    >
+                      <div style="display:flex; align-items:flex-start; gap:10px;">
+                        {% if it.kind == 'field' %}
+                          <span aria-hidden="true" style="margin-top: 3px; font-size: 12px; color: var(--muted);">✎</span>
+                          <div style="flex:1; min-width: 0;">
+                            <div style="color: var(--text); font-weight: 750; letter-spacing: .2px;">{{ it.label }}</div>
+                            <input
+                              class="js-field"
+                              type="text"
+                              placeholder="Preencher"
+                              style="margin-top:8px; width:100%; background: transparent; color: var(--text); border:1px solid var(--card-border); outline:none; border-radius:12px; padding:10px 12px;"
+                            />
+                          </div>
+                        {% else %}
+                          <input class="js-check" type="checkbox" {% if it.checked %}checked{% endif %} style="margin-top: 3px;" />
+                          <div style="flex:1; min-width:0;">
+                            <div style="color: var(--text); font-weight: 650; letter-spacing: .2px;">{{ it.label }}</div>
+                            <input
+                              class="js-note"
+                              type="text"
+                              placeholder="Obs. (opcional) — ex: 'deveria ter 2, tem 1'"
+                              style="margin-top:8px; width:100%; background: transparent; color: var(--text); border:1px solid var(--card-border); outline:none; border-radius:12px; padding:10px 12px;"
+                            />
+                          </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endfor %}
+          {% endif %}
+        </section>
+      {% endfor %}
+    </div>
+
+    <div class="card" style="margin-top: 14px;">
+      <div style="display:flex; align-items:center; justify-content: space-between; gap: 12px;">
+        <div>
+          <div class="title" style="font-size: 16px;">Texto para copiar</div>
+          <div class="subtitle" style="margin-top: 4px;">✅ conferido • 🚫 ausente/não informado</div>
+        </div>
+        <div style="display:flex; align-items:center; gap: 10px;">
+          <button id="copyBtn" type="button" class="btn" style="padding:10px 12px; font-size: 13px; display:inline-flex; align-items:center; gap:8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M8 7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-8a2 2 0 0 1-2-2V7Z" stroke="white" stroke-width="2"/>
+              <path d="M6 17H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1" stroke="white" stroke-width="2"/>
+            </svg>
+            <span>Copiar</span>
+          </button>
+          <button id="sendBtn" type="button" class="btn" style="padding:10px 12px; font-size: 13px;">Enviar</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 12px; padding: 12px;">
+        <div style="font-weight: 800; letter-spacing: .2px;">Enviar para registro</div>
+        <div class="subtitle" style="margin-top: 4px;">Selecione a unidade e informe o nome (sem prompt).</div>
+        <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top: 10px;">
+          <input
+            id="doctorName"
+            type="text"
+            placeholder="Nome do médico"
+            style="flex: 1; min-width: 220px; background: transparent; color: var(--text); border:1px solid var(--card-border); outline:none; border-radius:12px; padding:10px 12px;"
+          />
+          <select
+            id="unitSelect"
+            style="min-width: 160px; background: transparent; color: var(--text); border:1px solid var(--card-border); outline:none; border-radius:12px; padding:10px 12px;"
+          >
+            <option value="">Unidade (selecione)</option>
+            {% for u in expected_units %}
+              <option value="{{ u }}">{{ u }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <textarea id="output" rows="14" spellcheck="false" style="margin-top: 12px; width: 100%; resize: vertical; background: transparent; color: var(--text); border: 1px solid var(--card-border); outline: none; border-radius: 12px; padding: 12px 14px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: 12px; line-height: 1.5;"></textarea>
+
+      <div id="toast" class="msg success" style="display:none; margin-top: 10px;">Copiado.</div>
+    </div>
+  </div>
+
+  <form id="csrfForm" style="display:none;">{% csrf_token %}</form>
+
+  <script>
+    (function(){
+      const outputEl = document.getElementById('output');
+      const copyBtn = document.getElementById('copyBtn');
+      const sendBtn = document.getElementById('sendBtn');
+      const toast = document.getElementById('toast');
+      const csrfInput = document.querySelector('#csrfForm input[name=csrfmiddlewaretoken]');
+      const doctorInput = document.getElementById('doctorName');
+      const unitSelect = document.getElementById('unitSelect');
+
+      function toSentenceLike(label){
+        const s = String(label || '').trim();
+        if (!s) return '';
+        // Mantém prefixo numérico (ex: "1. " ou "5.1 ")
+        const m = s.match(/^\s*(\d+(?:\.\d+)?\.)\s+(.*)$/);
+        const prefix = m ? (m[1] + ' ') : '';
+        const rest = m ? m[2] : s;
+
+        const words = rest.split(/(\s+)/);
+        const out = words.map(w => {
+          if (/^\s+$/.test(w)) return w;
+          // Preserva tokens curtos em CAPS (siglas) e tokens com números/símbolos.
+          if (/[0-9]/.test(w) || /[+]/.test(w)) return w;
+          if (/^[A-ZÁ-ÚÇ]{2,4}$/.test(w)) return w;
+          if (w.toUpperCase() === 'I-STAT') return 'i-STAT';
+          const lower = w.toLowerCase();
+          return lower.charAt(0).toUpperCase() + lower.slice(1);
+        }).join('');
+
+        return prefix + out;
+      }
+
+      function buildText(){
+        const lines = [];
+        lines.push('CHECKLIST PADRÃO USA');
+
+        document.querySelectorAll('.js-group').forEach(groupEl => {
+          const gTitleRaw = groupEl.getAttribute('data-group-title') || '';
+          const gTitle = toSentenceLike(gTitleRaw);
+          lines.push('');
+          lines.push(gTitle);
+
+          // Itens diretos dentro do grupo (não dentro de .js-subgroup)
+          Array.from(groupEl.querySelectorAll('.js-item'))
+            .filter(itemEl => !itemEl.closest('.js-subgroup'))
+            .forEach(itemEl => {
+              lines.push(formatItemLine(itemEl));
+            });
+
+          groupEl.querySelectorAll(':scope > .js-subgroup').forEach(subEl => {
+            const stRaw = subEl.getAttribute('data-subgroup-title') || '';
+            const st = toSentenceLike(stRaw);
+            lines.push('');
+            lines.push('  ' + st);
+            subEl.querySelectorAll(':scope .js-item').forEach(itemEl => {
+              lines.push('  ' + formatItemLine(itemEl));
+            });
+          });
+        });
+
+        outputEl.value = lines.join('\n').trim() + '\n';
+      }
+
+      function formatItemLine(itemEl){
+        const kind = itemEl.getAttribute('data-kind') || 'checkbox';
+        const labelRaw = itemEl.getAttribute('data-label') || '';
+        const label = toSentenceLike(labelRaw);
+
+        if (kind === 'field') {
+          const field = itemEl.querySelector('.js-field');
+          const val = (field && field.value || '').trim();
+          const ok = !!val;
+          const emoji = ok ? '✅' : '🚫';
+          const detail = ok ? (': ' + val) : ': (não informado)';
+          return `${emoji} ${label}${detail}`;
+        }
+
+        const check = itemEl.querySelector('.js-check');
+        const note = itemEl.querySelector('.js-note');
+        const ok = !!(check && check.checked);
+        const emoji = ok ? '✅' : '🚫';
+        const obs = (note && note.value || '').trim();
+        return obs ? `${emoji} ${label} — Obs: ${obs}` : `${emoji} ${label}`;
+      }
+
+      function showToast(message, kind){
+        toast.textContent = message || 'OK.';
+        toast.className = 'msg ' + (kind === 'error' ? 'error' : 'success');
+        toast.style.display = 'block';
+        clearTimeout(showToast._t);
+        showToast._t = setTimeout(() => { toast.style.display = 'none'; }, 1800);
+      }
+
+      async function copyText(){
+        buildText();
+        const txt = outputEl.value;
+        try {
+          await navigator.clipboard.writeText(txt);
+          showToast('Copiado.', 'success');
+        } catch (e) {
+          // Fallback: seleciona e copia
+          outputEl.focus();
+          outputEl.select();
+          try { document.execCommand('copy'); } catch (_) {}
+          showToast('Copiado.', 'success');
+        }
+      }
+
+      async function sendText(){
+        buildText();
+        const txt = (outputEl.value || '').trim();
+        if (!txt) {
+          showToast('Nada para enviar.', 'error');
+          return;
+        }
+
+        const doctorName = (doctorInput && doctorInput.value || '').trim();
+        if (!doctorName) {
+          showToast('Nome do médico é obrigatório.', 'error');
+          if (doctorInput) doctorInput.focus();
+          return;
+        }
+
+        const unit = (unitSelect && unitSelect.value || '').trim();
+        if (!unit) {
+          showToast('Selecione a unidade.', 'error');
+          if (unitSelect) unitSelect.focus();
+          return;
+        }
+
+        const ok = window.confirm('Tem certeza que deseja enviar este checklist para o banco?');
+        if (!ok) return;
+
+        const csrfToken = csrfInput ? csrfInput.value : '';
+        if (!csrfToken) {
+          showToast('CSRF não encontrado. Recarregue a página.', 'error');
+          return;
+        }
+
+        const prevLabel = sendBtn ? sendBtn.textContent : '';
+        if (sendBtn) {
+          sendBtn.disabled = true;
+          sendBtn.textContent = 'Enviando...';
+        }
+
+        try {
+          const resp = await fetch('/api/checklists/submit/', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrfToken,
+            },
+            body: JSON.stringify({ doctor_name: doctorName, unit: unit, text: txt }),
+          });
+          const data = await resp.json().catch(() => ({}));
+          if (!resp.ok || !data.ok) {
+            const msg = (data && data.error) ? data.error : 'Falha ao enviar.';
+            showToast(msg, 'error');
+            return;
+          }
+          showToast(`Enviado. ID: ${data.id}`, 'success');
+        } catch (e) {
+          showToast('Erro de rede ao enviar.', 'error');
+        } finally {
+          if (sendBtn) {
+            sendBtn.disabled = false;
+            sendBtn.textContent = prevLabel || 'Enviar';
+          }
+        }
+      }
+
+      function maybeRebuild(e){
+        if (!outputEl) return;
+        const t = e && e.target;
+        if (!t || !t.classList) return;
+        if (t.classList.contains('js-check') || t.classList.contains('js-note') || t.classList.contains('js-field')) {
+          buildText();
+        }
+      }
+
+      // Inputs de texto disparam 'input'; checkbox é mais confiável em 'change'.
+      document.addEventListener('input', maybeRebuild);
+      document.addEventListener('change', maybeRebuild);
+
+      if (copyBtn) copyBtn.addEventListener('click', copyText);
+      if (sendBtn) sendBtn.addEventListener('click', sendText);
+      buildText();
+    })();
+  </script>
+</body>
+</html>

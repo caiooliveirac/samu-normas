@@ -11,7 +11,7 @@
     "model": "questions.rule",
     "pk": 1001,
     "fields": {
-      "title": "0. Apresentação",
+      "title": "0. APRESENTAÇÃO",
       "slug": "0-apresentação",
       "category": 1,
       "is_published": true,
@@ -26,7 +26,7 @@
     "pk": 10001,
     "fields": {
       "rule": 1001,
-      "title": "Geral",
+      "title": "GERAL",
       "order": 1,
       "is_published": true
     }
@@ -310,7 +310,7 @@
     "pk": 100025,
     "fields": {
       "card": 10003,
-      "text": "O SAMU Salvador e RMS conta ainda com o Protocolo AVC (PAVC). Este fluxo destinase aos pacientes com os seguintes critérios: déficit neurológico instalado há menos de 4 horas, independente do cálculo do NIHSS e para pacientes sem contraindicação à trombólise. O PAVC visa identificar os pacientes com suspeita de Acidente Vascular Cerebral Isquêmico e aptos ao tratamento via trombólise. Obrigatoriamente, os pacientes que atendam aos critérios devem ser encaminhados para as unidades de referência no menor tempo possível, ainda que na ausência de vaga na rede. A decisão quanto ao valor mínimo do NIHSS foi modificada em última reunião de chefia em virtude da possibilidade de piora do déficit e risco de perda de janela. Sendo assim, deve ser responsabilidade das equipes de referência a decisão quanto ao manejo. Pacientes que não se enquadrem nos critérios para o Protocolo AVC, porém apresentem sinais de acometimento neurológico agudo como por exemplo rebaixamento do nível de consciência súbito, presença de Tríade de Cushing ao exame físico, devem ser criteriosamente avaliados por risco de sangramento intracraniano. O Chefe de Plantão nesses casos pode encaminhar o paciente à unidade de referência considerando a necessidade imediata de exame de imagem e melhor tratamento disponível na rede.",
+      "text": "O SAMU Salvador e RMS conta ainda com o Protocolo AVC (PAVC). Este fluxo destina-se aos pacientes com os seguintes critérios: déficit neurológico instalado há menos de 4 horas, independente do cálculo do NIHSS e para pacientes sem contraindicação à trombólise. O PAVC visa identificar os pacientes com suspeita de Acidente Vascular Cerebral Isquêmico e aptos ao tratamento via trombólise. Obrigatoriamente, os pacientes que atendam aos critérios devem ser encaminhados para as unidades de referência no menor tempo possível, ainda que na ausência de vaga na rede. A decisão quanto ao valor mínimo do NIHSS foi modificada em última reunião de chefia em virtude da possibilidade de piora do déficit e risco de perda de janela. Sendo assim, deve ser responsabilidade das equipes de referência a decisão quanto ao manejo. Pacientes que não se enquadrem nos critérios para o Protocolo AVC, porém apresentem sinais de acometimento neurológico agudo como por exemplo rebaixamento do nível de consciência súbito, presença de Tríade de Cushing ao exame físico, devem ser criteriosamente avaliados por risco de sangramento intracraniano. O Chefe de Plantão nesses casos pode encaminhar o paciente à unidade de referência considerando a necessidade imediata de exame de imagem e melhor tratamento disponível na rede.",
       "order": 15,
       "tags": []
     }

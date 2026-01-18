@@ -11,6 +11,8 @@ set -euo pipefail
 #   --force-recreate   Força recriação dos serviços web/nginx
 #   --no-migrate       Pula migrações (normalmente entrypoint já faz migrate)
 #   --pull-only        Apenas faz pull da imagem (não sobe stack)
+#   --build-frontend   Gera assets do React no volume (sem rebuild da imagem web)
+#   --frontend-only    Apenas build-frontend e encerra
 #   --health-url URL   URL para healthcheck final (default http://localhost/nginx-health)
 
 COMPOSE_FILE="docker-compose.prod.yml"
@@ -21,6 +23,8 @@ BUILD_LOCAL=false
 FORCE_RECREATE=false
 NO_MIGRATE=false
 PULL_ONLY=false
+BUILD_FRONTEND=false
+FRONTEND_ONLY=false
 HEALTH_URL="http://localhost/nginx-health"
 
 while [[ $# -gt 0 ]]; do
@@ -29,6 +33,8 @@ while [[ $# -gt 0 ]]; do
     --force-recreate) FORCE_RECREATE=true; shift ;;
     --no-migrate) NO_MIGRATE=true; shift ;;
     --pull-only) PULL_ONLY=true; shift ;;
+    --build-frontend) BUILD_FRONTEND=true; shift ;;
+    --frontend-only) FRONTEND_ONLY=true; BUILD_FRONTEND=true; shift ;;
     --health-url) HEALTH_URL="$2"; shift 2 ;;
     *) echo "[deploy] Flag desconhecida: $1"; exit 1 ;;
   esac
@@ -53,6 +59,13 @@ fi
 if $PULL_ONLY; then
   echo "[deploy] Pull realizado. Encerrando (--pull-only)."
   exit 0
+fi
+
+if $BUILD_FRONTEND; then
+  echo "[deploy] Build do frontend (React/Vite) no volume react_volume..."
+  docker compose -f "$COMPOSE_FILE" run --rm frontend
+  echo "[deploy] Frontend build finalizado."
+  $FRONTEND_ONLY && exit 0
 fi
 
 if $BUILD_LOCAL; then

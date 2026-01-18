@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html, format_html_join
 from django.db import connection
-from .models import Category, Tag, Rule, RuleCard, RuleBullet, Question, SearchLog, AskedTerm
+from .models import Category, Tag, Rule, RuleCard, RuleBullet, Question, SearchLog, AskedTerm, ChecklistSubmission, ChecklistDigestLog
 
 # --- Utilitário: detectar se o banco tem tabelas de timezone populadas ---
 _HAS_TZ_SUPPORT = None
@@ -118,12 +118,19 @@ class SearchLogAdmin(admin.ModelAdmin):
     list_filter = ("results_count", "created_at")
     ordering = ("-created_at",)
 
-    # Só define date_hierarchy se o banco suportar conversão de timezone
-    if has_timezone_support():
-        date_hierarchy = "created_at"
-    else:
-        # Exibe aviso visual simples (opcional: poderia usar mensagens do admin)
-        pass
+    # Default: tenta habilitar hierarquia por data.
+    # Se o banco não suportar CONVERT_TZ (tabelas de timezone ausentes), desligamos
+    # isso em runtime no changelist_view (sem acessar DB durante import).
+    date_hierarchy = "created_at"
+
+    def changelist_view(self, request, extra_context=None):
+        old_date_hierarchy = getattr(self, "date_hierarchy", None)
+        try:
+            if not has_timezone_support():
+                self.date_hierarchy = None
+            return super().changelist_view(request, extra_context=extra_context)
+        finally:
+            self.date_hierarchy = old_date_hierarchy
 
 
 @admin.register(AskedTerm)
@@ -133,3 +140,19 @@ class AskedTermAdmin(admin.ModelAdmin):
     list_filter = ("count",)
     ordering = ("-count", "term")
     readonly_fields = ("first_seen", "last_seen", "count")
+
+
+@admin.register(ChecklistSubmission)
+class ChecklistSubmissionAdmin(admin.ModelAdmin):
+    list_display = ("id", "created_at", "doctor_name", "unit")
+    search_fields = ("doctor_name", "unit", "text")
+    list_filter = ("unit", "created_at")
+    readonly_fields = ("created_at", "ip_hash", "user_agent")
+
+
+@admin.register(ChecklistDigestLog)
+class ChecklistDigestLogAdmin(admin.ModelAdmin):
+    list_display = ("id", "date", "slot", "status", "sent_at", "recipient")
+    list_filter = ("date", "slot", "status")
+    search_fields = ("recipient", "message", "error")
+    readonly_fields = ("sent_at",)

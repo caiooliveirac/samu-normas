@@ -152,6 +152,11 @@ BUILD_SHA = os.getenv('BUILD_SHA', 'dev-local')
 BUILD_DATE = os.getenv('BUILD_DATE', 'unknown')
 APP_VERSION = os.getenv('APP_VERSION', 'dev')
 
+# Telegram (digest de checklists)
+TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '').strip()
+_tg_ids = os.getenv('TELEGRAM_CHAT_IDS', os.getenv('TELEGRAM_CHAT_ID', '')).strip()
+TELEGRAM_CHAT_IDS = [s.strip() for s in _tg_ids.split(',') if s.strip()]
+
 # Segurança / endurecimento condicional.
 # Regras:
 # - Só marca cookies como secure se realmente for forçado redirect HTTPS ou variável explícita SECURE_FORCE_COOKIES=1.

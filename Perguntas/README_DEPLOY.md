@@ -17,6 +17,29 @@ curl -sf http://localhost/healthz && echo OK-DJANGO
 ```
 Se ambos OK, acesse via navegador (HTTP). Só depois habilite HTTPS.
 
+## Atualizar só a estética (sem rebuild do container web)
+
+### 1) Frontend React/Vite (rápido)
+O `docker-compose.prod.yml` tem um serviço `frontend` que gera os assets do React em um volume dedicado (`react_volume`).
+Isso evita rebuild da imagem `web` quando a mudança é só UI do frontend.
+
+Comando:
+```bash
+./scripts/deploy.sh --frontend-only
+```
+
+Alternativa (sem script):
+```bash
+docker compose -f docker-compose.prod.yml run --rm frontend
+```
+
+### 2) Templates/CSS Django (rápido)
+Para editar HTML/CSS das views Django sem rebuild da imagem `web`, use o override:
+```bash
+docker compose -f docker-compose.prod.yml -f docker-compose.prod.override.dev-templates.yml restart web
+```
+Esse override monta `templates/` e `static/` como volumes read-only dentro do container.
+
 Para rollback rápido (imagem anterior):
 ```bash
 export APP_IMAGE=ghcr.io/<owner>/<repo>/samu-normas:<sha_antigo>
@@ -77,6 +100,55 @@ APP_IMAGE=ghcr.io/<owner>/<repo>/samu-normas:latest ./scripts/deploy.sh --force-
 - Nginx: `/nginx-health` (retorna 200 sem tocar no Django)
 - Django: `/healthz` (retorna plain text "ok")
  - Version: `/__version__` (JSON com sha, version, build_date)
+
+## Inbox (perguntas enviadas) — acesso em produção
+URL do painel de perguntas:
+- `/inbox/` (requer usuário **staff**)
+
+Fluxo típico:
+1. Acesse `http(s)://SEU_HOST/inbox/`.
+2. Se estiver deslogado, você será direcionado para uma tela de login.
+   - Observação: como o `inbox` usa `staff_member_required`, o redirect pode cair em `/admin/login/?next=/inbox/`.
+   - Se preferir usar a tela de login custom, faça login em `/login/` e depois volte para `/inbox/`.
+
+### Criar usuário para o coordenador (recomendado)
+Crie um usuário **staff** (não precisa ser superuser). Rode no servidor, na pasta `Perguntas/`:
+
+1) Criar usuário (interativo):
+```bash
+docker compose -f docker-compose.prod.yml exec web python manage.py createsuperuser
+```
+Durante a criação, marque como `Superuser` apenas se realmente precisar; para acessar `/inbox/` basta `Staff`.
+
+2) Se o usuário já existe, defina/alterar senha:
+```bash
+docker compose -f docker-compose.prod.yml exec web python manage.py changepassword NOME_DO_USUARIO
+```
+
+3) Ajustar permissões (staff) via Admin:
+- Acesse `/admin/` → Users → selecione o usuário → marque **Staff status** → Save.
+
+Dica operacional: envie a senha ao coordenador por canal seguro e, se possível, troque após o primeiro acesso.
+
+## Checklists USA + Digest no Telegram
+
+URLs úteis:
+- Preenchimento do checklist: `/checklists/`
+- Inbox de checklists (staff): `/inbox/checklists/`
+
+Configuração (em `.env.prod`):
+- `TELEGRAM_BOT_TOKEN`
+- `TELEGRAM_CHAT_IDS` (lista separada por vírgula) ou `TELEGRAM_CHAT_ID` (único)
+
+Envio do digest (manual):
+- Pelo botão em `/inbox/checklists/` (após confirmação, envia com `force=1`)
+- Via terminal:
+   ```bash
+   docker compose -f docker-compose.prod.yml exec web \
+      python manage.py send_checklist_digest --slot manual --force
+   ```
+
+Mais detalhes do formato e funcionamento: `docs/CHECKLISTS_TELEGRAM.md`.
 
 ## HTTPS (Certbot)
 Passo a passo seguro (não habilite redirect antes de ter certificado funcional):
