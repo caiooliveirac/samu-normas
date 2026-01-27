@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  app-financas:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: swiss-track-finance
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - finance_data:/data
+    networks:
+      - scoreboard_net
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://localhost:8080/financas/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  finance_data:
+
+networks:
+  scoreboard_net:
+    external: true
+    name: scoreboard-standalone_default

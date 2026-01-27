@@ -1,0 +1,242 @@
+{{ define "dashboard" }}
+<!-- KPI Grid (3D Tilt Effect) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <!-- Total Spent -->
+    <div class="glass-card rounded-2xl p-8 relative overflow-hidden group cursor-pointer transition-transform active:scale-95" data-tilt data-tilt-max="5" data-tilt-glare data-tilt-max-glare="0.2">
+        <div class="absolute -right-6 -top-6 w-24 h-24 bg-emerald-500/20 rounded-full blur-2xl group-hover:bg-emerald-500/30 transition-all"></div>
+        <p class="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em]">Total Gasto</p>
+        <h3 class="text-4xl font-thin text-white mt-1 tracking-tighter">R$ {{ printf "%.2f" .TotalSpent }}</h3>
+        <div class="flex items-center gap-2 mt-2">
+            <span class="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded border border-emerald-500/20">Mês Atual</span>
+        </div>
+    </div>
+
+    <!-- Budget Logic -->
+    <div class="glass-card rounded-2xl p-8 relative overflow-hidden group cursor-pointer transition-transform active:scale-95" data-tilt data-tilt-max="5">
+        <div class="absolute -right-6 -top-6 w-24 h-24 {{ if ge .BudgetUsage 100.0 }}bg-red-500/20{{ else if ge .BudgetUsage 70.0 }}bg-yellow-500/20{{ else }}bg-blue-500/20{{ end }} rounded-full blur-2xl transition-all"></div>
+        <div class="flex justify-between items-baseline">
+            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em]">Budget ({{ printf "%.0f" .BudgetLimit }})</p>
+            <span class="{{ if ge .BudgetUsage 100.0 }}text-red-400 animate-pulse{{ else if ge .BudgetUsage 70.0 }}text-yellow-400{{ else }}text-blue-400{{ end }} font-mono font-bold">{{ printf "%.1f" .BudgetUsage }}%</span>
+        </div>
+        
+        <!-- Retro Progress Bar -->
+        <div class="w-full bg-white/5 rounded-full h-2 mt-4 overflow-hidden border border-white/5">
+            <div class="h-full rounded-full {{ if ge .BudgetUsage 100.0 }}bg-gradient-to-r from-red-600 to-red-400{{ else if ge .BudgetUsage 70.0 }}bg-gradient-to-r from-yellow-600 to-yellow-400{{ else }}bg-gradient-to-r from-blue-600 to-blue-400{{ end }} shadow-[0_0_15px_rgba(59,130,246,0.5)]" style="width: {{ .BudgetUsage }}%"></div>
+        </div>
+        <p class="text-xs text-slate-500 mt-2 text-right">Limite mensal</p>
+    </div>
+
+    <!-- Projection -->
+    <div class="glass-card rounded-2xl p-8 relative overflow-hidden group cursor-pointer transition-transform active:scale-95" data-tilt data-tilt-max="5">
+        <div class="absolute -right-6 -top-6 w-24 h-24 {{ if eq .StatusColor "red" }}bg-red-500/20{{ else }}bg-emerald-500/20{{ end }} rounded-full blur-2xl transition-all"></div>
+        <p class="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em]">Projeção Final</p>
+        <h3 class="text-4xl font-thin text-white mt-1 tracking-tighter">R$ {{ printf "%.2f" .Projected }}</h3>
+        <div class="flex items-center gap-2 mt-2">
+             <span class="{{ if eq .StatusColor "red" }}bg-red-500/10 text-red-400 border-red-500/20{{ else }}bg-emerald-500/10 text-emerald-400 border-emerald-500/20{{ end }} text-xs px-2 py-0.5 rounded border">
+                 {{ if eq .StatusColor "red" }}⚠️ Acima do Budget{{ else }}✅ Dentro da Meta{{ end }}
+             </span>
+        </div>
+    </div>
+</div>
+
+<!-- AI Insights / Alerts Section -->
+{{ if .Insights }}
+<div class="mb-8 animate-in fade-in slide-in-from-top-4 duration-700">
+    <h4 class="text-slate-400 font-bold text-xs uppercase tracking-widest mb-4 flex items-center gap-2 px-1">
+        Insights Financeiros
+    </h4>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {{ range .Insights }}
+        <div class="relative overflow-hidden rounded-2xl border {{ if eq .Level "warning" }}border-orange-500/20 bg-orange-500/5{{ else if eq .Level "success" }}border-emerald-500/20 bg-emerald-500/5{{ else }}border-blue-500/20 bg-blue-500/5{{ end }} backdrop-blur-sm p-4 hover:bg-white/5 transition-colors cursor-default">
+            <div class="flex items-start gap-4">
+                <div class="text-2xl pt-1">{{ .Icon }}</div>
+                <div>
+                    <h5 class="font-bold text-sm {{ if eq .Level "warning" }}text-orange-200{{ else if eq .Level "success" }}text-emerald-200{{ else }}text-blue-200{{ end }} flex items-center gap-2">
+                        {{ .Title }}
+                        {{ if .Value }}<span class="text-[10px] px-1.5 py-0.5 rounded bg-white/10">{{ .Value }}</span>{{ end }}
+                    </h5>
+                    <p class="text-slate-400 text-xs mt-1 leading-relaxed">
+                        {{ .Message }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        {{ end }}
+    </div>
+</div>
+{{ end }}
+
+<!-- Charts Row (ECharts) -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Category Chart -->
+    <div class="glass-card rounded-2xl p-6">
+        <h4 class="text-slate-300 font-semibold mb-6 flex items-center gap-2 text-sm uppercase tracking-wide">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_#10b981]"></span>
+            Gastos por Categoria
+        </h4>
+        <div id="categoryChart" style="height: 300px; width: 100%;"></div>
+    </div>
+
+    <!-- Daily Chart -->
+    <div class="glass-card rounded-2xl p-6">
+        <h4 class="text-slate-300 font-semibold mb-6 flex items-center gap-2 text-sm uppercase tracking-wide">
+            <span class="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_10px_#3b82f6]"></span>
+            Timeline Financeira
+        </h4>
+        <div id="dailyChart" style="height: 300px; width: 100%;"></div>
+    </div>
+</div>
+
+<!-- Recent Transactions Table -->
+<div class="glass-card rounded-2xl overflow-hidden">
+    <div class="p-6 border-b border-white/5 bg-white/5 backdrop-blur-sm flex justify-between items-center">
+        <h4 class="text-slate-300 font-bold text-sm uppercase tracking-wider">Últimas Transações</h4>
+        <button class="text-xs bg-white/5 hover:bg-white/10 text-white px-3 py-1 rounded-lg transition-colors border border-white/10">Ver Todas</button>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="text-slate-500 text-[10px] uppercase tracking-wider border-b border-white/5">
+                    <th class="p-4 font-semibold">Data</th>
+                    <th class="p-4 font-semibold">Descrição</th>
+                    <th class="p-4 font-semibold">Tag</th>
+                    <th class="p-4 font-semibold text-right">Valor</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5 text-sm">
+                {{ if .Transactions }}
+                    {{ range .Transactions }}
+                    <tr class="hover:bg-white/5 transition-colors group cursor-pointer"
+                        hx-get="transactions/{{.ID}}" 
+                        hx-target="#modal-content"
+                        @click="showModal = true"
+                    >
+                        <td class="p-4 text-slate-400 font-mono text-xs">{{ .Date }}</td>
+                        <td class="p-4 text-slate-200 font-medium group-hover:text-emerald-300 transition-colors">
+                            <div class="flex flex-col">
+                                <span>{{ .Description }}</span>
+                                <div class="flex gap-2">
+                                     {{ if .Bank }}<span class="text-[10px] text-slate-500 border border-slate-700 px-1 rounded">{{ .Bank }}</span>{{ end }}
+                                     {{ if gt .Installments 1 }}<span class="text-[10px] text-pink-400 border border-pink-900/40 px-1 rounded">{{.Installments}}x</span>{{ end }}
+                                </div>
+                            </div>
+                        </td>
+                        <td class="p-4">
+                            <span class="px-2 py-1 rounded bg-slate-800/50 text-slate-400 text-[10px] border border-white/5 uppercase tracking-wide">
+                                {{ .Category }}
+                            </span>
+                        </td>
+                        <td class="p-4 text-right font-mono font-bold text-base {{ if .IsCredit }}text-red-400{{ else }}text-emerald-400{{ end }}">
+                            R$ {{ .Amount }}
+                        </td>
+                    </tr>
+                    {{ end }}
+                {{ else }}
+                    <tr>
+                        <td colspan="4" class="p-8 text-center text-slate-500 italic">
+                            Nenhuma transação encontrada este mês.
+                        </td>
+                    </tr>
+                {{ end }}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // Initialize 3D Tilt
+    VanillaTilt.init(document.querySelectorAll("[data-tilt]"), {
+        max: 5,
+        speed: 400,
+        glare: true,
+        "max-glare": 0.1
+    });
+
+    // Initialize ECharts
+    (function() {
+        const catContainer = document.getElementById('categoryChart');
+        const dayContainer = document.getElementById('dailyChart');
+         // Clean up existing instances if HTMX reloaded content
+        if (echarts.getInstanceByDom(catContainer)) echarts.getInstanceByDom(catContainer).dispose();
+        if (echarts.getInstanceByDom(dayContainer)) echarts.getInstanceByDom(dayContainer).dispose();
+
+        const myCatChart = echarts.init(catContainer, 'dark');
+        const myDayChart = echarts.init(dayContainer, 'dark');
+
+        // Data
+        const catLabels = {{ .Category.Labels }};
+        const catValues = {{ .Category.Values }};
+        const dayLabels = {{ .Daily.Labels }};
+        const dayValues = {{ .Daily.Values }};
+
+        // --- Donut Config (Nightingale) ---
+        const pieData = catLabels.map((label, i) => ({ value: catValues[i], name: label }));
+        
+        const catOption = {
+            backgroundColor: 'transparent',
+            tooltip: { trigger: 'item', formatter: '{b}: R$ {c} ({d}%)' },
+            legend: { top: '5%', left: 'center', textStyle: { color: '#94a3b8' } },
+            series: [{
+                name: 'Gastos',
+                type: 'pie',
+                radius: ['40%', '70%'],
+                center: ['50%', '60%'],
+                itemStyle: {
+                    borderRadius: 8,
+                    borderColor: '#0f172a',
+                    borderWidth: 2
+                },
+                label: { show: false },
+                emphasis: { label: { show: true, fontSize: '14', fontWeight: 'bold' } },
+                data: pieData
+            }]
+        };
+
+        // --- Bar Config (Gradient) ---
+        const dayOption = {
+            backgroundColor: 'transparent',
+            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+            grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+            xAxis: { 
+                type: 'category', 
+                data: dayLabels, 
+                axisLine: { lineStyle: { color: '#334155' } },
+                axisLabel: { color: '#94a3b8' }
+            },
+            yAxis: { 
+                type: 'value', 
+                splitLine: { lineStyle: { color: '#1e293b' } },
+                axisLabel: { color: '#94a3b8' }
+            },
+            dataZoom: [{ type: 'inside' }],
+            series: [{
+                name: 'Gasto',
+                type: 'bar',
+                data: dayValues,
+                itemStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: '#10b981' },
+                        { offset: 1, color: 'rgba(16, 185, 129, 0.1)' }
+                    ]),
+                    borderRadius: [4, 4, 0, 0]
+                }
+            }]
+        };
+
+        myCatChart.setOption(catOption);
+        myDayChart.setOption(dayOption);
+
+        // Interaction: Drill down (Simulated console log + HTMX trigger attempt)
+        myCatChart.on('click', function(params) {
+            console.log('Filter by:', params.name);
+            // In a real implementation: htmx.ajax('GET', '/dashboard?cat='+params.name, '#dashboard-content')
+        });
+
+        // Resize observer for responsiveness
+        window.addEventListener('resize', () => {
+            myCatChart.resize();
+            myDayChart.resize();
+        });
+    })();
+</script>
+{{ end }}
