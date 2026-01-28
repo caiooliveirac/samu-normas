@@ -1,71 +1,98 @@
-##### SISTEMA / EDITOR #####
-.DS_Store
-Thumbs.db
-.vscode/
-.idea/
-*.swp
-
-##### PYTHON / DJANGO #####
-.venv/
-env/
-venv/
+# --- Python / Django ---
 __pycache__/
 *.py[cod]
-*.pyo
-*.pyd
 *.so
+*.pyd
+*.pyo
 *.egg-info/
-build/
-dist/
 .eggs/
-.mypy_cache/
-.pytest_cache/
-.cache/
-.tox/
-htmlcov/
-.coverage*
+.build/
 
-##### FRONTEND / NODE #####
-node_modules/
-.next/
-frontend/.vite/
-Perguntas/static/react/
-npm-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+# Virtual env
+.venv/
+venv/
+ENV/
 
-##### STATIC / MEDIA GERADOS #####
-staticfiles/
-media/
+# Django stuff
+/media/
+/staticfiles/
+# Allow committed static source assets (raw) but ignore collected output
+# If you really want to version some built asset place an exception rule
 
-##### AMBIENTE / SEGREDOS #####
+# SQLite local
+/db.sqlite3
+
+# Local settings/env files (keep templates/examples)
 .env
 .env.*
-*/.env
-Perguntas/.env
-*.pem
-*.key
-*.crt
-*.pfx
-*.der
+!.env.example
+!.env.prod.example
 
-##### LOGS / BACKUPS #####
+# Secrets / tokens / debug artifacts
+cookies*.txt
+hidden_token.txt
+login_headers.txt
+login_page*.html
+login_response_headers.txt
+logout_headers.txt
+post_logout.txt
+
+# Dumps / backups / fixtures derivadas
+*backup*.sql
+*.sql
+!rules_seed.json
+!rules_fixture.json
+!dump.json  # Se não quiser versionar remova este !
+
+# Exports locais (não versionar)
+/backups/users_export*.json
+/backups/users_export*.csv
+
+# Nunca versionar PDFs (fonte externa / pesado)
+*.pdf
+
+# Artefatos derivados do pipeline de seed (mantenha só o Markdown fonte e o rules_seed.json final)
+/docs/rules_seed_backup*.json
+/docs/rules_seed_preview_*
+/docs/rules_seed_demo_backup_*.json
+
+# Node / frontend builds
+/frontend/node_modules/
+/frontend/dist/
+/frontend/dist-ssr/
+/frontend/*.local
+
+# Logs
 *.log
 logs/
-log/
-*.sql
-rules_backup_*.sql
 
-##### DOCKER (caso futuro) #####
-docker-data/
-*.tar
+# OS / Editor
+.DS_Store
+.idea/
+.vscode/
+!.vscode/extensions.json
+*.swp
+*.swo
 
-##### CACHE / OUTROS #####
-.ropeproject/
-.spyproject/
+# Workspace files
+*.code-workspace
 
-##### NEGAR IGNORE (manter no repo) #####
-!fixtures/
-!rules_seed.json
+# Docker artefatos locais
+**/.pytest_cache/
+.coverage
+htmlcov/
 
-# Fim
+# Bytecode caches
+__pycache__/
+
+# Build caches
+pip-wheel-metadata/
+
+# Pytest
+.pytest_cache/
+
+# Coverage
+.coverage.*
+
+# Misc
+scripts/debug_db.sh

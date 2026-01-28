@@ -4,13 +4,9 @@ Este repositório contém o código fonte da plataforma de consulta e gerenciame
 
 ## 📁 Estrutura do Projeto
 
-A organização do repositório é dividida em duas grandes áreas:
-
-*   **`Perguntas/`**: Contém a aplicação principal (Full Stack).
-    *   **Backend:** Desenvolvido em **Django** (Python). Responsável pela lógica de negócios, gestão de usuários, administração das normas via Django Admin e API.
-    *   **Frontend:** SPA desenvolvida em **React** (Vite). Responsável pela interface moderna e reativa para consulta rápida das normas.
-    *   **Infraestrutura:** Arquivos de configuração Docker (`Dockerfile`, `docker-compose*.yml`) para orquestração dos serviços (App Web, Banco de Dados, Nginx).
-*   **`site/`**: Uma versão _standalone_ (estática) simplificada da consulta de normas, útil para situações de contingência ou acesso offline/leve.
+*   **Backend:** Desenvolvido em **Django** (Python). Responsável pela lógica de negócios, gestão de usuários, administração das normas via Django Admin e API.
+*   **Frontend:** SPA desenvolvida em **React** (Vite). Responsável pela interface moderna e reativa para consulta rápida das normas. As fontes do frontend estão na pasta [`frontend/`](frontend/).
+*   **Infraestrutura:** Arquivos de configuração Docker (`Dockerfile`, `docker-compose*.yml`) para orquestração dos serviços (App Web, Banco de Dados, Nginx).
 
 ## 🚀 Tecnologias
 
@@ -22,10 +18,10 @@ A organização do repositório é dividida em duas grandes áreas:
 
 ## 🛠️ Como Executar
 
-A documentação detalhada para desenvolvimento e deploy está localizada dentro da pasta `Perguntas/`.
+A documentação detalhada para desenvolvimento e deploy está disponível na raiz do projeto.
 
-*   **Para Desenvolvedores:** Consulte [Perguntas/README_DEV.md](Perguntas/README_DEV.md) ou a documentação completa em [Perguntas/docs/DEV_GUIDE.md](Perguntas/docs/DEV_GUIDE.md). Lá você encontrará instruções para rodar o ambiente com Docker, configurar variáveis de ambiente e executar testes.
-*   **Para Deploy (Produção):** Consulte [Perguntas/README_DEPLOY.md](Perguntas/README_DEPLOY.md) para instruções sobre build de imagens, configuração de servidor e uso de certificados SSL.
+*   **Para Desenvolvedores:** Consulte [README_DEV.md](README_DEV.md) ou a documentação completa em [docs/DEV_GUIDE.md](docs/DEV_GUIDE.md). Lá você encontrará instruções para rodar o ambiente com Docker, configurar variáveis de ambiente e executar testes.
+*   **Para Deploy (Produção):** Consulte [README_DEPLOY.md](README_DEPLOY.md) para instruções sobre build de imagens, configuração de servidor e uso de certificados SSL.
 
 ## 📚 Funcionalidades Principais
 
