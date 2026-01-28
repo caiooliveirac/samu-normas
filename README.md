@@ -1,42 +1,55 @@
-# SAMU Normas
+# SAMU Normas: Manual Digital Interativo
 
-Este repositório contém o código fonte da plataforma de consulta e gerenciamento de normas e protocolos internos do SAMU 192. A aplicação visa facilitar o acesso a regras operacionais, protocolos de atendimento e diretrizes administrativas para as equipes de socorro.
+> *De um arquivo PDF estático para uma aplicação Full Stack de alta performance.*
 
-## 📁 Estrutura do Projeto
+Este projeto nasceu da necessidade de transformar o **Manual de Normas e Rotinas do SAMU 192** — originalmente um documento PDF extenso e de difícil navegação via mobile — em uma **ferramenta digital interativa, buscável e responsiva**.
 
-*   **Backend:** Desenvolvido em **Django** (Python). Responsável pela lógica de negócios, gestão de usuários, administração das normas via Django Admin e API.
-*   **Frontend:** SPA desenvolvida em **React** (Vite). Responsável pela interface moderna e reativa para consulta rápida das normas. As fontes do frontend estão na pasta [`frontend/`](frontend/).
-*   **Infraestrutura:** Arquivos de configuração Docker (`Dockerfile`, `docker-compose*.yml`) para orquestração dos serviços (App Web, Banco de Dados, Nginx).
+O objetivo não é apenas "digitalizar texto", mas oferecer uma **Experiência de Usuário (UX)** que respeite o cenário crítico de quem usa: profissionais de socorro que precisam de informação exata em segundos, muitas vezes em situações de estresse.
 
-## 🚀 Tecnologias
+## ⚡ A Solução Técnica & UX
 
-*   **Linguagens:** Python 3.12+, JavaScript/TypeScript.
-*   **Frameworks:** Django 5.x, React 18+.
-*   **Banco de Dados:** MariaDB 11.4 (Produção), SQLite (Desenvolvimento/CI).
-*   **Servidor Web/Proxy:** Nginx 1.27.
-*   **Containerização:** Docker & Docker Compose.
+Para atingir a fluidez necessária, o projeto adota uma arquitetura moderna, desacoplando a inteligência das regras (Backend) da experiência de consumo (Frontend).
 
-## 🛠️ Como Executar
+### Frontend: React + Vite
+A interface foi construída como uma SPA (Single Page Application) utilizando **React**, garantindo que a navegação entre normas seja instantânea, sem recarregamentos de página.
 
-A documentação detalhada para desenvolvimento e deploy está disponível na raiz do projeto.
+*   **Performance:** Uso do **Vite** para um bundle otimizado e carregamento ultrarrápido.
+*   **Interatividade:** Filtros em tempo real por categoria (Operacional, RH, Logística) e perfil Profissional (Médico, Condutor, Rádio).
+*   **Animações & Micro-interações:** A aplicação utiliza transições suaves para filtrar e exibir cards. Isso não é apenas estético; reduz a carga cognitiva do usuário, guiando o olhar para a informação relevante de forma orgânica.
+*   **Mobile-First:** Layout pensado primordialmente para telas de smartphones, onde o manual é mais consultado.
 
-*   **Para Desenvolvedores:** Consulte [README_DEV.md](README_DEV.md) ou a documentação completa em [docs/DEV_GUIDE.md](docs/DEV_GUIDE.md). Lá você encontrará instruções para rodar o ambiente com Docker, configurar variáveis de ambiente e executar testes.
-*   **Para Deploy (Produção):** Consulte [README_DEPLOY.md](README_DEPLOY.md) para instruções sobre build de imagens, configuração de servidor e uso de certificados SSL.
+### Backend: Python & Django
+O "cérebro" da aplicação. O Django não serve apenas JSON; ele gerencia a complexidade das normas.
 
-## 📚 Funcionalidades Principais
+*   **Admin Customizado:** Uma interface administrativa robusta para que a coordenação possa atualizar regras sem tocar em código.
+*   **API REST Agnostic:** Serve os dados para o React, mas está pronta para alimentar apps nativos (iOS/Android) futuramente.
 
-*   **Busca Semântica/Texto:** Localização rápida de normas por palavras-chave.
-*   **Categorização:** Filtros por setor (Operacional, RH, Logística) e perfil de acesso (Médico, Condutor, Rádio).
-*   **Painel Administrativo:** Interface do Django Admin para criação e edição fácil das regras.
-*   **Autenticação:** Sistema de login para acesso a áreas restritas e auditoria.
+## 🛠️ Stack Tecnológico
 
-## 🤝 Contribuição
+*   **Frontend:** React 18, Vite, CSS Modules / Tailwind (para estilização utilitária).
+*   **Backend:** Python 3.12, Django 5, Django REST Framework.
+*   **Infraestrutura:** Docker, Docker Compose, Nginx (Proxy Reverso), MariaDB (Produção).
+*   **Qualidade:** Testes automatizados (Pytest), CI/CD (GitHub Actions).
 
-1.  Faça um Fork do projeto.
-2.  Crie uma Branch para sua Feature (`git checkout -b feature/NovaFeature`).
-3.  Faça o Commit (`git commit -m 'Add some NovaFeature'`).
-4.  Push para a Branch (`git push origin feature/NovaFeature`).
-5.  Abra um Pull Request.
+## 📁 Organização do Código
+
+O repositório segue uma estrutura limpa e direta na raiz, facilitando o onboarding de novos desenvolvedores:
+
+*   `/frontend`: Código fonte da aplicação React.
+*   `/backend` (e pastas Django): Lógica de negócios e API.
+*   `/nginx` & `/infra`: Configurações de container e deploy.
+*   `/scripts`: Automações de deploy e seed de banco de dados.
+
+## 🚀 Como Executar
+
+A documentação técnica detalhada para setup e deploy encontra-se nos arquivos dedicados:
+
+*   **Desenvolvimento:** [README_DEV.md](README_DEV.md) (Docker, variáveis de ambiente, hot-reload).
+*   **Produção:** [README_DEPLOY.md](README_DEPLOY.md) (Build de imagens, SSL, Gunicorn).
+
+## 🎯 Por que este projeto importa?
+
+Transformar burocracia em usabilidade. Ao converter documentos governamentais estáticos em software vivo, impactamos diretamente a eficiência do serviço público e a segurança dos procedimentos de saúde.
 
 ---
-*© SAMU 192 - Serviço de Atendimento Móvel de Urgência*
+*Desenvolvido com foco em Código Limpo, Arquitetura Escalável e UX.*
