@@ -2,7 +2,6 @@ services:
   web:
     # Monta apenas templates como volume para editar HTML sem rebuild de imagem
     volumes:
-      - ./scoreboard/templates:/app/scoreboard/templates:ro
       - ./templates:/app/templates:ro
       - ./questions/templates:/app/questions/templates:ro
       - ./faq/templates:/app/faq/templates:ro

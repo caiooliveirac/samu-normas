@@ -18,7 +18,6 @@ urlpatterns = [
 
     # apps do projeto (inclui a rota '' -> home definida em questions/urls.py)
     path('', include('questions.urls')),
-    path('scoreboard/', include('scoreboard.urls', namespace='scoreboard')),
 
     # healthcheck
     path('healthz', healthz),

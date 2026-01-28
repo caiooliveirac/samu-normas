@@ -251,7 +251,6 @@ O guard adicionado em outubro/2025 repopula automaticamente se detectar poucos a
 
 #### Verificação Rápida Pós-Deploy
 ```bash
-curl -sf http://HOST/scoreboard/data/ | jq '.faculties | length'
 curl -I http://HOST/static/react/index.html | head -n 5
 docker compose -f docker-compose.prod.yml logs web | grep -i 'Guard:' | tail -n 3
 ```

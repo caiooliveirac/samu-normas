@@ -48,7 +48,6 @@ export default {
     // Templates Django globbed relativos ao diretório frontend
     '../templates/**/*.html',                 // templates raiz
     '../../questions/templates/**/*.html',    // app questions
-    '../../scoreboard/templates/**/*.html',   // app scoreboard (ranking, etc.)
     '../../faq/templates/**/*.html'           // app faq
   ],
   theme: {

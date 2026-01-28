@@ -59,7 +59,6 @@ INSTALLED_APPS = [
     'django_extensions',
     'questions',
     'faq',
-    'scoreboard',
 ]
 
 MIDDLEWARE = [
