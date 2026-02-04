@@ -96,3 +96,12 @@ pip-wheel-metadata/
 
 # Misc
 scripts/debug_db.sh
+
+# Security & Certificates
+nginx/ssl/
+
+# Utilities
+update_dates.py
+
+# Build artifacts
+frontend/.vite/

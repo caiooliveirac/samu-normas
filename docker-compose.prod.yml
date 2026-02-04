@@ -93,6 +93,9 @@ services:
     image: nginx:1.27-alpine
     depends_on:
       - web
+    networks:
+      - default
+      - scoreboard_net
     ports:
       - "80:80"      # Porta HTTP
       - "443:443"    # Porta HTTPS
@@ -107,6 +110,8 @@ services:
       - ./docs/anexos:/app/docs/anexos:ro
       - media_volume:/app/media:ro
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      # Volumes para SSL auto-assinado (suporte a Cloudflare Full)
+      - ./nginx/ssl:/etc/nginx/ssl:ro
       # Volume de certificados (estrutura padrão do certbot: /certs/live/DOMINIO/*.pem)
       - certs_volume:/certs:ro
     healthcheck:
@@ -135,4 +140,9 @@ volumes:
   certs_volume:
   frontend_node_modules:
   frontend_npm_cache:
+
+networks:
+  scoreboard_net:
+    external: true
+    name: scoreboard-standalone_default
 
