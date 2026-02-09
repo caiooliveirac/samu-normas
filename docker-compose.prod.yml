@@ -89,6 +89,14 @@ services:
       retries: 5
     command: ["/bin/sh", "-c", "./scripts/entrypoint.prod.sh"]
 
+  tutoriais:
+    build:
+      context: ../../samu-onboarding
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3000"
+
   nginx:
     image: nginx:1.27-alpine
     depends_on:
