@@ -1033,6 +1033,17 @@ export default function App(){
                             exit="exit"
                             className="pt-3 pl-[22px] pr-1"
                           >
+                            <div className="sticky top-2 z-10 flex justify-end pr-3">
+                              <button
+                                type="button"
+                                onClick={() => setExpandedId(null)}
+                                className="rounded-md border border-brand-200/70 bg-white/90 px-2 py-1 text-[11px] font-semibold text-slate-700 hover:bg-brand-50/40 transition-colors shadow-sm"
+                                aria-label={`Fechar ${rule.title}`}
+                              >
+                                Fechar
+                              </button>
+                            </div>
+
                             {rule.body?.trim() && (
                               <div className="text-[14px] sm:text-[15px] leading-relaxed text-slate-700 text-justified">
                                 {String(rule.body).split(/\n{2,}/).map((p, i) => (
