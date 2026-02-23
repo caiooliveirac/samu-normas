@@ -9,8 +9,20 @@
   <title>Manual de Normas SAMU</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+  {#
+    Canonical/OG URL:
+    Em produção o app roda sob /manual/ e o Nginx envia X-Forwarded-Prefix.
+    O WhatsApp associa o preview à og:url — se divergir da URL compartilhada,
+    pode gerar comportamento estranho no WebView.
+  #}
+  {% with prefix=request.META.HTTP_X_FORWARDED_PREFIX|default:'' %}
+    {% with canonical_path=prefix|add:'/' %}
+      <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ canonical_path }}" />
+      <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ canonical_path }}">
+    {% endwith %}
+  {% endwith %}
+
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://mnrs.com.br/">
   <meta property="og:title" content="Manual de Normas e Rotinas Médicas do SAMU">
   <meta property="og:description" content="Estabelece diretrizes técnicas, operacionais e administrativas para a atuação da equipe médica nas atividades de regulação e intervenção.">
   <meta property="og:image" content="https://mnrs.com.br/static/og/mnrs-og-v2.png">
