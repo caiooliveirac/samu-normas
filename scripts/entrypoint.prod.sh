@@ -42,6 +42,34 @@ fi
 echo "[entrypoint] Aplicando migrações..."
 python manage.py migrate --noinput
 
+# ── Auto-seed: se a tabela de regras existir mas estiver vazia, popula a partir do fixture ──
+# Isso resolve o problema recorrente de dados não carregarem após deploy/recreate de volumes.
+# Para forçar re-seed manual: FORCE_SEED=1  ou  python manage.py seed_rules --fresh
+SEED_FIXTURE="${SEED_FIXTURE:-rules_seed.json}"
+FORCE_SEED="${FORCE_SEED:-0}"
+
+RULE_COUNT=$(python -c "
+import django, os
+os.environ.setdefault('DJANGO_SETTINGS_MODULE','samu_q.settings')
+django.setup()
+try:
+    from questions.models import Rule
+    print(Rule.objects.count())
+except Exception:
+    print('0')
+" 2>/dev/null || echo "0")
+
+if [ "$FORCE_SEED" = "1" ] || [ "$RULE_COUNT" = "0" ]; then
+  if [ -f "$SEED_FIXTURE" ]; then
+    echo "[entrypoint] Tabela de regras vazia (count=$RULE_COUNT) ou FORCE_SEED=1. Executando seed_rules..."
+    python manage.py seed_rules --fixture "$SEED_FIXTURE" --fresh || echo "[entrypoint] AVISO: seed_rules falhou"
+  else
+    echo "[entrypoint] AVISO: Tabela de regras vazia mas fixture '$SEED_FIXTURE' não encontrada. Dados NÃO carregados."
+  fi
+else
+  echo "[entrypoint] Regras já populadas ($RULE_COUNT registros). Pulando seed."
+fi
+
 if [ "${COLLECT_STATIC:-1}" = "1" ]; then
   # Garante diretórios e permissões (se root)
   if [ "$(id -u)" = "0" ]; then

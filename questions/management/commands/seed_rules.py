@@ -137,7 +137,7 @@ class Command(BaseCommand):
                         raise CommandError(f"Falha instanciando {model_cls.__name__} pk={pk} raw={raw_fields}: {e}")
                     if pk is not None:
                         obj.pk = pk
-                    obj.save(force_insert=True)
+                    obj.save()
 
                     # Aplicar M2M
                     if m2m_pending:

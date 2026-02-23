@@ -11,7 +11,7 @@
     "model": "questions.rule",
     "pk": 1001,
     "fields": {
-      "title": "0. APRESENTAÇÃO",
+      "title": "0. Apresentação",
       "slug": "0-apresentação",
       "category": 1,
       "is_published": true,
@@ -26,7 +26,7 @@
     "pk": 10001,
     "fields": {
       "rule": 1001,
-      "title": "GERAL",
+      "title": "Geral",
       "order": 1,
       "is_published": true
     }
@@ -190,7 +190,7 @@
     "pk": 100013,
     "fields": {
       "card": 10003,
-      "text": "1.2.2 Checar os plantonistas que estão nas Unidades de Suporte Avançado registrando em relatório o horário de saída e entrada de cada um. O horário de chegada dos MRs deve ser considerado o horário que realizou o login e do MI o horário da postagem no Telegram i nformando a sua chegada ou o horário do login no aplicativo.",
+      "text": "1.2.2 Checar os plantonistas que estão nas Unidades de Suporte Avançado registrando em relatório o horário de saída e entrada de cada um. O horário de chegada dos MRs deve ser considerado o horário que realizou o login e do MI o horário da postagem no Telegram informando a sua chegada ou o horário do login no aplicativo.",
       "order": 3,
       "tags": []
     }
@@ -200,7 +200,7 @@
     "pk": 100014,
     "fields": {
       "card": 10003,
-      "text": "O horário de saída do MR deverá ser considerado o horário da sua liberação e do MI o horário da postagem informando a sua saída se estiver em ocorrência ou o horário da chegada da sua rendição s e estiver na base. Caso o MI esteja em ocorrência na troca do plantão, o CP deve registrar o horário de saída e número da ocorrência.",
+      "text": "O horário de saída do MR deverá ser considerado o horário da sua liberação e do MI o horário da postagem informando a sua saída se estiver em ocorrência ou o horário da chegada da sua rendição se estiver na base. Caso o MI esteja em ocorrência na troca do plantão, o CP deve registrar o horário de saída e número da ocorrência.",
       "order": 4,
       "tags": []
     }
@@ -210,7 +210,7 @@
     "pk": 100015,
     "fields": {
       "card": 10003,
-      "text": "1.2.3 Gerenciar as ocorrências abertas por UPAs e hospitais, ocorrências relacionadas ao Protocolo IAM, Protocolo BAVT, Protocolo AVC e outras ocorrências de maior complexidade como Incidente de Múltiplas Vítimas ou as que precisem de apoio aéreo. Atentar para as solicitações de apoio ou de informação do grupo “REMOÇÃO -ILHAS” e “ ASCOM” respectivamente, respondendo às solicitações em tempo hábil. Avaliar os pedidos de apoio das UPAS conforme anexo.",
+      "text": "1.2.3 Gerenciar as ocorrências abertas por UPAs e hospitais, ocorrências relacionadas ao Protocolo IAM, Protocolo BAVT, Protocolo AVC e outras ocorrências de maior complexidade como Incidente de Múltiplas Vítimas ou as que precisem de apoio aéreo. Atentar para as solicitações de apoio ou de informação do grupo “REMOÇÃO-ILHAS” e “ASCOM” respectivamente, respondendo às solicitações em tempo hábil. Avaliar os pedidos de apoio das UPAS conforme anexo.",
       "order": 5,
       "tags": []
     }
@@ -310,7 +310,7 @@
     "pk": 100025,
     "fields": {
       "card": 10003,
-      "text": "O SAMU Salvador e RMS conta ainda com o Protocolo AVC (PAVC). Este fluxo destina-se aos pacientes com os seguintes critérios: déficit neurológico instalado há menos de 4 horas, independente do cálculo do NIHSS e para pacientes sem contraindicação à trombólise. O PAVC visa identificar os pacientes com suspeita de Acidente Vascular Cerebral Isquêmico e aptos ao tratamento via trombólise. Obrigatoriamente, os pacientes que atendam aos critérios devem ser encaminhados para as unidades de referência no menor tempo possível, ainda que na ausência de vaga na rede. A decisão quanto ao valor mínimo do NIHSS foi modificada em última reunião de chefia em virtude da possibilidade de piora do déficit e risco de perda de janela. Sendo assim, deve ser responsabilidade das equipes de referência a decisão quanto ao manejo. Pacientes que não se enquadrem nos critérios para o Protocolo AVC, porém apresentem sinais de acometimento neurológico agudo como por exemplo rebaixamento do nível de consciência súbito, presença de Tríade de Cushing ao exame físico, devem ser criteriosamente avaliados por risco de sangramento intracraniano. O Chefe de Plantão nesses casos pode encaminhar o paciente à unidade de referência considerando a necessidade imediata de exame de imagem e melhor tratamento disponível na rede.",
+      "text": "O SAMU Salvador e RMS conta ainda com o Protocolo AVC (PAVC). Este fluxo destinase aos pacientes com os seguintes critérios: déficit neurológico instalado há menos de 4 horas, independente do cálculo do NIHSS e para pacientes sem contraindicação à trombólise. O PAVC visa identificar os pacientes com suspeita de Acidente Vascular Cerebral Isquêmico e aptos ao tratamento via trombólise. Obrigatoriamente, os pacientes que atendam aos critérios devem ser encaminhados para as unidades de referência no menor tempo possível, ainda que na ausência de vaga na rede. A decisão quanto ao valor mínimo do NIHSS foi modificada em última reunião de chefia em virtude da possibilidade de piora do déficit e risco de perda de janela. Sendo assim, deve ser responsabilidade das equipes de referência a decisão quanto ao manejo. Pacientes que não se enquadrem nos critérios para o Protocolo AVC, porém apresentem sinais de acometimento neurológico agudo como por exemplo rebaixamento do nível de consciência súbito, presença de Tríade de Cushing ao exame físico, devem ser criteriosamente avaliados por risco de sangramento intracraniano. O Chefe de Plantão nesses casos pode encaminhar o paciente à unidade de referência considerando a necessidade imediata de exame de imagem e melhor tratamento disponível na rede.",
       "order": 15,
       "tags": []
     }
@@ -370,7 +370,7 @@
     "pk": 100030,
     "fields": {
       "card": 10004,
-      "text": "Atrasos superiores a 15 minutos serão contabilizados no banco de horas como débito no valor absoluto. Não haverá compensação de atrasos suprimindo horário de descanso ou de refeições. Por outro lado, se o profissional sair após o término do plantão, seja por conta de ocorrência ou não -rendição e desde que tenha chegado no limite de tolerância, as horas são creditadas em dobro no banco de horas (vide tópico 5.1).",
+      "text": "Atrasos superiores a 15 minutos serão contabilizados no banco de horas como débito no valor absoluto. Não haverá compensação de atrasos suprimindo horário de descanso ou de refeições. Por outro lado, se o profissional sair após o término do plantão, seja por conta de ocorrência ou não-rendição e desde que tenha chegado no limite de tolerância, as horas são creditadas em dobro no banco de horas (vide tópico 5.1).",
       "order": 5,
       "tags": []
     }
@@ -390,7 +390,7 @@
     "pk": 100032,
     "fields": {
       "card": 10004,
-      "text": "Considerando que os remanejamentos de função podem ocorrer a qualquer momento do plantão, conforme a necessidade operacio nal, orienta -se que todos os profissionais mantenham sempre consigo o material completo necessário para o desempenho de ambas as funções, independentemente da escala inicialmente designada. Essa medida garante agilidade, organização e continuidade da assis tência, sem prejuízo à segurança do paciente ou da equipe (vide tópico 5.2).",
+      "text": "Considerando que os remanejamentos de função podem ocorrer a qualquer momento do plantão, conforme a necessidade operacional, orienta-se que todos os profissionais mantenham sempre consigo o material completo necessário para o desempenho de ambas as funções, independentemente da escala inicialmente designada. Essa medida garante agilidade, organização e continuidade da assistência, sem prejuízo à segurança do paciente ou da equipe (vide tópico 5.2).",
       "order": 7,
       "tags": []
     }
@@ -410,7 +410,7 @@
     "pk": 100033,
     "fields": {
       "card": 10005,
-      "text": "O plantão diurno conta com duas horas de repouso, sendo uma hora de almoço e uma hora de descanso. A divisão dos horários é realizada pelo CP seguindo a ordem temporal dos logins no sistema. O MR presencial terá prioridade na escolha do horário desde que não tenha ultrapassado a tolerância de 15 minutos na chegada ao plantão. Horários disponíveis: o Almoço: 11:30 / 12:30 / 13:30 o Descanso: 14:30 / 15:30 / 16:30 / 18:00 (este disponível apenas para MRR/MRVs).",
+      "text": "O plantão diurno conta com duas horas de repouso, sendo uma hora de almoço e uma hora de descanso. A divisão dos horários é realizada pelo CP seguindo a ordem temporal dos logins no sistema. O MR presencial terá prioridade na escolha do horário desde que não tenha ultrapassado a tolerância de 15 minutos na chegada ao plantão. Horários disponíveis: almoço: 11:30 / 12:30 / 13:30; descanso: 14:30 / 15:30 / 16:30 / 18:00 (este disponível apenas para MRR/MRVs).",
       "order": 1,
       "tags": []
     }
@@ -430,7 +430,7 @@
     "pk": 100034,
     "fields": {
       "card": 10006,
-      "text": "O plantão noturno conta com 30 minutos ou 1 hora (para aqueles de 24h) para o jantar. A preferência para escolha se dará por ordem de login no sistema, devendo o jantar ocorrer entre 20:00 e 22:30. O descanso da madrugada inicia às 23:00 e é dividido em do is horários: 23:00 às 03:00 e 03:00 às 07:00, cada horário contando com 4 MRs, sendo um deles designado pelo CP como responsável pelas ocorrências secundárias.",
+      "text": "O plantão noturno conta com 30 minutos ou 1 hora (para aqueles de 24h) para o jantar. A preferência para escolha se dará por ordem de login no sistema, devendo o jantar ocorrer entre 20:00 e 22:30. O descanso da madrugada inicia às 23:00 e é dividido em dois horários: 23:00 às 03:00 e 03:00 às 07:00, cada horário contando com 4 MRs, sendo um deles designado pelo CP como responsável pelas ocorrências secundárias.",
       "order": 1,
       "tags": []
     }
@@ -520,7 +520,7 @@
     "pk": 100041,
     "fields": {
       "card": 10008,
-      "text": "Todos os médicos do serviço devem enviar por e-mail uma foto atual e CPF para o cadastramento do reconhecimento facial no COI visto que, o posto de trabalho definido na escala pode ser no Centro de Operações e Inteligência. A lista dos profissionais escalados para o COI é enviada via e -mail mensalmente, de forma que somente os escalados terão o acesso permitido. As trocas deverão ser feitas apenas entre os escalados no mês.",
+      "text": "Todos os médicos do serviço devem enviar por e-mail uma foto atual e CPF para o cadastramento do reconhecimento facial no COI visto que, o posto de trabalho definido na escala pode ser no Centro de Operações e Inteligência. A lista dos profissionais escalados para o COI é enviada via e-mail mensalmente, de forma que somente os escalados terão o acesso permitido. As trocas deverão ser feitas apenas entre os escalados no mês.",
       "order": 3,
       "tags": []
     }
@@ -614,7 +614,7 @@
     "pk": 100048,
     "fields": {
       "card": 10009,
-      "text": "2.1.3 Disparo Automático: compreendem as situações de potencial gravidade e/ou com alta valência social onde há necessidade de envio imediato do recurso, ou seja, disparo automático de recurso disponível mais próximo. Nessas ocorrências o TARM aciona imediatamen te a sala de rádio operação para envio de ambulância básica e, posteriormente ao MR para triagem. Os TARMs estão orientados a não deixar essas ocorrências em fila mas caso a passagem da ligação para o MR não seja possível, essas ocorrências NÃO devem ser canceladas mesmo se o MR não conseguir contato com o solicitante. Nesse caso o MR aguarda o contato da USB já acionada.",
+      "text": "2.1.3 Disparo Automático: compreendem as situações de potencial gravidade e/ou com alta valência social onde há necessidade de envio imediato do recurso, ou seja, disparo automático de recurso disponível mais próximo. Nessas ocorrências o TARM aciona imediatamente a sala de rádio operação para envio de ambulância básica e, posteriormente ao MR para triagem. Os TARMs estão orientados a não deixar essas ocorrências em fila mas caso a passagem da ligação para o MR não seja possível, essas ocorrências NÃO devem ser canceladas mesmo se o MR não conseguir contato com o solicitante. Nesse caso o MR aguarda o contato da USB já acionada.",
       "order": 7,
       "tags": []
     }
@@ -624,7 +624,7 @@
     "pk": 100049,
     "fields": {
       "card": 10009,
-      "text": "Os disparos compreendem as seguintes queixas: PCR e Parada Respiratória; Convulsão, desmaio em via pública; Acidentes automobilísticos; Perfuração por arma de fogo/arma branca; Afogamento; Enforcamento; OVACE; Queda (>3M em crianças e >5M em adultos); Parto iminente ou consumado; Ocorrências abertas por agentes públicos em exercício da função. Essas ocorrências são encaminhadas para um dos MRVs.",
+      "text": "Os disparos compreendem as seguintes queixas: PCR e Parada Respiratória; Convulsão, desmaio em via pública; Acidentes automobilísticos; Perfuração por arma de fogo/arma branca; Afogamento; Enforcamento; OVACE; Queda (>3m em crianças e >5m em adultos); Parto iminente ou consumado; Ocorrências abertas por agentes públicos em exercício da função. Essas ocorrências são encaminhadas para um dos MRVs.",
       "order": 8,
       "tags": []
     }
@@ -634,7 +634,7 @@
     "pk": 100050,
     "fields": {
       "card": 10009,
-      "text": "2.1.4 Triagem: Idealmente a triagem médica com classificação de risco e decisão de envio ou não de recurso deve durar no máximo 3 minutos. Por esse motivo é importante que o Médico Regulador tenha habilidade para reconhecer a gravidade realizando perguntas chave s para auxiliar neste processo. Não é função do MR realizar diagnóstico nesse momento. Após solicitação do recurso, o Rádio Operador (RO) realiza a vinculação das unidades básicas e o Enfermeiro Regulador (ER) das unidades avançadas.",
+      "text": "2.1.4 Triagem: Idealmente a triagem médica com classificação de risco e decisão de envio ou não de recurso deve durar no máximo 3 minutos. Por esse motivo é importante que o Médico Regulador tenha habilidade para reconhecer a gravidade realizando perguntas chaves para auxiliar neste processo. Não é função do MR realizar diagnóstico nesse momento. Após solicitação do recurso, o Rádio Operador (RO) realiza a vinculação das unidades básicas e o Enfermeiro Regulador (ER) das unidades avançadas.",
       "order": 9,
       "tags": []
     }
@@ -674,7 +674,7 @@
     "pk": 100053,
     "fields": {
       "card": 10010,
-      "text": "A transferência de ocorrências entre os MRs deve ser realizada diretamente de médico para médico, com a passagem detalhada do caso e comunicação das possíveis pendências existentes. Em hipótese alguma, um MR deverá transferir uma ocorrência para tela de ou tro colega sem comunicação prévia e/ou sem qualquer registro no prontuário eletrônico.",
+      "text": "A transferência de ocorrências entre os MRs deve ser realizada diretamente de médico para médico, com a passagem detalhada do caso e comunicação das possíveis pendências existentes. Em hipótese alguma, um MR deverá transferir uma ocorrência para tela de outro colega sem comunicação prévia e/ou sem qualquer registro no prontuário eletrônico.",
       "order": 1,
       "tags": []
     }
@@ -724,7 +724,7 @@
     "pk": 100057,
     "fields": {
       "card": 10011,
-      "text": "OCORRÊNCIAS: O sistema utilizado pelo serviço conta com diversas ferramentas que visam melhorar os processos de trabalho. Assim que o médico é incorporado à equipe, será treinado quanto ao uso durante o seu plantão como sombra. Neste momento, o médico recémchegado terá a oportunidade de conhecer as funcionalidades do sistema e aprender quanto ao registro adequado.",
+      "text": "OCORRÊNCIAS: O sistema utilizado pelo serviço conta com diversas ferramentas que visam melhorar os processos de trabalho. Assim que o médico é incorporado à equipe, será treinado quanto ao uso durante o seu plantão como sombra. Neste momento, o médico recém-chegado terá a oportunidade de conhecer as funcionalidades do sistema e aprender quanto ao registro adequado.",
       "order": 1,
       "tags": []
     }
@@ -944,7 +944,7 @@
     "pk": 100077,
     "fields": {
       "card": 10013,
-      "text": "2.5.4 Óbito de causa externa/suspeita: Em casos de suspeita de morte violenta, o MI deverá fornecer a Constatação de óbito, detalhando no campus “observação” os dados pertinentes ao atendimento (se houve compressão torácica, tentativa de AVP ou de IOT, etc.) e a crescentar a frase “não se pode excluir causas externas”.",
+      "text": "2.5.4 Óbito de causa externa/suspeita: Em casos de suspeita de morte violenta, o MI deverá fornecer a Constatação de óbito, detalhando no campus “observação” os dados pertinentes ao atendimento (se houve compressão torácica, tentativa de AVP ou de IOT, etc.) e acrescentar a frase “não se pode excluir causas externas”.",
       "order": 6,
       "tags": []
     }
@@ -964,7 +964,7 @@
     "pk": 100079,
     "fields": {
       "card": 10013,
-      "text": "2.5.5 Óbito dentro da ambulância: cabe ao MR buscar vaga em necrotério de UPA ou Hospital para acolhimento do corpo: o Se óbito de causa clínica com familiar presente na cena e possibilidade de se estabelecer nexo causal do óbito, o MI deverá fornecer a DO, cabendo ao MR registrar em ocorrência número da DO fornecida e demais informações pertinentes.",
+      "text": "2.5.5 Óbito dentro da ambulância: cabe ao MR buscar vaga em necrotério de UPA ou Hospital para acolhimento do corpo: se óbito de causa clínica com familiar presente na cena e possibilidade de se estabelecer nexo causal do óbito, o MI deverá fornecer a DO, cabendo ao MR registrar em ocorrência número da DO fornecida e demais informações pertinentes.",
       "order": 8,
       "tags": []
     }
@@ -994,7 +994,7 @@
     "pk": 100082,
     "fields": {
       "card": 10013,
-      "text": "Caso o óbito tenha suspeita de causa violenta, cabe ao MR acionamento do CICOM (com registro em tela) informando para qual equipamento de saúde o corpo foi encaminhado. Ao MI cabe o preenchimento da constatação de óbito e do relatório de atendimento conten do as informações de interesse policial.",
+      "text": "Caso o óbito tenha suspeita de causa violenta, cabe ao MR acionamento do CICOM (com registro em tela) informando para qual equipamento de saúde o corpo foi encaminhado. Ao MI cabe o preenchimento da constatação de óbito e do relatório de atendimento contendo as informações de interesse policial.",
       "order": 11,
       "tags": []
     }
@@ -1034,7 +1034,7 @@
     "pk": 100085,
     "fields": {
       "card": 10014,
-      "text": "Dentre outras deliberações (vide anexo 2), o documento define que “os pacientes CLÍNICOS/PEDIÁTRICOS atendidos pelas unidades do SAMU quando forem classificados como VERDE ou AMARELO, serão encaminhados SEM CONTATO PRÉVIO respeitando-se o princípio de regi onalização. O médico regulador do SAMU decidirá para qual UPA ou PA o paciente deverá ser encaminhado e comunicará sua decisão à equipe da intervenção”.",
+      "text": "Dentre outras deliberações (vide anexo 2), o documento define que “os pacientes CLÍNICOS/PEDIÁTRICOS atendidos pelas unidades do SAMU quando forem classificados como VERDE ou AMARELO, serão encaminhados SEM CONTATO PRÉVIO respeitando-se o princípio de regionalização. O médico regulador do SAMU decidirá para qual UPA ou PA o paciente deverá ser encaminhado e comunicará sua decisão à equipe da intervenção”.",
       "order": 2,
       "tags": []
     }
@@ -1044,7 +1044,7 @@
     "pk": 100086,
     "fields": {
       "card": 10014,
-      "text": "Sendo confirmada na UPA a classificação como verde e/ou amarela o paciente aguardará o fluxo de atendim ento da unidade e a equipe deve ser liberada pela enfermeira da classificação. Os pacientes ortopédicos ficam fora desse fluxo por necessitarem de avaliação com ortopedista para garantir o acolhimento.",
+      "text": "Sendo confirmada na UPA a classificação como verde e/ou amarela o paciente aguardará o fluxo de atendimento da unidade e a equipe deve ser liberada pela enfermeira da classificação. Os pacientes ortopédicos ficam fora desse fluxo por necessitarem de avaliação com ortopedista para garantir o acolhimento.",
       "order": 3,
       "tags": []
     }
@@ -1238,7 +1238,7 @@
     "pk": 100099,
     "fields": {
       "card": 10019,
-      "text": "Os horários de chegada e saída dos plantões devem ser comunicados ao Chefe de Plantão por meio do Telegram, a fim de registro em relatório. O check-in no aplicativo SAMU+ é obrigatório assim que o profissional assume a unidade. É de responsabilidade do pro fissional informar à Central sobre sua chegada.",
+      "text": "Os horários de chegada e saída dos plantões devem ser comunicados ao Chefe de Plantão por meio do Telegram, a fim de registro em relatório. O check-in no aplicativo SAMU+ é obrigatório assim que o profissional assume a unidade. É de responsabilidade do profissional informar à Central sobre sua chegada.",
       "order": 1,
       "tags": []
     }
@@ -1338,7 +1338,7 @@
     "pk": 100108,
     "fields": {
       "card": 10020,
-      "text": "Cada membro da equipe é responsável por uma parte da checagem desses materiais, avaliando disponibilidade, funcionamento adequado e posteriormente registrando na folha do checklist (disponível na pasta da unidade) e via grupo de WhatsApp com todas as não conformidades sinalizadas. Conforme o padrão definido pelo serviço, o modelo de checklist padrão da USA e suas especificações encontra -se ao final do arquivo do manual disponibilizado pela coordenação no anexo 4.",
+      "text": "Cada membro da equipe é responsável por uma parte da checagem desses materiais, avaliando disponibilidade, funcionamento adequado e posteriormente registrando na folha do checklist (disponível na pasta da unidade) e via grupo de WhatsApp com todas as não conformidades sinalizadas. Conforme o padrão definido pelo serviço, o modelo de checklist padrão da USA e suas especificações encontra-se ao final do arquivo do manual disponibilizado pela coordenação no anexo 4.",
       "order": 4,
       "tags": []
     }
@@ -1498,7 +1498,7 @@
     "pk": 100121,
     "fields": {
       "card": 10023,
-      "text": "Se durante o checklist houver a identificação da ausência de algum item de responsabilidade médica, o profissional deverá seguir o seguinte fluxo: 3.5.1 O médico entra em contato com o colega do plantão anterior para se informar sobre o uso do item não encontrado na tentativa de localizá -lo na ambulância. Caso não tenha sucesso e haja suspeita de ter sido deixado em algum domicílio ou instituição de saúde, o médico deverá informar ao ER para que seja feita a busca ativa do item.",
+      "text": "Se durante o checklist houver a identificação da ausência de algum item de responsabilidade médica, o profissional deverá seguir o seguinte fluxo: O médico entra em contato com o colega do plantão anterior para se informar sobre o uso do item não encontrado na tentativa de localizá-lo na ambulância. Caso não tenha sucesso e haja suspeita de ter sido deixado em algum domicílio ou instituição de saúde, o médico deverá informar ao ER para que seja feita a busca ativa do item.",
       "order": 1,
       "tags": []
     }
@@ -1708,7 +1708,7 @@
     "pk": 100138,
     "fields": {
       "card": 10027,
-      "text": "Assim, a avaliação da instabilidade hemodinâmica ou respiratória, do risco iminente de deterioração e da capacidade de manter intervenções adequadas durante o deslocamento deve ser guiada por critérios técnicos, mas também por bom senso clínico, reconh ecendo a urgência em garantir ao paciente um cuidado definitivo.",
+      "text": "Assim, a avaliação da instabilidade hemodinâmica ou respiratória, do risco iminente de deterioração e da capacidade de manter intervenções adequadas durante o deslocamento deve ser guiada por critérios técnicos, mas também por bom senso clínico, reconhecendo a urgência em garantir ao paciente um cuidado definitivo.",
       "order": 3,
       "tags": []
     }
@@ -1872,7 +1872,7 @@
     "pk": 100149,
     "fields": {
       "card": 10031,
-      "text": "4.4.6 Se o primeiro paciente estiver grave e o segundo estável: comunicar imediatamente a CRU para abertura da ocorrência e envio imediato de uma outra unidade. Explicar a situação aos familiares/acompanhantes informando que uma nova unidade já foi acionada e pr osseguir com o transporte interrompido caso a permanência no local até a chegada da outra unidade oferecer riscos ao primeiro paciente.",
+      "text": "4.4.6 Se o primeiro paciente estiver grave e o segundo estável: comunicar imediatamente a CRU para abertura da ocorrência e envio imediato de uma outra unidade. Explicar a situação aos familiares/acompanhantes informando que uma nova unidade já foi acionada e prosseguir com o transporte interrompido caso a permanência no local até a chegada da outra unidade oferecer riscos ao primeiro paciente.",
       "order": 6,
       "tags": []
     }
@@ -1962,7 +1962,7 @@
     "pk": 100156,
     "fields": {
       "card": 10033,
-      "text": "Nos casos em que haja recusa, mas exista risco iminente de morte ou de agravamento significativo do quadro clínico, os procedimentos indispensáveis deverão ser realizados, conforme o Art. 22 do Código de Ética Médica: “É vedado ao médico deixar de obter consentimento do paciente ou de seu representante legal, após esclarecê -lo sobre o procedimento a ser realizado, salvo em caso de risco iminente de morte”.",
+      "text": "Nos casos em que haja recusa, mas exista risco iminente de morte ou de agravamento significativo do quadro clínico, os procedimentos indispensáveis deverão ser realizados, conforme o Art. 22 do Código de Ética Médica: “É vedado ao médico deixar de obter consentimento do paciente ou de seu representante legal, após esclarecê-lo sobre o procedimento a ser realizado, salvo em caso de risco iminente de morte”.",
       "order": 3,
       "tags": []
     }
@@ -2122,7 +2122,7 @@
     "pk": 10038,
     "fields": {
       "rule": 1005,
-      "title": "4.11. ATENDIMENTO EM CENÁRIO ONDE A EQUIPE FIQUE EXPOSTA A SITUAÇÕES DE VIOLÊNCIA",
+      "title": "4.11. ATENDIMENTO EM CENÁRIO ONDE HAJA NECESSIDADE DE APOIO POLICIAL",
       "order": 11,
       "is_published": true
     }
@@ -2132,7 +2132,7 @@
     "pk": 100168,
     "fields": {
       "card": 10038,
-      "text": "Nos atendimentos em que a equipe seja exposta a situações de violência — tais como ameaça direta com arma de fogo, arma branca ou agressão física — devem ser adotadas as seguintes condutas:",
+      "text": "Nos atendimentos em que a equipe seja exposta a situações de violência — tais como ameaça direta com arma de fogo, arma branca ou agressão física — o apoio policial deve ser considerado a fim de preservar a integridade e segurança da equipe e possibilitar o atendimento. O fluxo abaixo deve ser seguido:",
       "order": 1,
       "tags": []
     }
@@ -2142,7 +2142,7 @@
     "pk": 100169,
     "fields": {
       "card": 10038,
-      "text": "Preservação da integridade e segurança da equipe: buscar imediatamente um local seguro para abrigo, permanecendo nele até que a ameaça seja neutralizada.",
+      "text": "Identificação e solicitação de apoio: o MR identifica, durante a triagem, a necessidade de apoio policial e realiza a solicitação via sistema.",
       "order": 2,
       "tags": []
     }
@@ -2152,7 +2152,7 @@
     "pk": 100170,
     "fields": {
       "card": 10038,
-      "text": "Sinalizar a situação à Central de Regulação de Urgência (CRU) que acionará o COI para apoio policial combinando um ponto de encontro em local seguro.",
+      "text": "Contato com a Polícia Militar: o RO realiza contato telefônico com o 190 e registra na ocorrência: número da ocorrência aberta no CICOM e o nome do policial que realizou o atendimento.",
       "order": 3,
       "tags": []
     }
@@ -2162,7 +2162,7 @@
     "pk": 100171,
     "fields": {
       "card": 10038,
-      "text": "Cenas com violência conhecida: quando a cena for previamente identificada como violenta, a equipe do SAMU 192 deverá aguardar o apoio policial em ponto de encontro pré-definido e adentrar o local apenas quando houver segurança.",
+      "text": "Ocorrência vermelha: o MR compartilha a ocorrência com o MR-COI, para que este possa realizar os registros e acompanhamento do apoio policial.",
       "order": 4,
       "tags": []
     }
@@ -2172,8 +2172,28 @@
     "pk": 100172,
     "fields": {
       "card": 10038,
-      "text": "Caso nenhuma das estratégias acima seja possível, encerrar a ocorrência e realizar registro por meio de Boletim de Ocorrência Virtual, para fins legais e administrativos. Há mais informações no anexo 5 do manual.",
+      "text": "Ocorrência verde ou amarela: será realizada permuta de ocorrência e o MR encaminha a ocorrência que necessita de apoio policial ao MR-COI; o MR-COI realiza a permuta com uma ocorrência já triada.",
       "order": 5,
+      "tags": []
+    }
+  },
+  {
+    "model": "questions.rulebullet",
+    "pk": 100173,
+    "fields": {
+      "card": 10038,
+      "text": "Gerenciamento do apoio: Cabe ao MR-COI o gerenciamento integral do apoio policial, incluindo: ajuste e definição do ponto de encontro onde a equipe do SAMU 192 deverá aguardar o apoio policial e cobrança direta ao preposto da Polícia Militar, quando necessário.",
+      "order": 6,
+      "tags": []
+    }
+  },
+  {
+    "model": "questions.rulebullet",
+    "pk": 100174,
+    "fields": {
+      "card": 10038,
+      "text": "Caso o atendimento não seja possível, seja qual for o motivo, encerrar a ocorrência e realizar registro por meio de Boletim de Ocorrência Virtual, para fins legais e administrativos.",
+      "order": 7,
       "tags": []
     }
   },
@@ -2189,17 +2209,17 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100173,
+    "pk": 100175,
     "fields": {
       "card": 10039,
-      "text": "A atuação da equipe do SAMU 192 em cenas com possível relação criminal deve priorizar a segurança dos profissionais, a avaliação e prestação da assistência necessária à vítima e, sempre que possível, a preservação da integridade da cena, evitando a alteraç ão ou remoção de elementos que possam possuir valor legal.",
+      "text": "A atuação da equipe do SAMU 192 em cenas com possível relação criminal deve priorizar a segurança dos profissionais, a avaliação e prestação da assistência necessária à vítima e, sempre que possível, a preservação da integridade da cena, evitando a alteração ou remoção de elementos que possam possuir valor legal.",
       "order": 1,
       "tags": []
     }
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100174,
+    "pk": 100176,
     "fields": {
       "card": 10039,
       "text": "Recomenda-se: o Realizar avaliação remota (à distância) para identificar riscos, número de vítimas e necessidade de apoio.",
@@ -2209,7 +2229,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100175,
+    "pk": 100177,
     "fields": {
       "card": 10039,
       "text": "Iniciar imediatamente, se cena segura, as medidas de preservação da vida, restringindo o acesso de terceiros e, se possível, utilizando a própria ambulância, cones ou fitas para isolamento.",
@@ -2219,7 +2239,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100176,
+    "pk": 100178,
     "fields": {
       "card": 10039,
       "text": "Entrar na cena apenas quando houver sinais de vida ou dúvida quanto à condição do paciente; se houver morte evidente, restringir a circulação e preservar o local.",
@@ -2229,7 +2249,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100177,
+    "pk": 100179,
     "fields": {
       "card": 10039,
       "text": "Alterar a cena somente quando estritamente necessário para salvar vidas ou garantir segurança, como em casos de RCP, risco imediato ou impossibilidade de acesso ao paciente.",
@@ -2239,7 +2259,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100178,
+    "pk": 100180,
     "fields": {
       "card": 10039,
       "text": "Descrever na constatação de óbito o mais detalhado possível as intervenções feitas (AVP, IOT, RCP, etc…)",
@@ -2249,7 +2269,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100179,
+    "pk": 100181,
     "fields": {
       "card": 10039,
       "text": "Registrar na ficha de atendimento de maneira fiel e completa visto que, esta poderá ser o único documento a subsidiar eventual depoimento judicial da equipe. Avaliar mais informações no item 2.5 (óbitos).",
@@ -2269,17 +2289,17 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100180,
+    "pk": 100182,
     "fields": {
       "card": 10040,
-      "text": "Violência contra a mulher: Caracteriza -se por qualquer ação ou omissão de discriminação, agressão ou coerção motivada pelo fato de a vítima ser mulher, resultando em dano, morte, constrangimento, limitação ou sofrimento físico, sexual, moral, psicológico, social, político, econômico ou patrimonial, em espaços públicos ou privados.",
+      "text": "Violência contra a mulher: Caracteriza-se por qualquer ação ou omissão de discriminação, agressão ou coerção motivada pelo fato de a vítima ser mulher, resultando em dano, morte, constrangimento, limitação ou sofrimento físico, sexual, moral, psicológico, social, político, econômico ou patrimonial, em espaços públicos ou privados.",
       "order": 1,
       "tags": []
     }
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100181,
+    "pk": 100183,
     "fields": {
       "card": 10040,
       "text": "Violência contra a pessoa idosa: Abrange qualquer ato único ou repetido que cause dano ou aflição a pessoa com 60 anos ou mais, incluindo sofrimento físico, sexual, moral, psicológico ou social, discriminação, agressão, morte, constrangimento, coerção, limitação ou perda patrimonial.",
@@ -2289,7 +2309,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100182,
+    "pk": 100184,
     "fields": {
       "card": 10040,
       "text": "Violência contra a população LGBTQIAP+: Consiste em ato único ou repetido que cause dano ou aflição a pessoa LGBTQIAP+, envolvendo sofrimento físico, sexual, moral, psicológico ou social, discriminação, agressão, morte, constrangimento, coerção, limitação ou perda patrimonial.",
@@ -2299,7 +2319,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100183,
+    "pk": 100185,
     "fields": {
       "card": 10040,
       "text": "Violência contra criança ou adolescente: Compreende qualquer ação ou omissão que cause dano físico, psicológico, sexual ou social, incluindo negligência, abuso e exploração, praticada contra pessoa menor de 18 anos.",
@@ -2309,7 +2329,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100184,
+    "pk": 100186,
     "fields": {
       "card": 10040,
       "text": "A violência, em qualquer de suas formas, constitui grave violação de direitos e demanda atuação técnica, segura e ética por parte da equipe do SAMU 192. Nos casos de suspeita ou confirmação de violência ou negligência contra grupos vulneráveis, devem ser observadas as seguintes condutas gerais:",
@@ -2319,17 +2339,17 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100185,
+    "pk": 100187,
     "fields": {
       "card": 10040,
-      "text": "Comunicar imediatamente ao Chefe de Plantão, repassando informações de forma sistematizada. o CP definirá a unidade de saúde de destino e adoção das providências legais cabíveis.",
+      "text": "Comunicar imediatamente ao Chefe de Plantão, repassando informações de forma sistematizada. O CP definirá a unidade de saúde de destino e adoção das providências legais cabíveis.",
       "order": 6,
       "tags": []
     }
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100186,
+    "pk": 100188,
     "fields": {
       "card": 10040,
       "text": "Registrar, na ficha de atendimento, todos os dados disponíveis, incluindo orientações prestadas, informações obtidas e condutas adotadas.",
@@ -2339,7 +2359,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100187,
+    "pk": 100189,
     "fields": {
       "card": 10040,
       "text": "Durante a transição do cuidado, alertar a equipe do serviço social da unidade de destino sobre a suspeita ou confirmação de violência, registrando o nome do profissional que recebeu a informação.",
@@ -2359,7 +2379,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100188,
+    "pk": 100190,
     "fields": {
       "card": 10041,
       "text": "Avaliar a segurança da cena e posicionar a ambulância no ponto mais próximo possível do local da ocorrência.",
@@ -2369,7 +2389,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100189,
+    "pk": 100191,
     "fields": {
       "card": 10041,
       "text": "Se a cena for considerada segura, avaliar a viabilidade de deslocamento terrestre da equipe até o paciente.",
@@ -2379,7 +2399,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100190,
+    "pk": 100192,
     "fields": {
       "card": 10041,
       "text": "Em caso de cenário potencialmente arriscado, comunicar imediatamente à Central de Regulação de Urgência (CRU), para que o Médico Regulador entre em contato com o solicitante e avalie a possibilidade de deslocamento do paciente até a equipe.",
@@ -2389,7 +2409,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100191,
+    "pk": 100193,
     "fields": {
       "card": 10041,
       "text": "Quando o deslocamento não for viável, solicitar: o Apoio do Corpo de Bombeiros, nos casos de barreiras geográficas ou obstáculos físicos; o Apoio da Polícia Militar, nos casos de risco por violência.",
@@ -2399,7 +2419,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100192,
+    "pk": 100194,
     "fields": {
       "card": 10041,
       "text": "Caso nenhuma das estratégias acima seja possível, encerrar a ocorrência e realizar registro por meio de Boletim de Ocorrência Virtual, para fins legais e administrativos.",
@@ -2419,7 +2439,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100193,
+    "pk": 100195,
     "fields": {
       "card": 10042,
       "text": "Na presença de pertences junto ao paciente (roupas, adornos, documentos, valores, equipamentos eletrônicos, bolsas, malas, próteses, entre outros), a equipe deve entregar ao serviço social da UR.",
@@ -2429,7 +2449,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100194,
+    "pk": 100196,
     "fields": {
       "card": 10042,
       "text": "No caso de bens volumosos (ex.: bicicletas, cadeiras de rodas) e não havendo acompanhantes/familiar, considerar levá-los junto ao paciente. Na impossibilidade informar ao MR para que uma equipe de segurança resgate o bem deixado na cena.",
@@ -2449,7 +2469,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100195,
+    "pk": 100197,
     "fields": {
       "card": 10043,
       "text": "O transporte de pacientes com sobrepeso e obesidade deve ser realizado com rigorosa observância da segurança do paciente e da equipe. É obrigatória a avaliação prévia das condições clínicas, do ambiente e dos recursos disponíveis antes de qualquer deslocamento.",
@@ -2459,7 +2479,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100196,
+    "pk": 100198,
     "fields": {
       "card": 10043,
       "text": "Sempre que identificado risco ergonômico ou estrutural, a equipe deve acionar imediatamente a Central de Regulação de Urgência (CRU) para definição da estratégia mais adequada, podendo incluir o acionamento do Corpo de Bombeiros.",
@@ -2469,7 +2489,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100197,
+    "pk": 100199,
     "fields": {
       "card": 10043,
       "text": "Deve-se evitar o transporte improvisado sobre o piso da ambulância, em virtude do risco de incidentes com a equipe e o paciente. Na impossibilidade de garantir a segurança integral do transporte, e diante do estado de necessidade, a condução do veículo deve ser realizada em velocidade reduzida, compatível com as condições da via.",
@@ -2479,7 +2499,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100198,
+    "pk": 100200,
     "fields": {
       "card": 10043,
       "text": "As macas do SAMU devem ser utilizadas respeitando o limite indicado em sua lateral: até 150 kg na posição elevada e 300 kg ao nível do solo. Quando necessário, devem ser utilizados métodos alternativos de mobilização, como: lençóis reforçados; pranchas rígidas; maca a vácuo; sistemas de elevação mecânica; apoio do Corpo de Bombeiros.",
@@ -2513,7 +2533,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100199,
+    "pk": 100201,
     "fields": {
       "card": 10044,
       "text": "O tempo de tolerância para apresentação no plantão é de 15 minutos. Depois desse período, o tempo de atraso é contabilizado no banco de horas como débito no valor absoluto. Por outro lado, se o profissional saiu após o término do plantão, seja por conta de ocorrência ou não -rendição e desde que tenha chegado no limite de tolerância, as horas são creditadas em dobro no banco de horas.",
@@ -2523,7 +2543,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100200,
+    "pk": 100202,
     "fields": {
       "card": 10044,
       "text": "Desde o mês de maio de 2025 o ajuste do banco de horas é realizado mensalmente.",
@@ -2533,7 +2553,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100201,
+    "pk": 100203,
     "fields": {
       "card": 10044,
       "text": "Os profissionais estatutários terão os atrasos computados em folha de frequência e os créditos registrados no banco de horas para possíveis liberações a combinar. Os profissionais PJ terão as horas ajustadas no registro da frequência em múltiplos de 6h.",
@@ -2543,7 +2563,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100202,
+    "pk": 100204,
     "fields": {
       "card": 10044,
       "text": "Sendo assim, se o banco de horas estiver negativo em 6, 12, 18 ou 24h essas horas serão subtraídas no atesto das notas ou descontados do crédito anterior a maio do banco de horas se estiver com saldo positivo. Por outro lado, se o saldo mensal foi positivo, essas horas serão ajustadas na frequência ou abatidas do banco de horas anterior a maio se o saldo estiver negativo.",
@@ -2553,7 +2573,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100203,
+    "pk": 100205,
     "fields": {
       "card": 10044,
       "text": "A hora de chegada e saída será registrada em relatório pelo Chefe de Plantão, sendo considerada para o MI a hora exata em que o profissional registrou no grupo do Telegram (“MÉDICOS E CHEFE”) ou horário de login no aplicativo (o que for mais cedo). Na Regulação o horário considerado será o horário de login no sistema e não há possibilidade de compensação de horário na CRU durante almoço ou descanso vespertino.",
@@ -2563,7 +2583,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100204,
+    "pk": 100206,
     "fields": {
       "card": 10044,
       "text": "A falta do profissional PJ sem justificativa e sem cobertura implicará na perda das horas equivalentes de crédito registradas no Banco de Horas, caso disponha. Se houver atestado médico, este deve ser enviado para o Chefe de Plantão para ser anexado em relatório justificando a falta ou a execução do plantão de forma remota caso esteja escalado como Médico Regulador.",
@@ -2583,7 +2603,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100205,
+    "pk": 100207,
     "fields": {
       "card": 10045,
       "text": "Conforme previsto em edital, é obrigatória a execução de ambas as funções no serviço. Sendo assim, orienta-se que, independente da função para o qual o profissional esteja escalado no dia, sempre esteja em posse dos materiais e fardamentos necessários para possíveis remanejamentos. O remanejamento pode ser necessário a qualquer momento durante o plantão e é de responsabilidade e autonomia do Chefe de Plantão, não sendo passível de recusa por parte do profissional. Pode haver remanejamento de base e, portanto, não é aconselhável guardar material em armário das bases quando não estiver no serviço.",
@@ -2603,17 +2623,17 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100206,
+    "pk": 100208,
     "fields": {
       "card": 10046,
-      "text": "As trocas de plantão devem ser realizadas via aplicativo Soffia sendo considerado o responsável pelo plantão o profissional que estiver no app na função ou base específica. Sendo assim, caso o profissional realize uma troca sem o devido ajuste no app e o c olega não compareça ao plantão, a ausência será de responsabilidade do profissional escalado.",
+      "text": "As trocas de plantão devem ser realizadas via aplicativo Soffia sendo considerado o responsável pelo plantão o profissional que estiver no app na função ou base específica. Sendo assim, caso o profissional realize uma troca sem o devido ajuste no app e o colega não compareça ao plantão, a ausência será de responsabilidade do profissional escalado.",
       "order": 1,
       "tags": []
     }
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100207,
+    "pk": 100209,
     "fields": {
       "card": 10046,
       "text": "A troca envolvendo profissionais estatutários deverá ser feita dentro do mesmo mês, haja vista que esses profissionais precisam cumprir a carga horária mensal.",
@@ -2633,7 +2653,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100208,
+    "pk": 100210,
     "fields": {
       "card": 10047,
       "text": "Os pedidos para mudança ou ajuste de escala devem ser realizados à Coordenação Médica até o dia 10 do mês anterior. Importante ressaltar que, conforme previsto no edital do Chamamento Público, os médicos do serviço devem exercer as duas funções.",
@@ -2643,7 +2663,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100209,
+    "pk": 100211,
     "fields": {
       "card": 10047,
       "text": "Entretanto, entendendo as preferências, a Coordenação fixou como obrigatoriedade o mínimo de 1 plantão de 12h na função com menor afinidade. As trocas podem ser realizadas obedecendo este critério",
@@ -2653,7 +2673,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100210,
+    "pk": 100212,
     "fields": {
       "card": 10047,
       "text": "Os preceptores sem carga horária para intervenção exercerão essa função durante o recesso das instituições em maior número de plantões.",
@@ -2673,7 +2693,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100211,
+    "pk": 100213,
     "fields": {
       "card": 10048,
       "text": "Os Estatutários e REDAs deverão assinar as folhas de frequência até o dia 05 ao meio dia de cada mês haja vista que as folhas irão para a SMS no dia 05 à tarde.",
@@ -2683,7 +2703,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100212,
+    "pk": 100214,
     "fields": {
       "card": 10048,
       "text": "Caso a frequência não esteja assinada o salário poderá ser bloqueado",
@@ -2693,17 +2713,17 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100213,
+    "pk": 100215,
     "fields": {
       "card": 10048,
-      "text": "Os profissionais contratados por Pessoa Jurídica deverão assinar a frequência e relatório de atividades e enviar a Nota Fiscal para o e -mail da Secretária Iasmim (iasmimfernandes@salvador.ba.gov.br) até o 5º dia útil do mês para que a Coordenação Médica possa atestar os documentos com celeridade.",
+      "text": "Os profissionais contratados por Pessoa Jurídica deverão assinar a frequência e relatório de atividades e enviar a Nota Fiscal para o e-mail da Secretária Iasmim (iasmimfernandes@salvador.ba.gov.br) até o 5º dia útil do mês para que a Coordenação Médica possa atestar os documentos com celeridade.",
       "order": 3,
       "tags": []
     }
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100214,
+    "pk": 100216,
     "fields": {
       "card": 10048,
       "text": "Iasmim informará assim que esses documentos estejam atestados ou, em caso de erro, da necessidade de correção.",
@@ -2723,7 +2743,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100215,
+    "pk": 100217,
     "fields": {
       "card": 10049,
       "text": "Toda intercorrência deverá ser formalmente registrada e encaminhada ao Chefe de Plantão, contendo a descrição completa e fidedigna dos fatos, a fim de que seja devidamente anexada ao relatório da unidade. Após análise, a Coordenação Médica procederá à avaliação do caso e, se pertinente, encaminhará a ocorrência à Comissão de Ética Médica para as medidas cabíveis.",
@@ -2743,7 +2763,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100216,
+    "pk": 100218,
     "fields": {
       "card": 10050,
       "text": "Não é autorizada a divulgação de informações referentes a pacientes, ocorrências ou rotinas do serviço a terceiros, sob nenhuma circunstância. Toda solicitação deverá ser direcionada ao setor administrativo, em horário comercial.",
@@ -2753,7 +2773,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100217,
+    "pk": 100219,
     "fields": {
       "card": 10050,
       "text": "Ocorrências que envolvam a presença de veículos de imprensa ou representantes da mídia, recomenda-se que nenhum profissional do serviço conceda entrevistas ou repasse informações, limitando-se a orientar o contato com a Assessoria de Comunicação do Município.",
@@ -2763,7 +2783,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100218,
+    "pk": 100220,
     "fields": {
       "card": 10050,
       "text": "O descumprimento desta norma pode configurar infração ética e poderá ensejar responsabilização administrativa, civil e/ou penal, de acordo com a gravidade da conduta e a legislação vigente.",
@@ -2783,7 +2803,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100219,
+    "pk": 100221,
     "fields": {
       "card": 10051,
       "text": "O SAMU acolhe internos em ambas as funções, regulação e intervenção. Na CRU, os internos estão sob supervisão do preceptor direto e, em hipótese alguma possuem autonomia para tomada de conduta sem a ciência e concordância do preceptor. É indispensável que todas as informações descritas em sistema sejam revisadas pelo preceptor, evitando envio de ocorrências com registros confusos ou incompletos.",
@@ -2793,7 +2813,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100220,
+    "pk": 100222,
     "fields": {
       "card": 10051,
       "text": "Na intervenção a escala dos internos é responsabilidade das coordenações do internato, não sendo possível convocar o acadêmico em turnos que não estejam previstos em sua escala. Condutas inadequadas por parte dos internos devem ser prontamente encaminhadas para a coordenação do internato, a qual estará responsável pela adoção de medidas pertinentes.",
@@ -2803,7 +2823,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100221,
+    "pk": 100223,
     "fields": {
       "card": 10051,
       "text": "Os intervencionistas, conforme previsto em edital, deverão orientar os acadêmicos durante os atendimentos, instruindo sobre os recursos diagnósticos e terapêuticos.",
@@ -2837,31 +2857,11 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100222,
-    "fields": {
-      "card": 10052,
-      "text": "A Comissão de Ética Médica do SAMU de Salvador desempenha um papel fundamental na garantia da conduta ética dos profissionais de saúde que atuam no serviço. Sua importância se destaca em vários aspectos: o Garantia da Conduta Ética: A comissão assegura que os profissionais do SAMU sigam os princípios éticos estabelecidos pelo Código de Ética Médica, promovendo uma prática profissional responsável e respeitosa.",
-      "order": 1,
-      "tags": []
-    }
-  },
-  {
-    "model": "questions.rulebullet",
-    "pk": 100223,
-    "fields": {
-      "card": 10052,
-      "text": "Resolução de Dilemas Éticos: Ela atua na resolução de conflitos e dilemas éticos que surgem no cotidiano do serviço, oferecendo orientação e suporte aos profissionais.",
-      "order": 2,
-      "tags": []
-    }
-  },
-  {
-    "model": "questions.rulebullet",
     "pk": 100224,
     "fields": {
       "card": 10052,
-      "text": "Proteção dos Pacientes: A comissão trabalha para garantir que os direitos e a dignidade dos pacientes sejam respeitados, promovendo uma assistência de qualidade e humanizada.",
-      "order": 3,
+      "text": "A Comissão de Ética Médica do SAMU de Salvador desempenha um papel fundamental na garantia da conduta ética dos profissionais de saúde que atuam no serviço. Sua importância se destaca em vários aspectos:",
+      "order": 1,
       "tags": []
     }
   },
@@ -2870,8 +2870,38 @@
     "pk": 100225,
     "fields": {
       "card": 10052,
-      "text": "Educação e Conscientização: Ela promove a educação contínua dos profissionais sobre questões éticas, atualizando-os sobre as melhores práticas e normas éticas.",
+      "text": "Garantia da Conduta Ética: A comissão assegura que os profissionais do SAMU sigam os princípios éticos estabelecidos pelo Código de Ética Médica, promovendo uma prática profissional responsável e respeitosa.",
+      "order": 2,
+      "tags": []
+    }
+  },
+  {
+    "model": "questions.rulebullet",
+    "pk": 100226,
+    "fields": {
+      "card": 10052,
+      "text": "Resolução de Dilemas Éticos: Ela atua na resolução de conflitos e dilemas éticos que surgem no cotidiano do serviço, oferecendo orientação e suporte aos profissionais.",
+      "order": 3,
+      "tags": []
+    }
+  },
+  {
+    "model": "questions.rulebullet",
+    "pk": 100227,
+    "fields": {
+      "card": 10052,
+      "text": "Proteção dos Pacientes: A comissão trabalha para garantir que os direitos e a dignidade dos pacientes sejam respeitados, promovendo uma assistência de qualidade e humanizada.",
       "order": 4,
+      "tags": []
+    }
+  },
+  {
+    "model": "questions.rulebullet",
+    "pk": 100228,
+    "fields": {
+      "card": 10052,
+      "text": "Educação e Conscientização: Ela promove a educação contínua dos profissionais sobre questões éticas, atualizando-os sobre as melhores práticas e normas éticas.",
+      "order": 5,
       "tags": []
     }
   },
@@ -2887,7 +2917,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100226,
+    "pk": 100229,
     "fields": {
       "card": 10053,
       "text": "Dilemas Éticos: Situações em que os profissionais enfrentam decisões difíceis que envolvem questões éticas, como conflitos de interesse, consentimento informado, confidencialidade, entre outros.",
@@ -2897,31 +2927,41 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100227,
+    "pk": 100230,
     "fields": {
       "card": 10053,
-      "text": "Denúncias de Violação Ética: Casos em que há suspeita ou evidência de violação do Código de Ética Médica em situações envolvendo algum profissional do Serviço o Dúvidas sobre Conduta Profissional: Quando os profissionais têm dúvidas sobre a conduta ética apropriada em situações específicas.",
+      "text": "Denúncias de Violação Ética: Casos em que há suspeita ou evidência de violação do Código de Ética Médica em situações envolvendo algum profissional do Serviço.",
       "order": 2,
       "tags": []
     }
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100228,
+    "pk": 100231,
     "fields": {
       "card": 10053,
-      "text": "Investigação de Incidentes: Em casos de incidentes ou eventos adversos que possam ter implicações éticas, a comissão pode ser acionada para investigar e oferecer recomendações.",
+      "text": "Dúvidas sobre Conduta Profissional: Quando os profissionais têm dúvidas sobre a conduta ética apropriada em situações específicas.",
       "order": 3,
       "tags": []
     }
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100229,
+    "pk": 100232,
+    "fields": {
+      "card": 10053,
+      "text": "Investigação de Incidentes: Em casos de incidentes ou eventos adversos que possam ter implicações éticas, a comissão pode ser acionada para investigar e oferecer recomendações.",
+      "order": 4,
+      "tags": []
+    }
+  },
+  {
+    "model": "questions.rulebullet",
+    "pk": 100233,
     "fields": {
       "card": 10053,
       "text": "Em resumo, a Comissão de Ética Médica do SAMU de Salvador é essencial para garantir a integridade e a qualidade da assistência prestada, promovendo uma cultura de respeito e responsabilidade entre os profissionais de saúde.",
-      "order": 4,
+      "order": 5,
       "tags": []
     }
   },
@@ -2951,7 +2991,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100230,
+    "pk": 100234,
     "fields": {
       "card": 10054,
       "text": "O MI nao tem obrigação de fornecer seu nome completo e número de registro (CRM) diretamente ao solicitante, paciente, familiar ou terceiros. Todas as informações de identificação dos atendimentos realizados ficam registradas nos documentos oficiais do serviço, com rastreabilidade garantida pelo sistema de regulação e pelos relatórios internos.",
@@ -2961,7 +3001,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100231,
+    "pk": 100235,
     "fields": {
       "card": 10054,
       "text": "Caso haja solicitação dessa natureza, o médico deve orientar o interessado a procurar o setor administrativo, em horário comercial, que é o único autorizado a fornecer informações institucionais ou documentais.",
@@ -2981,7 +3021,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100232,
+    "pk": 100236,
     "fields": {
       "card": 10055,
       "text": "A dificuldade de localização do endereço deverá ser reportada para a sala de radio para que seja feita uma ligação/conferência com o solicitante para que novas informações possam ser obtidas que facilitem a identificação do endereço.",
@@ -3001,7 +3041,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100233,
+    "pk": 100237,
     "fields": {
       "card": 10056,
       "text": "O médico regulador atua como autoridade sanitária, fundamentado nos protocolos assistenciais e nas diretrizes da Central de Regulação de Urgências. O médico intervencionista, por sua vez, é responsável pela execução da assistência em campo, cabendo-lhe cumprir as orientações regulatórias estabelecidas.",
@@ -3011,7 +3051,7 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100234,
+    "pk": 100238,
     "fields": {
       "card": 10056,
       "text": "Eventuais divergências de conduta devem ser registradas formalmente em relatório de intercorrência e encaminhadas ao Chefe de Plantão, para posterior análise pela Coordenação Médica. Essa avaliação considerará os relatos de ambas as partes, com base nos protocolos institucionais e princípios éticos, de modo a garantir segurança assistencial e padronização do cuidado.",
@@ -3031,31 +3071,41 @@
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100235,
+    "pk": 100239,
     "fields": {
       "card": 10057,
-      "text": "Nas situações em que uma ocorrência permanece em espera por indisponibilidade de ambulância, devem ser observadas as seguintes diretrizes: o Quando não houver vinculação imediata de unidade, o Médico Regulador (MR) deverá entrar em contato com o solicitante para informar sobre a demora. O solicitante poderá optar por aguardar o envio do recurso ou não.",
+      "text": "Nas situações em que uma ocorrência permanece em espera por indisponibilidade de ambulância, devem ser observadas as seguintes diretrizes:",
       "order": 1,
       "tags": []
     }
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100236,
+    "pk": 100240,
     "fields": {
       "card": 10057,
-      "text": "o Caso o solicitante opte por aguardar, a unidade deverá ser vinculada e encaminhada tão logo esteja disponível, devendo o solicitante ser informado de que o recurso está a caminho.",
+      "text": "Quando não houver vinculação imediata de unidade, o Médico Regulador (MR) deverá entrar em contato com o solicitante para informar sobre a demora. O solicitante poderá optar por aguardar o envio do recurso ou não.",
       "order": 2,
       "tags": []
     }
   },
   {
     "model": "questions.rulebullet",
-    "pk": 100237,
+    "pk": 100241,
     "fields": {
       "card": 10057,
-      "text": "o Caso, no momento da vinculação da unidade, não seja possível estabelecer contato com o solicitante, O RECURSO DEVERÁ SER MANTIDO.",
+      "text": "Caso o solicitante opte por aguardar, a unidade deverá ser vinculada e encaminhada tão logo esteja disponível, devendo o solicitante ser informado de que o recurso está a caminho.",
       "order": 3,
+      "tags": []
+    }
+  },
+  {
+    "model": "questions.rulebullet",
+    "pk": 100242,
+    "fields": {
+      "card": 10057,
+      "text": "Caso, no momento da vinculação da unidade, não seja possível estabelecer contato com o solicitante, O RECURSO DEVERÁ SER MANTIDO.",
+      "order": 4,
       "tags": []
     }
   }

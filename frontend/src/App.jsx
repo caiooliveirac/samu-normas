@@ -813,9 +813,6 @@ export default function App(){
             <p className="text-[11px] text-slate-600 mt-2">Atalhos: / busca · Esc limpa · ↑ ↓ navegam · Home/End · Enter/Espaço expandem.</p>
           </div>
           <div className="flex items-center gap-2">
-            <a href="/checklists/" className="inline-flex items-center gap-2 rounded-lg border border-brand-200 bg-white/70 hover:bg-brand-50 text-sm sm:text-xs font-semibold px-4 py-2.5 sm:py-2 text-brand-800 transition-colors min-h-11">
-              <span>Checklists</span>
-            </a>
             <a href={askHref} className="inline-flex items-center gap-2 rounded-lg border border-brand-200 bg-white hover:bg-brand-50 text-sm sm:text-xs font-semibold px-4 py-2.5 sm:py-2 text-brand-800 transition-colors min-h-11">
               <span>+ Perguntar</span>
             </a>

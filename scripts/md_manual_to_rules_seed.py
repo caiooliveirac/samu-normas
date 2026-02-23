@@ -274,8 +274,8 @@ def build_fixture(fm: dict, rules: list[Rule], tag_defs: dict[str, tuple[str, st
                 "is_published": True,
                 "order": r_idx * 10,
                 "body": "",
-                "created_at": "2026-01-01T00:00:00Z",
-                "updated_at": "2026-01-01T00:00:00Z",
+                "created_at": "2026-02-01T00:00:00Z",
+                "updated_at": "2026-02-01T00:00:00Z",
             },
         })
 

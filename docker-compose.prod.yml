@@ -36,9 +36,9 @@ services:
     environment:
       MARIADB_DATABASE: ${DB_NAME:-samu_q}
       MARIADB_USER: ${DB_USER:-samu_q}
-      MARIADB_PASSWORD: ${DB_PASSWORD:-change-me}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-troque-app}
       # Senha root separada da senha do usuário de aplicação
-      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root-change-me}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-troque-root}
     volumes:
       - db_data:/var/lib/mysql
     healthcheck:
@@ -104,14 +104,12 @@ services:
     networks:
       - default
       - scoreboard_net
+      - perguntas_net
     ports:
       - "80:80"      # Porta HTTP
       - "443:443"    # Porta HTTPS
     volumes:
       - static_volume:/app/staticfiles:ro
-      # Fixa o tema das páginas Django (/ask,/login,/inbox): evita regressão para CSS antigo
-      # quando o container web é recriado sem rebuild e repopula o volume staticfiles.
-      - ./static/css/ask.css:/app/staticfiles/css/ask.css:ro
       # React build (volume separado)
       - react_volume:/app/staticfiles/react:ro
       # Anexos (imagens) - publicados via /anexos/
@@ -153,4 +151,7 @@ networks:
   scoreboard_net:
     external: true
     name: scoreboard-standalone_default
+  perguntas_net:
+    external: true
+    name: perguntas_default
 

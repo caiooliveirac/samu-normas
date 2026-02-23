@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#030712" />
+    <title>MNRS Signal Core</title>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #030712;
+        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        overflow: hidden;
+      }
+
+      #app {
+        position: fixed;
+        inset: 0;
+        touch-action: none;
+        background:
+          radial-gradient(1100px 700px at 50% -10%, rgba(34, 211, 238, 0.16), rgba(2, 6, 23, 0.96) 58%, #02040a 100%);
+      }
+
+      canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .hud {
+        position: absolute;
+        left: 12px;
+        right: 12px;
+        top: max(10px, env(safe-area-inset-top));
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        z-index: 2;
+      }
+
+      .panel {
+        background: rgba(10, 18, 35, 0.58);
+        border: 1px solid rgba(125, 211, 252, 0.26);
+        backdrop-filter: blur(8px);
+        border-radius: 14px;
+        padding: 10px 12px;
+        box-shadow: 0 10px 34px rgba(2, 6, 23, 0.52);
+      }
+
+      .title {
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        color: #67e8f9;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .meta {
+        font-size: 12px;
+        color: #e2e8f0;
+        font-weight: 600;
+        margin-top: 2px;
+      }
+
+      .score {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .chip {
+        font-size: 11px;
+        color: #93c5fd;
+        padding: 6px 10px;
+        border: 1px solid rgba(96, 165, 250, 0.35);
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.58);
+      }
+
+      #soundBtn {
+        border: 1px solid rgba(251, 146, 60, 0.5);
+        background: rgba(251, 146, 60, 0.13);
+        color: #fdba74;
+        font-weight: 700;
+        border-radius: 10px;
+        padding: 8px 10px;
+        font-size: 12px;
+      }
+
+      .log {
+        position: absolute;
+        left: 12px;
+        right: 12px;
+        bottom: max(12px, env(safe-area-inset-bottom));
+        z-index: 2;
+      }
+
+      .log h3 {
+        margin: 0 0 8px;
+        font-size: 11px;
+        color: #7dd3fc;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .feed {
+        max-height: 24vh;
+        overflow: auto;
+        display: grid;
+        gap: 6px;
+      }
+
+      .row {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 11px;
+        line-height: 1.4;
+        color: #cbd5e1;
+        opacity: 0.96;
+      }
+
+      .tag {
+        color: #fb923c;
+        font-weight: 700;
+      }
+
+      .help {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: calc(26vh + 20px);
+        padding: 8px 12px;
+        border-radius: 999px;
+        border: 1px dashed rgba(125, 211, 252, 0.4);
+        background: rgba(8, 15, 30, 0.66);
+        color: #bfdbfe;
+        font-size: 12px;
+        z-index: 2;
+        white-space: nowrap;
+      }
+
+      @media (min-width: 900px) {
+        .hud,
+        .log {
+          left: 18px;
+          right: 18px;
+        }
+
+        #soundBtn {
+          padding: 8px 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="radar" aria-label="Simulador de sinais" role="img"></canvas>
+
+      <div class="hud">
+        <div class="panel">
+          <div class="title">Signal Core // MNRS</div>
+          <div class="meta" id="status">Operação nominal</div>
+        </div>
+
+        <div class="score">
+          <div class="chip" id="score">STAB 000</div>
+          <div class="chip" id="risk">RISK 008%</div>
+          <button id="soundBtn" type="button">Som: OFF</button>
+        </div>
+      </div>
+
+      <div class="help">Toque nos sinais críticos para estabilizar a rede</div>
+
+      <div class="log panel">
+        <h3>System Log</h3>
+        <div id="feed" class="feed"></div>
+      </div>
+    </div>
+
+    <script>
+      (() => {
+        const canvas = document.getElementById("radar");
+        const context = canvas.getContext("2d", { alpha: false });
+        const scoreElement = document.getElementById("score");
+        const riskElement = document.getElementById("risk");
+        const statusElement = document.getElementById("status");
+        const feedElement = document.getElementById("feed");
+        const soundButton = document.getElementById("soundBtn");
+
+        const state = {
+          width: 0,
+          height: 0,
+          dpr: 1,
+          score: 0,
+          risk: 8,
+          combo: 0,
+          lastSpawnAt: 0,
+          incidents: [],
+          logs: [],
+          soundEnabled: false,
+          audioContext: null,
+          startedAt: performance.now(),
+        };
+
+        const tags = [
+          "NODE_STABILIZED",
+          "UNIT_DISPATCHED",
+          "CRITICAL_PARAM_MONITORED",
+          "ACCESS_ATTEMPT_LOGGED",
+          "SYNC_VECTOR_PATCHED",
+          "PULSE_STREAM_ALIGNED",
+          "GATEWAY_LATENCY_SOFTENED",
+        ];
+
+        const levelByRisk = (risk) => {
+          if (risk < 35) return "Operação nominal";
+          if (risk < 72) return "Rede sob pressão controlada";
+          return "Atenção máxima: contenção ativa";
+        };
+
+        const resize = () => {
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          state.width = window.innerWidth;
+          state.height = window.innerHeight;
+          state.dpr = dpr;
+
+          canvas.width = Math.floor(state.width * dpr);
+          canvas.height = Math.floor(state.height * dpr);
+          context.setTransform(dpr, 0, 0, dpr, 0, 0);
+        };
+
+        const addLog = (tag, message) => {
+          const seconds = ((performance.now() - state.startedAt) / 1000)
+            .toFixed(1)
+            .padStart(6, "0");
+          state.logs.unshift(`[${seconds}s] [${tag}] ${message}`);
+          if (state.logs.length > 12) state.logs.length = 12;
+
+          feedElement.innerHTML = state.logs
+            .map((entry) => {
+              const firstClose = entry.indexOf("] ") + 1;
+              return `<div class="row"><span class="tag">${entry.slice(0, firstClose)}</span>${entry.slice(firstClose)}</div>`;
+            })
+            .join("");
+        };
+
+        const spawnIncident = (now) => {
+          const padding = 26;
+          const incident = {
+            x: padding + Math.random() * (state.width - padding * 2),
+            y: 78 + Math.random() * (state.height - 220),
+            radius: 14 + Math.random() * 16,
+            lifeMs: 3800 + Math.random() * 3200,
+            bornAt: now,
+            phase: Math.random() * Math.PI * 2,
+          };
+
+          state.incidents.push(incident);
+          if (state.incidents.length > 18) state.incidents.shift();
+        };
+
+        const beep = (frequency = 880, duration = 0.06, type = "sine", gain = 0.035) => {
+          if (!state.soundEnabled) return;
+
+          try {
+            if (!state.audioContext) {
+              state.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            const audio = state.audioContext;
+            if (audio.state === "suspended") audio.resume();
+
+            const oscillator = audio.createOscillator();
+            const gainNode = audio.createGain();
+
+            oscillator.type = type;
+            oscillator.frequency.value = frequency;
+            gainNode.gain.value = gain;
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audio.destination);
+
+            oscillator.start();
+            gainNode.gain.exponentialRampToValueAtTime(0.0001, audio.currentTime + duration);
+            oscillator.stop(audio.currentTime + duration);
+          } catch {
+            // no-op
+          }
+        };
+
+        const drawGrid = (now) => {
+          context.fillStyle = "#030712";
+          context.fillRect(0, 0, state.width, state.height);
+
+          const gridX = 34;
+          const gridY = 34;
+
+          context.strokeStyle = "rgba(34, 211, 238, 0.10)";
+          context.lineWidth = 1;
+
+          for (let x = (now * 0.03) % gridX; x < state.width; x += gridX) {
+            context.beginPath();
+            context.moveTo(x, 0);
+            context.lineTo(x, state.height);
+            context.stroke();
+          }
+
+          for (let y = (now * 0.02) % gridY; y < state.height; y += gridY) {
+            context.beginPath();
+            context.moveTo(0, y);
+            context.lineTo(state.width, y);
+            context.stroke();
+          }
+
+          const gradient = context.createRadialGradient(
+            state.width * 0.5,
+            state.height * 0.4,
+            10,
+            state.width * 0.5,
+            state.height * 0.4,
+            state.width * 0.7
+          );
+          gradient.addColorStop(0, "rgba(56, 189, 248, 0.13)");
+          gradient.addColorStop(1, "rgba(2, 6, 23, 0)");
+          context.fillStyle = gradient;
+          context.fillRect(0, 0, state.width, state.height);
+        };
+
+        const drawIncident = (incident, now) => {
+          const age = now - incident.bornAt;
+          const progress = age / incident.lifeMs;
+          const alpha = Math.max(0.2, 1 - progress);
+          const pulse = 1 + Math.sin(now * 0.008 + incident.phase) * 0.18;
+          const radius = incident.radius * pulse;
+
+          context.beginPath();
+          context.arc(incident.x, incident.y, radius + 12, 0, Math.PI * 2);
+          context.strokeStyle = `rgba(251, 146, 60, ${alpha * 0.24})`;
+          context.lineWidth = 2;
+          context.stroke();
+
+          context.beginPath();
+          context.arc(incident.x, incident.y, radius, 0, Math.PI * 2);
+          context.fillStyle = `rgba(14, 165, 233, ${alpha * 0.36})`;
+          context.fill();
+
+          context.beginPath();
+          context.arc(incident.x, incident.y, Math.max(4, radius * 0.32), 0, Math.PI * 2);
+          context.fillStyle = `rgba(255, 255, 255, ${alpha * 0.92})`;
+          context.fill();
+        };
+
+        const render = (now) => {
+          drawGrid(now);
+
+          if (now - state.lastSpawnAt > Math.max(340, 980 - state.score * 6)) {
+            spawnIncident(now);
+            state.lastSpawnAt = now;
+          }
+
+          for (let index = state.incidents.length - 1; index >= 0; index -= 1) {
+            const incident = state.incidents[index];
+            if (now - incident.bornAt > incident.lifeMs) {
+              state.incidents.splice(index, 1);
+              state.risk = Math.min(100, state.risk + 5);
+              addLog("ACCESS_ATTEMPT_LOGGED", "pico expirou sem contenção");
+              beep(210, 0.09, "triangle", 0.03);
+              continue;
+            }
+            drawIncident(incident, now);
+          }
+
+          state.risk = Math.max(2, state.risk - 0.005);
+          scoreElement.textContent = `STAB ${String(state.score).padStart(3, "0")}`;
+          riskElement.textContent = `RISK ${String(Math.round(state.risk)).padStart(3, "0")}%`;
+          statusElement.textContent = levelByRisk(state.risk);
+
+          requestAnimationFrame(render);
+        };
+
+        const handleInput = (x, y) => {
+          let hitIndex = -1;
+
+          for (let index = state.incidents.length - 1; index >= 0; index -= 1) {
+            const incident = state.incidents[index];
+            const dx = x - incident.x;
+            const dy = y - incident.y;
+            const limit = incident.radius + 13;
+            if (dx * dx + dy * dy <= limit * limit) {
+              hitIndex = index;
+              break;
+            }
+          }
+
+          if (hitIndex >= 0) {
+            state.incidents.splice(hitIndex, 1);
+            state.combo = Math.min(9, state.combo + 1);
+            state.score += 1 + Math.floor(state.combo / 3);
+            state.risk = Math.max(0, state.risk - (7 + state.combo * 0.8));
+
+            const tag = tags[(Math.random() * 4) | 0];
+            addLog(tag, "estabilização concluída em janela tática");
+            beep(860 + state.combo * 34, 0.06, "sine", 0.035);
+
+            if (state.combo >= 5) {
+              beep(1240, 0.04, "square", 0.02);
+            }
+          } else {
+            state.combo = 0;
+            state.risk = Math.min(100, state.risk + 2.2);
+            addLog("ACCESS_ATTEMPT_LOGGED", "toque sem alvo rastreável");
+            beep(280, 0.05, "sawtooth", 0.02);
+          }
+        };
+
+        canvas.addEventListener("pointerdown", (event) => {
+          const rect = canvas.getBoundingClientRect();
+          handleInput(event.clientX - rect.left, event.clientY - rect.top);
+        });
+
+        soundButton.addEventListener("click", () => {
+          state.soundEnabled = !state.soundEnabled;
+          soundButton.textContent = `Som: ${state.soundEnabled ? "ON" : "OFF"}`;
+          if (state.soundEnabled) {
+            beep(640, 0.05, "sine", 0.03);
+            addLog("AUDIO_CHANNEL_ACTIVE", "telemetria acústica habilitada");
+          }
+        });
+
+        window.addEventListener("resize", resize, { passive: true });
+
+        resize();
+        addLog("SYSTEM_BOOT_OK", "ambiente interativo iniciado");
+        addLog("CRITICAL_PARAM_MONITORED", "aguardando eventos de estabilização");
+        requestAnimationFrame(render);
+      })();
+    </script>
+  </body>
+</html>

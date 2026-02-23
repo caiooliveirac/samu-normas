@@ -62,6 +62,23 @@ else
   echo "[INFO] NO_MIGRATE=1 — pulando migrations"
 fi
 
+# Auto-seed: se a tabela de regras estiver vazia, executa seed_rules automaticamente.
+# Isso garante que dados apareçam no frontend após deploy limpo ou recreate de volumes.
+if [[ "${NO_SEED:-0}" != "1" ]]; then
+  RULE_COUNT=$(docker compose -f "$COMPOSE_FILE" exec -T "$WEB_SERVICE" python -c "
+import django,os;os.environ.setdefault('DJANGO_SETTINGS_MODULE','samu_q.settings');django.setup()
+from questions.models import Rule;print(Rule.objects.count())
+" 2>/dev/null || echo "0")
+  if [[ "$RULE_COUNT" == "0" ]]; then
+    echo "[INFO] Tabela de regras vazia. Executando seed_rules..."
+    docker compose -f "$COMPOSE_FILE" exec "$WEB_SERVICE" python manage.py seed_rules --fresh || echo "[WARN] seed_rules falhou"
+  else
+    echo "[INFO] Regras já populadas ($RULE_COUNT registros). Pulando seed."
+  fi
+else
+  echo "[INFO] NO_SEED=1 — pulando seed"
+fi
+
 if [[ "${NO_COLLECTSTATIC:-0}" != "1" ]]; then
   echo "[INFO] Executando collectstatic"
   docker compose -f "$COMPOSE_FILE" exec "$WEB_SERVICE" python manage.py collectstatic --noinput
