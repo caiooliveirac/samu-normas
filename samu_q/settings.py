@@ -84,6 +84,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'samu_q.context_processors.build_metadata',
             ],
         },
     },
@@ -150,6 +151,9 @@ LOGIN_URL = os.getenv('LOGIN_URL', '/login/')
 BUILD_SHA = os.getenv('BUILD_SHA', 'dev-local')
 BUILD_DATE = os.getenv('BUILD_DATE', 'unknown')
 APP_VERSION = os.getenv('APP_VERSION', 'dev')
+
+# Open Graph / Facebook (para o debugger/scraper)
+FB_APP_ID = os.getenv('FB_APP_ID', '').strip()
 
 # Telegram (digest de checklists)
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '').strip()

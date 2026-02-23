@@ -23,6 +23,7 @@
   {% endwith %}
 
   <meta property="og:type" content="website">
+  {% if FB_APP_ID %}<meta property="fb:app_id" content="{{ FB_APP_ID }}">{% endif %}
   <meta property="og:title" content="Manual de Normas e Rotinas Médicas do SAMU">
   <meta property="og:description" content="Estabelece diretrizes técnicas, operacionais e administrativas para a atuação da equipe médica nas atividades de regulação e intervenção.">
   <meta property="og:image" content="https://mnrs.com.br/static/og/mnrs-og-v2.png">
