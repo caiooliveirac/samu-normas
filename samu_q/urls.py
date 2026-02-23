@@ -10,11 +10,13 @@ def healthz(_):
     return HttpResponse("ok", content_type="text/plain")
 
 urlpatterns = [
+    # Admin logout com redirect para /login/ (evita cair na raiz)
+    path('admin/logout/', auth_views.LogoutView.as_view(next_page='/login/'), name='admin_logout'),
     path('admin/', admin.site.urls),
 
     # login/logout usando nosso template
     path('login/',  auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='/login/'), name='logout'),
 
     # Perfil (troca de senha) — fluxo padrão do Django (persistente e seguro)
     path(

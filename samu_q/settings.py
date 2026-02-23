@@ -142,8 +142,8 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = os.getenv('LOGIN_REDIRECT_URL', '/inbox/')
-# Ao deslogar queremos voltar para a home pública
-LOGOUT_REDIRECT_URL = os.getenv('LOGOUT_REDIRECT_URL', '/')
+# Ao deslogar queremos voltar para a tela de login
+LOGOUT_REDIRECT_URL = os.getenv('LOGOUT_REDIRECT_URL', '/login/')
 
 LOGIN_URL = os.getenv('LOGIN_URL', '/login/')
 
