@@ -9,12 +9,12 @@
   <title>Manual de Normas SAMU</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  {#
+  {% comment %}
     Canonical/OG URL:
     Em produção o app roda sob /manual/ e o Nginx envia X-Forwarded-Prefix.
     O WhatsApp associa o preview à og:url — se divergir da URL compartilhada,
     pode gerar comportamento estranho no WebView.
-  #}
+  {% endcomment %}
   {% with prefix=request.META.HTTP_X_FORWARDED_PREFIX|default:'' %}
     {% with canonical_path=prefix|add:'/' %}
       <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ canonical_path }}" />
