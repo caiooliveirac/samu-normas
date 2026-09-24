@@ -12,10 +12,18 @@
     <header class="header">
       <div class="logo" aria-hidden="true"></div>
       <div>
-        <div class="title">Entrar no painel</div>
-        <div class="subtitle">Acesse para ver e revisar as perguntas enviadas.</div>
+        <div class="title">Área da coordenação</div>
+        <div class="subtitle">Perguntas anônimas e edição do manual.</div>
       </div>
     </header>
+
+    {% if escala_sso %}
+    <section class="card">
+      <a class="btn" href="{% url 'questions:painel_entrar' %}" style="display:block; text-align:center; text-decoration:none">Entrar com a conta do escala</a>
+      <p class="helper" style="margin-top:10px">Mesmo login e senha do escala. Coordenadores entram direto.</p>
+    </section>
+    <p class="footer" style="margin:14px 0 8px">ou com usuário local:</p>
+    {% endif %}
 
     <section class="card">
       <form method="post" action="{% url 'login' %}">
@@ -38,7 +46,7 @@
       </form>
     </section>
 
-    <p class="footer">Dica: use um usuário com <strong>staff status</strong> (não precisa ser superuser).</p>
+    <p class="footer"><a href="/manual/">Voltar ao manual</a></p>
   </main>
 </body>
 </html>

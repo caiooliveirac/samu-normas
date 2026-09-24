@@ -1,0 +1,22 @@
+{% load static %}<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Área da coordenação</title>
+  <link rel="stylesheet" href="{% static 'css/ask.css' %}">
+</head>
+<body>
+  <main class="container fade-in">
+    <header class="header">
+      <div class="logo" aria-hidden="true"></div>
+      <div><div class="title">Área da coordenação</div></div>
+    </header>
+    <section class="card">
+      <div class="msg error">{{ mensagem }}</div>
+      <p><a class="btn" href="{% url 'questions:painel_entrar' %}" style="text-decoration:none">Tentar de novo</a>
+         <a href="/manual/" style="margin-left:12px">Voltar ao manual</a></p>
+    </section>
+  </main>
+</body>
+</html>

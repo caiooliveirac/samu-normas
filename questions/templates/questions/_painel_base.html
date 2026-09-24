@@ -1,0 +1,30 @@
+{% load static %}<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Coordenação — Manual de Normas</title>
+  <link rel="stylesheet" href="{% static 'css/ask.css' %}">
+  <link rel="stylesheet" href="{% static 'css/painel.css' %}">
+</head>
+<body>
+  <main class="container fade-in">
+    <header class="header">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <div class="title">{% block titulo %}{% endblock %}</div>
+        <div class="subtitle">Área da coordenação · {{ user.get_full_name|default:user.username }}</div>
+      </div>
+    </header>
+    <nav class="nav">
+      <a href="{% url 'questions:painel' %}" {% block aba_painel %}{% endblock %}>Painel</a>
+      <a href="{% url 'questions:inbox' %}">Perguntas</a>
+      <a href="{% url 'questions:historico' %}" {% block aba_historico %}{% endblock %}>Histórico de alterações</a>
+      <a href="/manual/">Ver manual</a>
+      <form class="sair" method="post" action="/logout/">{% csrf_token %}<button type="submit">Sair</button></form>
+    </nav>
+    {% for m in messages %}<div class="msg {{ m.tags }}">{{ m }}</div>{% endfor %}
+{% block conteudo %}{% endblock %}
+  </main>
+</body>
+</html>
