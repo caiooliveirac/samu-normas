@@ -77,10 +77,42 @@ def test_sso_reusa_conta_existente_por_email(client, federacao):
 
 
 @pytest.mark.django_db
-def test_sso_profissional_recusado(client, federacao):
-    r = client.get("/api/auth/sso", {"token": token(perfil="PROFISSIONAL")})
+@pytest.mark.parametrize("perfil", ["ADMIN", "COORD_CATEGORIA"])
+def test_sso_admin_e_coordenador_entram(client, federacao, perfil):
+    assert client.get("/api/auth/sso", {"token": token(perfil=perfil)}).status_code == 302
+    assert client.get("/painel/").status_code == 200
+    assert 0 < client.session.get_expiry_age() <= 12 * 3600
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("claims", [
+    {"perfil": "PROFISSIONAL"},
+    {"perfil": "COORD_SETORIAL"},
+    {"perfil": ""},
+    {"origem": "upas", "perfil": "ADMIN"},
+    {"origem": "plantoes", "perfil": "ADMIN"},
+])
+def test_sso_medico_e_outras_origens_recusados(client, federacao, claims):
+    r = client.get("/api/auth/sso", {"token": token(**claims)})
     assert r.status_code == 403
     assert not User.objects.exists()
+    assert client.get("/painel/").status_code == 302
+    assert client.get("/api/me/").json()["coordenacao"] is False
+
+
+@pytest.mark.django_db
+def test_coordenador_rebaixado_perde_acesso(client, federacao):
+    client.get("/api/auth/sso", {"token": token()})
+    client.post("/logout/")
+    assert client.get("/api/auth/sso", {"token": token(perfil="PROFISSIONAL")}).status_code == 403
+    assert not User.objects.get().is_staff
+
+
+@pytest.mark.django_db
+def test_rebaixamento_nao_mexe_em_conta_local(client, federacao):
+    User.objects.create_user("admin-local", email="coord@samu.test", password="x", is_staff=True)
+    client.get("/api/auth/sso", {"token": token(perfil="PROFISSIONAL")})
+    assert User.objects.get().is_staff
 
 
 @pytest.mark.django_db

@@ -148,8 +148,13 @@ LOGIN_REDIRECT_URL = os.getenv('LOGIN_REDIRECT_URL', '/painel/')
 ESCALA_URL = os.getenv('ESCALA_URL', '').strip().rstrip('/')
 ESCALA_FEDERACAO_SECRET = os.getenv('ESCALA_FEDERACAO_SECRET', '').strip()
 FEDERACAO_ID = os.getenv('FEDERACAO_ID', 'samu-normas').strip()
-# Perfis do escala que entram na área da coordenação
-FEDERACAO_PERFIS = [p.strip() for p in os.getenv('FEDERACAO_PERFIS', 'ADMIN,COORD_CATEGORIA,COORD_SETORIAL').split(',') if p.strip()]
+# Perfis do escala que entram na área da coordenação. PROFISSIONAL (todo médico,
+# inclusive quem entra pelo plantões) e COORD_SETORIAL (líder de base) ficam fora.
+FEDERACAO_PERFIS = [p.strip() for p in os.getenv('FEDERACAO_PERFIS', 'ADMIN,COORD_CATEGORIA').split(',') if p.strip()]
+# Só o escala do SAMU abre sessão aqui (a UPA e os apps irmãos têm o mesmo segredo)
+FEDERACAO_ORIGENS = [p.strip() for p in os.getenv('FEDERACAO_ORIGENS', 'samu-salvador').split(',') if p.strip()]
+# Sessão aberta pelo escala expira antes: perfil rebaixado lá perde o acesso aqui em horas
+FEDERACAO_SESSAO_SEGUNDOS = int(os.getenv('FEDERACAO_SESSAO_SEGUNDOS', str(12 * 3600)))
 # Ao deslogar queremos voltar para a tela de login
 LOGOUT_REDIRECT_URL = os.getenv('LOGOUT_REDIRECT_URL', '/login/')
 

@@ -59,11 +59,17 @@ def sso(request):
 
     email = claims["sub"].strip().lower()
     perfil = claims.get("perfil", "")
-    if perfil not in settings.FEDERACAO_PERFIS:
-        log.info("[federacao] sem_perfil email=%s perfil=%s", email, perfil or "-")
-        return _negado(request, "A área da coordenação é restrita a perfis de coordenação no escala.", 403)
-
+    origem = claims.get("origem", "")
     user = User.objects.filter(email__iexact=email).first() or User.objects.filter(username__iexact=email).first()
+    if origem not in settings.FEDERACAO_ORIGENS or perfil not in settings.FEDERACAO_PERFIS:
+        log.info("[federacao] recusado email=%s perfil=%s origem=%s", email, perfil or "-", origem or "-")
+        # conta que só existe pela federação perde o staff junto com o perfil;
+        # conta local (com senha) é gerida no /admin/ e não é tocada
+        if user is not None and user.is_staff and not user.has_usable_password():
+            user.is_staff = False
+            user.save(update_fields=["is_staff"])
+        return _negado(request, "A área da coordenação é restrita a administradores e coordenadores do escala.", 403)
+
     if user is None:
         user = User(username=email[:150], email=email)
         user.set_unusable_password()
@@ -76,7 +82,8 @@ def sso(request):
     user.save()
 
     login(request, user, backend="django.contrib.auth.backends.ModelBackend")
-    log.info("[federacao] login_ok email=%s perfil=%s origem=%s", email, perfil, claims.get("origem", "?"))
+    request.session.set_expiry(settings.FEDERACAO_SESSAO_SEGUNDOS)
+    log.info("[federacao] login_ok email=%s perfil=%s origem=%s", email, perfil, origem)
     return redirect("questions:painel")
 
 
