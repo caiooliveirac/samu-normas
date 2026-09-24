@@ -244,6 +244,7 @@ export default function App(){
   const reportedTermsRef = useRef(new Set())
   const [controlsFocused, setControlsFocused] = useState(false)
   const [atTop, setAtTop] = useState(true)
+  const [coordenacao, setCoordenacao] = useState(false)
 
   useEffect(() => {
     return () => {
@@ -269,6 +270,14 @@ export default function App(){
         console.error(e)
         setLoading(false)
       })
+  }, [])
+
+  // Sessão da coordenação: só decide se aparecem os links de edição
+  useEffect(() => {
+    fetch('/api/me/', { credentials: 'same-origin' })
+      .then(r => r.ok ? r.json() : null)
+      .then(me => setCoordenacao(!!me?.coordenacao))
+      .catch(() => {})
   }, [])
 
   // Detecta se o usuário está no topo da página.
@@ -813,6 +822,9 @@ export default function App(){
             <p className="text-[11px] text-slate-600 mt-2">Atalhos: / busca · Esc limpa · ↑ ↓ navegam · Home/End · Enter/Espaço expandem.</p>
           </div>
           <div className="flex items-center gap-2">
+            <a href={coordenacao ? '/painel/' : '/painel/entrar/'} className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-sm sm:text-xs font-semibold px-4 py-2.5 sm:py-2 text-slate-700 transition-colors min-h-11">
+              <span>{coordenacao ? 'Painel da coordenação' : 'Área da coordenação'}</span>
+            </a>
             <a href={askHref} className="inline-flex items-center gap-2 rounded-lg border border-brand-200 bg-white hover:bg-brand-50 text-sm sm:text-xs font-semibold px-4 py-2.5 sm:py-2 text-brand-800 transition-colors min-h-11">
               <span>+ Perguntar</span>
             </a>
@@ -1061,7 +1073,14 @@ export default function App(){
                                     className="rounded-lg border border-brand-200/60 bg-white/92 px-4 py-3 shadow-sm shadow-slate-200/60"
                                     aria-label={`Card ${c.title}`}
                                   >
-                                    <h3 className="text-[12px] font-semibold text-slate-800">{highlight(c.title, search)}</h3>
+                                    <div className="flex items-start justify-between gap-3">
+                                      <h3 className="text-[12px] font-semibold text-slate-800">{highlight(c.title, search)}</h3>
+                                      {coordenacao && (
+                                        <a href={`/painel/cards/${c.id}/`} className="shrink-0 text-[12px] font-semibold text-brand-700 hover:text-brand-800 underline decoration-dotted">
+                                          Editar
+                                        </a>
+                                      )}
+                                    </div>
                                     <ul className="mt-2 flex flex-col gap-1">
                                       {(c.bullets || []).map((b) => (
                                         <li

@@ -141,7 +141,15 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-LOGIN_REDIRECT_URL = os.getenv('LOGIN_REDIRECT_URL', '/inbox/')
+LOGIN_REDIRECT_URL = os.getenv('LOGIN_REDIRECT_URL', '/painel/')
+
+# Federação com o escala (questions/federacao.py). Sem as duas, o botão
+# "Entrar pelo escala" some e /api/auth/sso responde 404 — login por senha segue igual.
+ESCALA_URL = os.getenv('ESCALA_URL', '').strip().rstrip('/')
+ESCALA_FEDERACAO_SECRET = os.getenv('ESCALA_FEDERACAO_SECRET', '').strip()
+FEDERACAO_ID = os.getenv('FEDERACAO_ID', 'samu-normas').strip()
+# Perfis do escala que entram na área da coordenação
+FEDERACAO_PERFIS = [p.strip() for p in os.getenv('FEDERACAO_PERFIS', 'ADMIN,COORD_CATEGORIA,COORD_SETORIAL').split(',') if p.strip()]
 # Ao deslogar queremos voltar para a tela de login
 LOGOUT_REDIRECT_URL = os.getenv('LOGOUT_REDIRECT_URL', '/login/')
 

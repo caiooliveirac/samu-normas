@@ -1,0 +1,23 @@
+{% extends "questions/_painel_base.html" %}
+{% block titulo %}Histórico de alterações{% endblock %}
+{% block aba_historico %}aria-current="page"{% endblock %}
+{% block conteudo %}
+    <section class="card">
+      <form method="get" style="display:flex; gap:8px; margin-bottom:8px">
+        <input type="text" name="quem" value="{{ quem }}" placeholder="Filtrar por nome ou e-mail">
+        <button class="btn" type="submit">Filtrar</button>
+      </form>
+      {% for rev in page_obj.object_list %}
+        <div class="revisao">
+          <div>{% if rev.card %}<a href="{% url 'questions:card_editar' rev.card_id %}">{{ rev.card_label }}</a>{% else %}{{ rev.card_label }} <span class="oculto">card apagado</span>{% endif %}</div>
+          <div class="muted">{{ rev.user_label }} · {{ rev.created_at|date:"d/m/Y H:i" }}</div>
+          {% include "questions/_painel_mudancas.html" %}
+        </div>
+      {% empty %}<p class="muted">Nenhuma alteração registrada.</p>{% endfor %}
+      <p class="muted" style="margin-top:12px">
+        {% if page_obj.has_previous %}<a href="?quem={{ quem|urlencode }}&page={{ page_obj.previous_page_number }}">« Anterior</a>{% endif %}
+        Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+        {% if page_obj.has_next %}<a href="?quem={{ quem|urlencode }}&page={{ page_obj.next_page_number }}">Próxima »</a>{% endif %}
+      </p>
+    </section>
+{% endblock %}

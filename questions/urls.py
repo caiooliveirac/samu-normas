@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from . import painel, views
 from .views import home, ask_view, inbox, inbox_detail, mark_reviewed, export_csv, api_search_log
 
 app_name = 'questions'
@@ -16,5 +16,11 @@ urlpatterns = [
     path('inbox/checklists/<int:pk>/', views.inbox_checklists_detail, name='inbox_checklists_detail'),
     path('inbox/<int:pk>/', views.inbox_detail, name='inbox_detail'),
     path('inbox/<int:pk>/reviewed/', views.mark_reviewed, name='mark_reviewed'),
+    path('painel/', painel.painel, name='painel'),
+    path('painel/entrar/', painel.entrar, name='painel_entrar'),
+    path('painel/historico/', painel.historico, name='historico'),
+    path('painel/cards/<int:pk>/', painel.card_editar, name='card_editar'),
+    path('api/auth/sso', painel.sso, name='sso'),
+    path('api/me/', painel.api_me, name='api_me'),
     path('inbox/export.csv', views.export_csv, name='export_csv'),
 ]

@@ -221,3 +221,27 @@ class ChecklistDigestLog(models.Model):
 
     def __str__(self):
         return f"Digest {self.date} ({self.slot}) — {self.status}"
+
+class CardRevision(models.Model):
+    """Audit log da edição de card pela área da coordenação: quem mudou o quê.
+
+    Guarda o estado inteiro antes e depois (título, publicação, bullets) em vez
+    de um diff: o diff sai na hora de mostrar, e o snapshot sobrevive a card
+    apagado. Quem editou fica copiado em texto para não sumir junto com o usuário.
+    """
+
+    card = models.ForeignKey(RuleCard, null=True, on_delete=models.SET_NULL, related_name="revisions")
+    card_label = models.CharField(max_length=420)
+    user = models.ForeignKey("auth.User", null=True, on_delete=models.SET_NULL, related_name="card_revisions")
+    user_label = models.CharField(max_length=254)
+    before = models.JSONField()
+    after = models.JSONField()
+    created_at = models.DateTimeField(default=timezone.now, db_index=True)
+
+    class Meta:
+        ordering = ["-created_at", "-id"]
+        verbose_name = "Alteração de card"
+        verbose_name_plural = "Alterações de card"
+
+    def __str__(self):
+        return f"{self.user_label} — {self.card_label} — {self.created_at:%Y-%m-%d %H:%M}"

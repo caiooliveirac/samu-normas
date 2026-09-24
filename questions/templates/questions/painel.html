@@ -1,0 +1,41 @@
+{% extends "questions/_painel_base.html" %}
+{% block titulo %}Painel da coordenação{% endblock %}
+{% block aba_painel %}aria-current="page"{% endblock %}
+{% block conteudo %}
+    <section class="card">
+      <h2>Perguntas anônimas</h2>
+      <p><span class="destaque">{{ novas }}</span> <span class="muted">nova{{ novas|pluralize }} aguardando revisão</span></p>
+      <ul class="lista">
+        {% for q in ultimas_perguntas %}
+          <li><a href="{% url 'questions:inbox_detail' q.id %}">{{ q.text|truncatechars:140 }}</a>
+            <div class="muted">{{ q.created_at|date:"d/m/Y H:i" }} · {{ q.get_status_display }}</div></li>
+        {% empty %}<li class="muted">Nenhuma pergunta ainda.</li>{% endfor %}
+      </ul>
+      <p style="margin-top:12px"><a class="btn" href="{% url 'questions:inbox' %}" style="text-decoration:none">Ver todas as perguntas</a></p>
+    </section>
+
+    <section class="card">
+      <h2>Editar o manual</h2>
+      <p class="muted">Abra o tópico e escolha o card. Toda alteração fica registrada com seu nome.</p>
+      {% for r in rules %}
+        <details>
+          <summary>{{ r.title }}{% if not r.is_published %}<span class="oculto">oculto</span>{% endif %}</summary>
+          <ul>
+            {% for c in r.cards.all %}
+              <li><a href="{% url 'questions:card_editar' c.id %}">{{ c.title|default:"(sem título)" }}</a>{% if not c.is_published %}<span class="oculto">oculto</span>{% endif %}</li>
+            {% empty %}<li class="muted">Sem cards.</li>{% endfor %}
+          </ul>
+        </details>
+      {% endfor %}
+    </section>
+
+    <section class="card">
+      <h2>Últimas alterações</h2>
+      <ul class="lista">
+        {% for rev in ultimas_alteracoes %}
+          <li>{% if rev.card %}<a href="{% url 'questions:card_editar' rev.card_id %}">{{ rev.card_label }}</a>{% else %}{{ rev.card_label }}{% endif %}
+            <div class="muted">{{ rev.user_label }} · {{ rev.created_at|date:"d/m/Y H:i" }}</div></li>
+        {% empty %}<li class="muted">Nenhuma alteração registrada.</li>{% endfor %}
+      </ul>
+    </section>
+{% endblock %}

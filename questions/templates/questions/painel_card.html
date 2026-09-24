@@ -1,0 +1,41 @@
+{% extends "questions/_painel_base.html" %}
+{% block titulo %}Editar card{% endblock %}
+{% block conteudo %}
+    <section class="card">
+      <p class="muted">{{ card.rule.title }}</p>
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="versao" value="{{ versao }}">
+        <div class="item">
+          <label for="title"><strong>Título do card</strong></label>
+          <input type="text" id="title" name="title" value="{{ card.title }}" maxlength="200" required>
+        </div>
+        <div class="item">
+          <label><input type="checkbox" name="is_published" {% if card.is_published %}checked{% endif %}> Publicado no manual</label>
+        </div>
+        <h2>Itens</h2>
+        {% for b in bullets %}
+          <div class="item">
+            <textarea name="bullet-{{ b.id }}" aria-label="Item {{ forloop.counter }}">{{ b.text }}</textarea>
+            <label class="remover"><input type="checkbox" name="remover-{{ b.id }}"> remover este item</label>
+          </div>
+        {% endfor %}
+        <div class="item">
+          <label for="novo"><strong>Novo item</strong> <span class="muted">(opcional, entra no fim)</span></label>
+          <textarea id="novo" name="novo"></textarea>
+        </div>
+        <button class="btn" type="submit">Salvar</button>
+        <a class="btn ghost" href="{% url 'questions:painel' %}">Cancelar</a>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Histórico deste card</h2>
+      {% for rev in revisoes %}
+        <div class="revisao">
+          <div class="muted">{{ rev.user_label }} · {{ rev.created_at|date:"d/m/Y H:i" }}</div>
+          {% include "questions/_painel_mudancas.html" %}
+        </div>
+      {% empty %}<p class="muted">Nenhuma alteração registrada.</p>{% endfor %}
+    </section>
+{% endblock %}

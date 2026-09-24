@@ -1,0 +1,6 @@
+{% for m in rev.mudancas %}
+  <div class="mudanca">
+    <span class="muted">{{ m.tipo }}</span>
+    <span>{% if m.de %}<span class="de">{{ m.de }}</span>{% endif %}{% if m.de and m.para %}<br>{% endif %}{% if m.para %}<span class="para">{{ m.para }}</span>{% endif %}</span>
+  </div>
+{% endfor %}
